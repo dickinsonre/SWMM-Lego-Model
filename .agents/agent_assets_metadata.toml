@@ -6,3 +6,33 @@ id = "H0uJJyC7gS3a1w9lsKBvZ"
 uri = "file://SWMM5_LEGO_HANDOVER.md"
 type = "text"
 title = "SWMM5 Lego Builder - Detailed Handover Document"
+
+[[outputs]]
+id = "t6atfv9r7aSLYN4uUr5pZ"
+uri = "file://attached_assets/lego-board-residential.png"
+type = "image"
+title = "Residential Stormwater Model"
+
+[[outputs]]
+id = "06mlTDdkXr1DcomQgEKcW"
+uri = "file://attached_assets/lego-board-drainage.png"
+type = "image"
+title = "Drainage Pipe Network Close-up"
+
+[[outputs]]
+id = "3tP5V3Mgn_6p3_JoscjFZ"
+uri = "file://attached_assets/lego-board-stadium.png"
+type = "image"
+title = "Stadium Stormwater Model"
+
+[[outputs]]
+id = "IR9bTGf63vtnbvke86PYY"
+uri = "file://attached_assets/lego-board-hillside.png"
+type = "image"
+title = "Hillside Terrain Drainage"
+
+[[outputs]]
+id = "rR2RChPAtuO3Ok1OH1DDY"
+uri = "file://attached_assets/lego-board-green-infra.png"
+type = "image"
+title = "Green Infrastructure Model"
