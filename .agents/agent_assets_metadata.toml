@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "H0uJJyC7gS3a1w9lsKBvZ"
+uri = "file://SWMM5_LEGO_HANDOVER.md"
+type = "text"
+title = "SWMM5 Lego Builder - Detailed Handover Document"
