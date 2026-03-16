@@ -49,9 +49,12 @@ Interactive browser-based stormwater management model builder. Features:
 - SWMM Inspector panel for live element data during simulation
 - Export to .INP format (compatible with EPA SWMM5)
 - Import .INP files from EPA SWMM5
-- 11 built-in demo scenarios (Residential, Highway, Stadium, etc.)
+- 13 built-in demo scenarios (Residential, Parking Lot, Green Infra, Highway, Mixed-Use, School Campus, Industrial, Hillside, Hospital, Dual Outfall, Stadium, Stadium Simple, Minimal Test)
 - Resizable grid (20x20 to 50x50)
-- Model validation and auto-fix
+- Model validation with CFL Courant number checks and auto-fix
+- Per-cell property editing via right-click context menu (override CN, % imperv, Manning's n, slope, pipe diameter, node depth)
+- Time-series CSV export for all result tabs
+- Save/Load to localStorage (auto-save + 5 named slots)
 - No backend required — entirely frontend
 
 **Visual Theme**: Full LEGO brick aesthetic
@@ -61,9 +64,21 @@ Interactive browser-based stormwater management model builder. Features:
 - White "instruction booklet" style side panels with gray borders and drop shadows
 - LEGO-colored toolbar buttons, red/yellow tutorial overlay, Fredoka + Nunito fonts
 - Inspector, validation, results, and export panels all use light #F4F4F4 backgrounds
+- Grid cell borders: red=error, orange=CFL/validation warning, yellow=custom property override
 
 **Key dependencies**: React, recharts (charts), Vite (build)
-**Entry**: `src/components/SWMM5LegoBuilder.jsx` (single self-contained component, ~2550 lines, inline styles)
+
+**Architecture** (modularized):
+- `src/components/SWMM5LegoBuilder.jsx` — Main React component (~1464 lines, inline styles)
+- `src/lib/elements.js` — Element definitions (EL, CATS), grid utilities, mutable GRID via getGrid()/setGrid()
+- `src/lib/storms.js` — 49 design storms with storm category definitions
+- `src/lib/hydraulics.js` — SWMM5 JS engine (buildModel, runSWMM5, Manning's equations, CN infiltration)
+- `src/lib/validation.js` — Model validation with CFL checks and auto-fix
+- `src/lib/exportCsv.js` — Time-series CSV export
+- `src/lib/persistence.js` — localStorage save/load (auto-save + named slots)
+- `src/lib/exportInp.js` — SWMM5 .INP file export
+- `src/lib/importInp.js` — SWMM5 .INP file import with auto grid sizing
+- `src/lib/demos.js` — 13 demo model builders
 
 ## TypeScript & Composite Projects
 
