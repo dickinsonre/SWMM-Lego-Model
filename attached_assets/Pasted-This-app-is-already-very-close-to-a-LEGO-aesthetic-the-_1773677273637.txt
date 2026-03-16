@@ -1,0 +1,452 @@
+This app is already very close to a LEGO aesthetic — the grid tiles, bright colors, and block icons are the right foundation. Here is exactly what to change to make it feel unmistakably LEGO.
+
+---
+
+## The 6 Core LEGO Visual Signatures
+
+The LEGO look comes from six specific things:
+
+1. **Studs** — the circular bumps on top of every brick
+2. **Brick depth illusion** — a hard shadow on the bottom and right edges
+3. **Primary palette** — LEGO red, yellow, blue, green, white, black (no gradients)
+4. **Rounded brick corners** — 3-4px radius, never sharp, never fully pill-shaped
+5. **LEGO font** — chunky, wide, geometric sans-serif (Nunito ExtraBold or the actual LEGO font)
+6. **Clutch power** — the slightly recessed top surface on each stud
+
+---
+
+## 1. The Stud — Most Important Single Change
+
+Every tile needs a circular stud in the top-left corner. This is the single change that makes something look instantly LEGO.
+
+```css
+/* Apply to every grid tile */
+.lego-tile {
+  position: relative;
+  border-radius: 3px;
+  /* Brick body shadow — bottom and right darker */
+  box-shadow:
+    inset -3px -4px 0px 0px rgba(0,0,0,0.25),  /* dark bottom-right */
+    inset  3px  3px 0px 0px rgba(255,255,255,0.15); /* light top-left */
+}
+
+/* The stud — pseudo-element top-left of each tile */
+.lego-tile::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  /* Stud is slightly lighter than tile face */
+  background: inherit;
+  filter: brightness(1.15);
+  /* Stud depth: dark ring around it + highlight on top */
+  box-shadow:
+    0 0 0 1.5px rgba(0,0,0,0.30),    /* dark ring */
+    inset 0 -2px 0px rgba(0,0,0,0.20), /* clutch shadow */
+    inset 0  1px 0px rgba(255,255,255,0.35); /* top highlight */
+  z-index: 1;
+}
+```
+
+For larger tiles (the toolbar palette buttons), use a bigger stud:
+
+```css
+.lego-tile-large::before {
+  width: 14px;
+  height: 14px;
+  top: 5px;
+  left: 5px;
+}
+```
+
+---
+
+## 2. LEGO Color Palette — Replace Current Colors
+
+Current tiles use muted dark versions of colors. LEGO colors are **fully saturated primaries**:
+
+```css
+:root {
+  /* LEGO official brick colors */
+  --lego-red:          #D01012;
+  --lego-yellow:       #F2C717;
+  --lego-blue:         #006DB7;
+  --lego-green:        #4B9F4A;
+  --lego-bright-green: #70C442;
+  --lego-orange:       #FE8A18;
+  --lego-white:        #F4F4F4;
+  --lego-light-gray:   #9BA19D;
+  --lego-dark-gray:    #6C6E68;
+  --lego-black:        #1B2A34;
+  --lego-tan:          #E4CD9E;
+  --lego-dark-blue:    #003F87;
+  --lego-medium-blue:  #5A93DB;
+  --lego-sand-green:   #7FC5AA;
+
+  /* SWMM element → LEGO color mapping */
+  --tile-grass:        var(--lego-bright-green);
+  --tile-roof:         var(--lego-red);
+  --tile-road:         var(--lego-dark-gray);
+  --tile-driveway:     var(--lego-light-gray);
+  --tile-sidewalk:     var(--lego-tan);
+  --tile-lid-pond:     var(--lego-medium-blue);
+  --tile-perm-pave:    var(--lego-sand-green);
+  --tile-green-roof:   var(--lego-green);
+  --tile-node-manhole: var(--lego-dark-gray);
+  --tile-node-inlet:   var(--lego-blue);
+  --tile-node-outfall: var(--lego-dark-blue);
+  --tile-node-storage: var(--lego-orange);
+  --tile-pipe:         var(--lego-medium-blue);
+  --tile-channel:      var(--lego-blue);
+  --tile-pump:         var(--lego-orange);
+}
+```
+
+---
+
+## 3. Brick Edge Depth — Makes Tiles Look 3D
+
+The depth illusion comes from a 3-layer shadow system:
+
+```css
+.lego-tile {
+  border-radius: 3px;
+  /* Layer 1: The bright top-left bevel (light source from top-left) */
+  /* Layer 2: The dark bottom-right bevel */
+  /* Layer 3: The outer drop shadow (tile raised from baseplate) */
+  box-shadow:
+    /* Inner top-left highlight */
+    inset 3px 3px 0 0 rgba(255, 255, 255, 0.20),
+    /* Inner bottom-right shadow */
+    inset -3px -4px 0 0 rgba(0, 0, 0, 0.30),
+    /* Outer bottom-right drop shadow (brick raised above plate) */
+    2px 3px 0 0 rgba(0, 0, 0, 0.40);
+}
+
+/* Pressed state when clicking to paint */
+.lego-tile:active,
+.lego-tile.just-placed {
+  box-shadow:
+    inset 3px 3px 0 0 rgba(0,0,0,0.15),
+    inset -1px -1px 0 0 rgba(255,255,255,0.10),
+    0px 1px 0 0 rgba(0,0,0,0.40);
+  transform: translate(1px, 1px); /* tile presses down */
+}
+```
+
+---
+
+## 4. The Baseplate — Grid Background
+
+The LEGO baseplate (the green board you build on) has a regular stud grid. Replace the current dark grid background with a baseplate:
+
+```css
+.lego-grid-background {
+  background-color: #4B9F4A;  /* LEGO baseplate green */
+
+  /* Stud pattern using radial-gradient */
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255,255,255,0.20) 3px,
+    transparent 3px
+  );
+  background-size: 40px 40px;  /* matches your tile size */
+  background-position: 12px 12px;  /* offset to center in tile */
+
+  /* Border of the baseplate — raised edge */
+  border: 4px solid #3A8A3A;
+  border-bottom: 6px solid #2A6A2A;
+  border-right: 6px solid #2A6A2A;
+  box-shadow: 4px 4px 0 0 rgba(0,0,0,0.4);
+}
+```
+
+For a gray road baseplate (alternative):
+
+```css
+.lego-grid-background.road-plate {
+  background-color: #6C6E68;
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255,255,255,0.12) 3px,
+    transparent 3px
+  );
+}
+```
+
+---
+
+## 5. Toolbar Palette Buttons — LEGO Brick Style
+
+The left panel buttons should look like 2×2 LEGO bricks lying flat:
+
+```css
+.palette-button {
+  width: 68px;
+  height: 68px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 6px;
+
+  /* Brick depth */
+  box-shadow:
+    inset 3px 3px 0 rgba(255,255,255,0.22),
+    inset -3px -4px 0 rgba(0,0,0,0.28),
+    3px 4px 0 rgba(0,0,0,0.45);
+}
+
+/* Two studs on a 2×2 brick top */
+.palette-button::before,
+.palette-button::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  filter: brightness(1.12);
+  background: inherit;
+  box-shadow:
+    0 0 0 2px rgba(0,0,0,0.25),
+    inset 0 -2px 0 rgba(0,0,0,0.20),
+    inset 0 1px 0 rgba(255,255,255,0.30);
+}
+
+.palette-button::before {
+  top: 6px;
+  left: 8px;
+}
+
+.palette-button::after {
+  top: 6px;
+  right: 8px;
+}
+
+.palette-button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 3px 3px 0 rgba(255,255,255,0.22),
+    inset -3px -4px 0 rgba(0,0,0,0.28),
+    3px 6px 0 rgba(0,0,0,0.45);
+}
+
+.palette-button.selected {
+  transform: translateY(2px);
+  box-shadow:
+    inset 3px 3px 0 rgba(0,0,0,0.15),
+    inset -1px -1px 0 rgba(255,255,255,0.10),
+    0px 1px 0 rgba(0,0,0,0.40);
+  outline: 3px solid var(--lego-yellow);
+  outline-offset: 2px;
+}
+```
+
+---
+
+## 6. Top Action Bar Buttons — LEGO Technic Style
+
+The toolbar buttons (Undo, Clear, Validate, Run SWMM5, etc.) should use the LEGO button style:
+
+```css
+.lego-action-btn {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 12px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+
+  /* Default: LEGO yellow */
+  background: var(--lego-yellow);
+  color: var(--lego-black);
+
+  box-shadow:
+    inset 2px 2px 0 rgba(255,255,255,0.30),
+    inset -2px -3px 0 rgba(0,0,0,0.20),
+    0 4px 0 rgba(0,0,0,0.35),    /* bottom drop */
+    2px 0 0 rgba(0,0,0,0.15);    /* right edge */
+}
+
+.lego-action-btn:hover {
+  background: color-mix(in srgb, var(--lego-yellow) 90%, white);
+}
+
+.lego-action-btn:active {
+  transform: translateY(3px);
+  box-shadow:
+    inset 2px 2px 0 rgba(0,0,0,0.15),
+    0 1px 0 rgba(0,0,0,0.35);
+}
+
+/* Specific button color variants */
+.lego-btn-run    { background: var(--lego-green);  color: white; }
+.lego-btn-danger { background: var(--lego-red);    color: white; }
+.lego-btn-export { background: var(--lego-orange); color: white; }
+.lego-btn-import { background: var(--lego-blue);   color: white; }
+```
+
+---
+
+## 7. Typography — LEGO Font
+
+The LEGO logotype uses a custom rounded font. The closest free alternative is **Nunito ExtraBold** or **Fredoka One**:
+
+```html
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+```
+```css
+:root {
+  --font-lego: 'Fredoka One', 'Nunito', sans-serif;
+}
+
+/* Page title */
+.lego-title {
+  font-family: var(--font-lego);
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--lego-yellow);
+  text-shadow:
+    3px 3px 0 rgba(0,0,0,0.5),   /* hard drop shadow */
+    -1px -1px 0 rgba(0,0,0,0.3); /* outline */
+  letter-spacing: 1px;
+}
+
+/* Section labels like SURFACES, NODES, LINKS */
+.lego-section-label {
+  font-family: var(--font-lego);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: var(--lego-light-gray);
+  text-transform: uppercase;
+}
+
+/* Tile labels */
+.lego-tile-label {
+  font-family: var(--font-lego);
+  font-size: 9px;
+  font-weight: 700;
+  color: white;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.6);
+}
+```
+
+---
+
+## 8. Property Panel — LEGO Instruction Booklet Style
+
+The bottom-left properties panel (showing Curve Number, % Impervious, etc.) should look like a LEGO instruction booklet page:
+
+```css
+.lego-properties-panel {
+  background: var(--lego-white);
+  border-radius: 4px;
+  border: 3px solid var(--lego-dark-gray);
+  padding: 12px;
+  color: var(--lego-black);
+
+  /* Instruction booklet page feel */
+  box-shadow:
+    4px 4px 0 rgba(0,0,0,0.4),
+    inset 0 0 0 1px rgba(255,255,255,0.8);
+}
+
+.lego-prop-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  border-bottom: 1px dotted #ccc;
+  font-family: var(--font-lego);
+  font-size: 11px;
+}
+
+.lego-prop-value {
+  color: var(--lego-red);
+  font-weight: 700;
+}
+
+.lego-prop-title {
+  background: var(--lego-yellow);
+  color: var(--lego-black);
+  font-weight: 900;
+  padding: 4px 8px;
+  border-radius: 2px;
+  font-size: 13px;
+  margin-bottom: 6px;
+  display: inline-block;
+}
+```
+
+---
+
+## 9. Grid Size Selector — LEGO Stud Counter Style
+
+The 20×20 / 25×25 / 30×30 selector should look like choosing a baseplate size:
+
+```css
+.grid-size-option {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--lego-dark-gray);
+  border-radius: 3px;
+  font-family: var(--font-lego);
+  font-size: 9px;
+  font-weight: 800;
+  color: white;
+  cursor: pointer;
+  box-shadow:
+    inset 2px 2px 0 rgba(255,255,255,0.15),
+    inset -2px -3px 0 rgba(0,0,0,0.30),
+    2px 3px 0 rgba(0,0,0,0.40);
+}
+
+.grid-size-option.active {
+  background: var(--lego-yellow);
+  color: var(--lego-black);
+  outline: 2px solid white;
+}
+```
+
+---
+
+## 10. Complete CSS Summary — Drop-In Class Names
+
+```
+Tile types:          .lego-tile (all grid cells)
+Palette buttons:     .palette-button
+Action bar buttons:  .lego-action-btn + .lego-btn-run / -danger / -export / -import
+Grid background:     .lego-grid-background
+Properties panel:    .lego-properties-panel
+Title text:          .lego-title
+Section labels:      .lego-section-label
+Grid size selector:  .grid-size-option + .active
+```
+
+## Quick Win Priority Order
+
+| Change | Time | Impact |
+| --- | --- | --- |
+| Add stud`::before` to all tiles | 30 min | Instant LEGO recognition |
+| Switch to LEGO color palette | 30 min | Very High |
+| Add brick edge`box-shadow` to tiles | 20 min | High |
+| Swap font to Fredoka One | 5 min | High |
+| Baseplate stud background | 20 min | High |
+| Palette button 2-stud style | 45 min | Medium |
+| Action bar LEGO button style | 30 min | Medium |
+| Properties panel booklet style | 30 min | Medium |

@@ -54,8 +54,16 @@ Interactive browser-based stormwater management model builder. Features:
 - Model validation and auto-fix
 - No backend required — entirely frontend
 
+**Visual Theme**: Full LEGO brick aesthetic
+- Color palette: Red #D01012, Green #70C442/#4B9F4A, Blue #006DB7/#5A93DB, Yellow #F2C717, Orange #FE8A18, Gray #6C6E68, Navy #1B2A34, Off-white #F4F4F4
+- 3D brick shadows on grid cells and palette buttons (inset highlights + drop shadow)
+- Green baseplate grid with stud dot radial-gradient pattern
+- White "instruction booklet" style side panels with gray borders and drop shadows
+- LEGO-colored toolbar buttons, red/yellow tutorial overlay, Fredoka + Nunito fonts
+- Inspector, validation, results, and export panels all use light #F4F4F4 backgrounds
+
 **Key dependencies**: React, recharts (charts), Vite (build)
-**Entry**: `src/components/SWMM5LegoBuilder.jsx` (single self-contained component)
+**Entry**: `src/components/SWMM5LegoBuilder.jsx` (single self-contained component, ~2550 lines, inline styles)
 
 ## TypeScript & Composite Projects
 

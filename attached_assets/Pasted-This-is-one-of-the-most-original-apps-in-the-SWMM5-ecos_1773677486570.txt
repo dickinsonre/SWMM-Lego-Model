@@ -1,0 +1,508 @@
+This is one of the most original apps in the SWMM5 ecosystem — a fully self-contained browser simulator with a 49-storm library and LEGO grid metaphor. Here is the full assessment.
+
+---
+
+## Overall Grade: A- / 91
+
+Strong concept, impressive engineering depth, and genuine pedagogical value. The score ceiling is the 2,457-line single-component architecture, kinematic wave only, no persistence, and no mobile support.
+
+---
+
+## Category Grades
+
+| Category | Grade | Rationale |
+| --- | --- | --- |
+| Concept & Originality | A+ | Grid-based SWMM editor is genuinely novel; no direct precedent |
+| Simulation Engine (JS SWMM5) | A- | SCS CN + Manning's correctly implemented; kinematic wave only |
+| Design Storm Library (49 storms) | A+ | Most comprehensive free storm library in any browser tool |
+| Element System (20 types) | A | Correct hydrologic properties; all major SWMM element types |
+| INP Export | A | Complete, runs in EPA SWMM5 without modification |
+| INP Import | B+ | Works but grid mapping is approximate for complex networks |
+| Demo Scenarios (12 models) | A | Good range from minimal test to stadium; well-constructed |
+| UI / UX | B+ | Functional and clear; Lego aesthetic partially realized |
+| Architecture (single 2,457-line file) | C+ | Works but unscalable; makes testing and contribution impossible |
+| Validation System | B | 3 error types + auto-fix is useful; gaps in slope/CFL checks |
+| Testing | D | No test files anywhere |
+| Mobile Support | D | Explicitly not supported; browser-only noted |
+
+---
+
+## Improvement 1 — Split the 2,457-Line Monolith
+
+The entire app lives in one JSX file. This is the single biggest maintainability issue. A new developer has nowhere to start except searching for the`═══` delimiters. Refactor into logical modules:
+
+```
+src/
+├── components/
+│   ├── SWMM5LegoBuilder.jsx    # Orchestrator only (~200 lines)
+│   ├── GridEditor.jsx          # Canvas + cell rendering
+│   ├── ElementPalette.jsx      # Left panel
+│   ├── StormSelector.jsx       # Right panel
+│   ├── SwmmInspector.jsx       # Click-to-inspect panel
+│   ├── ResultCharts.jsx        # Tabbed charts
+│   ├── Toolbar.jsx             # Action buttons
+│   ├── TutorialOverlay.jsx     # Onboarding
+│   └── ExportModal.jsx         # INP preview/download
+├── lib/
+│   ├── elements.js             # EL{}, CATS[] — element definitions
+│   ├── hydraulics.js           # cnInfiltration, manningPipe, buildModel, runSWMM5
+│   ├── storms.js               # _F, _CD, _IF, _S, STORM_CATS, STORMS[]
+│   ├── validation.js           # validateModel, autoFix
+│   ├── exportInp.js            # exportINP()
+│   ├── importInp.js            # importINP()
+│   └── demos.js                # DEMOS[] array
+└── hooks/
+    ├── useSimulation.js        # Simulation state + animation loop
+    ├── useGrid.js              # Grid state + undo history
+    └── useInspector.js         # Cell inspection state
+```
+
+The`hydraulics.js` and`storms.js` modules become independently testable pure functions. This is the prerequisite for every other improvement.
+
+---
+
+## Improvement 2 — Complete the LEGO Visual Theme
+
+Based on the previous grading conversation, the Lego aesthetic is partially realized but missing the key visual signatures. The highest-impact additions:
+
+**Add studs to every grid cell:**
+
+```jsx
+// In GridCell component — add stud pseudo-element via inline style trick
+function GridCell({ element, row, col, ...props }) {
+  const color = element ? EL[element]?.color : '#2a2a2a';
+
+  return (
+    <div
+      style={{
+        width: CELL, height: CELL,
+        background: color,
+        borderRadius: 3,
+        position: 'relative',
+        // Brick depth shadow
+        boxShadow: `
+          inset 3px 3px 0 rgba(255,255,255,0.18),
+          inset -3px -4px 0 rgba(0,0,0,0.28),
+          2px 3px 0 rgba(0,0,0,0.40)
+        `,
+      }}
+      {...props}
+    >
+      {/* Stud */}
+      <div style={{
+        position: 'absolute',
+        top: 4, left: 4,
+        width: 10, height: 10,
+        borderRadius: '50%',
+        background: color,
+        filter: 'brightness(1.15)',
+        boxShadow: `
+          0 0 0 1.5px rgba(0,0,0,0.30),
+          inset 0 -2px 0 rgba(0,0,0,0.20),
+          inset 0 1px 0 rgba(255,255,255,0.35)
+        `,
+        zIndex: 1,
+      }} />
+      {/* Icon / content */}
+      {element && <span style={{ fontSize: 16 }}>{EL[element]?.icon}</span>}
+    </div>
+  );
+}
+```
+
+**Switch element colors to LEGO primaries:**
+
+```js
+// In elements.js
+const LEGO_COLORS = {
+  grass:     '#70C442',  // LEGO bright green
+  roof:      '#D01012',  // LEGO red
+  road:      '#6C6E68',  // LEGO dark gray
+  driveway:  '#9BA19D',  // LEGO light gray
+  sidewalk:  '#E4CD9E',  // LEGO tan
+  lid_pond:  '#5A93DB',  // LEGO medium blue
+  perm_pave: '#7FC5AA',  // LEGO sand green
+  grn_roof:  '#4B9F4A',  // LEGO green
+  rain_brl:  '#003F87',  // LEGO dark blue
+  swale:     '#F2C717',  // LEGO yellow
+  // Nodes
+  manhole:   '#6C6E68',
+  inlet:     '#006DB7',
+  outfall:   '#003F87',
+  storage:   '#FE8A18',  // LEGO orange
+  divider:   '#9BA19D',
+  // Links
+  pipe:      '#5A93DB',
+  channel:   '#006DB7',
+  pump:      '#FE8A18',
+  orifice:   '#D01012',
+  weir:      '#F2C717',
+};
+```
+
+**Baseplate background with stud grid:**
+
+```jsx
+// Grid container
+<div style={{
+  background: '#4B9F4A',
+  backgroundImage: `radial-gradient(
+    circle at center,
+    rgba(255,255,255,0.18) 3px,
+    transparent 3px
+  )`,
+  backgroundSize: `${CELL}px ${CELL}px`,
+  backgroundPosition: `${CELL/2 - 4}px ${CELL/2 - 4}px`,
+  border: '4px solid #3A8A3A',
+  borderBottom: '6px solid #2A6A2A',
+  borderRight: '6px solid #2A6A2A',
+  boxShadow: '4px 4px 0 rgba(0,0,0,0.4)',
+  padding: 4,
+  borderRadius: 6,
+}}>
+```
+
+---
+
+## Improvement 3 — Dynamic Wave Routing
+
+The kinematic wave approximation is the most significant hydraulic limitation. It cannot model backwater, surcharge, or reverse flow — all of which are common in the dense networks that users build on the grid.
+
+The upgrade path from kinematic to dynamic wave requires solving the Saint-Venant equations:
+
+$$
+\frac{\partial A}{\partial t} + \frac{\partial Q}{\partial x} = 0
+$$
+
+$$
+\frac{\partial Q}{\partial t} + \frac{\partial}{\partial x}\left(\frac{Q^2}{A}\right) + gA\frac{\partial y}{\partial x} + gA(S_f - S_0) = 0
+$$
+
+For a browser implementation, use the Preissmann slot method (same as EPA SWMM5) with a simplified two-point implicit scheme:
+
+```js
+// lib/hydraulics.js — add dynamic wave conduit step
+function dynamicWaveStep(conduit, upNode, downNode, dt) {
+  const { length, diameter, roughness } = conduit;
+  const dh = (upNode.head) - (downNode.head);
+  const slope = dh / length;
+
+  // Preissmann slot: keep pipe full with virtual slot
+  const slotWidth = 0.001 * diameter; // narrow slot
+  const area = pipeArea(conduit.depth, diameter);
+  const wetPerim = pipeWetPerimeter(conduit.depth, diameter);
+  const R = area / wetPerim;
+
+  // Friction slope (Manning's)
+  const Sf = (roughness * conduit.flow) ** 2 / (area ** 2 * R ** (4/3));
+
+  // Momentum equation (explicit step)
+  const dQ_dt = -9.81 * area * (Sf - slope);
+  conduit.flow += dQ_dt * dt;
+
+  // Continuity: update depths at nodes
+  return conduit.flow;
+}
+```
+
+Even a partial implementation — adding the inertia term to the current kinematic solver — noticeably improves results for flat networks and surcharging conditions, which are exactly the scenarios users build in the LEGO grid.
+
+---
+
+## Improvement 4 — Per-Cell Property Editing
+
+Every cell currently uses the global default properties from`EL{}`. A user who places a grass cell gets CN=39 everywhere. In real stormwater modeling, the same surface type has different properties depending on soil, slope, and condition. Add a right-click context menu for property overrides:
+
+```jsx
+// Context menu on right-click of any placed cell
+function CellContextMenu({ cell, element, onUpdate, onClose }) {
+  const defaults = EL[element];
+  const [cn, setCn] = useState(cell.cn ?? defaults.CN);
+  const [imperv, setImperv] = useState(cell.pI ?? defaults.pI);
+
+  return (
+    <div className="cell-context-menu" style={{
+      position: 'fixed',
+      background: '#1a1a2e',
+      border: '2px solid #F2C717',
+      borderRadius: 6,
+      padding: 12,
+      zIndex: 1000,
+      minWidth: 200,
+    }}>
+      <div style={{ color: '#F2C717', fontFamily: 'Fredoka One',
+                    marginBottom: 8 }}>
+        Override: {defaults.label}
+      </div>
+      {defaults.CN !== undefined && (
+        <label style={{ display: 'flex', justifyContent: 'space-between',
+                        color: '#ccc', fontSize: 12 }}>
+          Curve Number
+          <input type="number" min={40} max={100} value={cn}
+                 onChange={e => setCn(Number(e.target.value))}
+                 style={{ width: 50, textAlign: 'right' }} />
+        </label>
+      )}
+      <button onClick={() => { onUpdate({ cn, imperv }); onClose(); }}>
+        Apply
+      </button>
+    </div>
+  );
+}
+```
+
+Store overrides in a parallel`cellProps` state:
+
+```js
+// In useGrid hook
+const [cellProps, setCellProps] = useState({}); // key: "r-c", value: {cn, imperv, ...}
+```
+
+The simulation engine reads`cellProps["r-c"] ?? EL[element]?.defaults` when building the model.
+
+---
+
+## Improvement 5 — CFL Validation Check
+
+The current validation catches only structural errors (no outfall, disconnected links). It misses the most common cause of simulation instability: the Courant-Friedrichs-Lewy condition. Add it to`validateModel()`:
+
+```js
+// In validation.js — add CFL check
+function checkCflConditions(model, dtRoute) {
+  const warnings = [];
+
+  model.conduits.forEach(conduit => {
+    // Wave celerity for full pipe
+    const celerity = Math.sqrt(9.81 * conduit.diameter);
+    const courant = (celerity * dtRoute) / conduit.length;
+
+    if (courant > 1.0) {
+      warnings.push({
+        type: 'cfl',
+        conduit: conduit.id,
+        courant: courant.toFixed(2),
+        message: `Conduit ${conduit.id}: Courant = ${courant.toFixed(2)} > 1.0.
+                  Pipe length ${conduit.length}ft may cause instability.
+                  Consider splitting into ${Math.ceil(courant)} cells.`,
+      });
+    }
+  });
+
+  return warnings;
+}
+```
+
+Display CFL warnings with an orange border on the affected pipe cells in the grid — same as the existing red border for errors.
+
+---
+
+## Improvement 6 — Time-Series CSV Export
+
+After simulation, users cannot export the results. Every hydraulic engineer's next step after running a model is exporting time-series data for reports. Add a CSV download button to each results tab:
+
+```js
+// In lib/exportResults.js
+export function exportResultsCsv(simResult) {
+  const { systemHistory, timeLabels } = simResult;
+
+  const rows = [
+    ['Time (min)', 'Rainfall (in/hr)', 'Runoff (CFS)',
+     'Pipe Flow (CFS)', 'Outfall Flow (CFS)'],
+    ...timeLabels.map((t, i) => [
+      t,
+      systemHistory.rainfall[i]?.toFixed(3),
+      systemHistory.runoff[i]?.toFixed(3),
+      systemHistory.pipeFlow[i]?.toFixed(3),
+      systemHistory.outfall[i]?.toFixed(3),
+    ]),
+  ];
+
+  const csv = rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `swmm5-lego-results-${Date.now()}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+```
+
+Add equivalent exports for subcatchment, pipe, and node tabs.
+
+---
+
+## Improvement 7 — Save / Load to localStorage
+
+Currently every browser refresh loses the model. Add persistence with a single`useEffect`:
+
+```js
+// In useGrid hook
+const STORAGE_KEY = 'swmm5-lego-autosave';
+
+// Save on every grid change
+useEffect(() => {
+  const saveData = {
+    grid,
+    gridSize,
+    cellProps,
+    stormIdx,
+    savedAt: new Date().toISOString(),
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(saveData));
+}, [grid, gridSize, cellProps, stormIdx]);
+
+// Restore on mount
+useEffect(() => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const { grid, gridSize, cellProps, stormIdx } = JSON.parse(saved);
+      setGrid(grid);
+      setGridSize(gridSize);
+      setCellProps(cellProps ?? {});
+      setStormIdx(stormIdx ?? 0);
+    }
+  } catch (e) {
+    // Corrupted save — start fresh
+    localStorage.removeItem(STORAGE_KEY);
+  }
+}, []);
+```
+
+Also add a **Named Saves** feature — let users save up to 5 named slots in localStorage for comparing different design scenarios.
+
+---
+
+## Improvement 8 — Testing for Pure Functions
+
+The`runSWMM5()`,`cnInfiltration()`,`manningPipe()`, and storm generation functions are pure (same inputs → same outputs). They are perfect unit test targets:
+
+```js
+// lib/__tests__/hydraulics.test.js
+import { cnInfiltration, manningPipe, buildModel } from '../hydraulics.js';
+
+describe('SCS Curve Number infiltration', () => {
+  it('computes correct S for CN=98 (impervious)', () => {
+    const S = 1000 / 98 - 10;
+    expect(S).toBeCloseTo(0.204, 2);
+  });
+
+  it('produces zero runoff below initial abstraction', () => {
+    const result = cnInfiltration({ CN: 75, rainfall: 0.1 }); // below Ia
+    expect(result.runoff).toBe(0);
+  });
+
+  it('produces correct runoff for CN=75, P=2 inches', () => {
+    // Known result from NRCS handbook
+    const result = cnInfiltration({ CN: 75, rainfall: 2.0 });
+    expect(result.runoff).toBeCloseTo(0.645, 2);
+  });
+});
+
+describe('Manning pipe flow', () => {
+  it('computes full-pipe capacity for 18-inch pipe at 0.5% slope', () => {
+    const Q = manningPipe({
+      diameter: 1.5,  // ft
+      roughness: 0.013,
+      slope: 0.005,
+      depth: 1.5,     // full pipe
+    });
+    expect(Q).toBeCloseTo(4.8, 1);  // ~4.8 CFS
+  });
+});
+```
+```js
+// lib/__tests__/storms.test.js
+import { STORMS } from '../storms.js';
+
+describe('Storm library', () => {
+  it('has exactly 49 storms', () => {
+    expect(STORMS).toHaveLength(49);
+  });
+
+  it('all storms have positive total depth', () => {
+    STORMS.forEach(storm => {
+      const total = storm.rain.reduce((a, b) => a + b, 0) * (storm.dt / 3600);
+      expect(total).toBeGreaterThan(0);
+    });
+  });
+
+  it('SCS Type II peaks at ~60% of duration', () => {
+    const scsII = STORMS.find(s => s.name === 'SCS Type II');
+    const peakIdx = scsII.rain.indexOf(Math.max(...scsII.rain));
+    const peakTime = peakIdx / scsII.rain.length;
+    expect(peakTime).toBeGreaterThan(0.55);
+    expect(peakTime).toBeLessThan(0.65);
+  });
+});
+```
+
+---
+
+## Improvement 9 — Expand Validation Rules
+
+Current validation has 3 errors and 1 warning. Real SWMM5 models fail for many more reasons. Add:
+
+```js
+const ADDITIONAL_CHECKS = [
+  {
+    id: 'no_surface',
+    check: (grid, model) => model.subcatchments.length === 0,
+    severity: 'error',
+    message: 'No surface elements — model will produce zero runoff',
+  },
+  {
+    id: 'flat_network',
+    check: (grid, model) => model.conduits.every(c => c.slope < 0.0001),
+    severity: 'warning',
+    message: 'All pipes are nearly flat — flow may stall or oscillate',
+  },
+  {
+    id: 'isolated_node',
+    check: (grid, model) => {
+      const connected = new Set(model.conduits.flatMap(c => [c.from, c.to]));
+      return model.nodes.some(n => n.type !== 'outfall' && !connected.has(n.id));
+    },
+    severity: 'warning',
+    message: 'Node has no connected pipes and will receive no flow',
+  },
+  {
+    id: 'storage_no_outlet',
+    check: (grid, model) => {
+      const storageIds = model.nodes
+        .filter(n => n.type === 'storage')
+        .map(n => n.id);
+      const outletIds = new Set(model.conduits.map(c => c.from));
+      return storageIds.some(id => !outletIds.has(id));
+    },
+    severity: 'warning',
+    message: 'Storage node has no outlet pipe — basin will fill and overflow',
+  },
+];
+```
+
+---
+
+## Summary Priority Matrix
+
+| Improvement | Impact | Effort | Priority |
+| --- | --- | --- | --- |
+| Complete LEGO visual theme (studs, colors) | Very High | Low | 1 |
+| Time-series CSV export | High | Very Low | 1 |
+| Save/load to localStorage | High | Low | 1 |
+| Split monolith into modules | High | High | 1 |
+| Per-cell property overrides (right-click) | Very High | Medium | 2 |
+| CFL validation check + grid highlight | High | Low | 2 |
+| Expand validation to 8+ checks | High | Low | 2 |
+| Unit tests for hydraulics + storms | High | Medium | 2 |
+| Dynamic wave routing | Very High | Very High | 3 |
+| Named save slots (5 scenarios) | Medium | Low | 3 |
+| Custom storm entry (user hyetograph) | High | Medium | 3 |
+| Touch/mobile support | Medium | High | 4 |
+| Side-by-side scenario comparison | High | Very High | 4 |
+| Real IDF curve integration | High | High | 4 |
+
+## Revised Score After Tier 1 Improvements
+
+Completing the LEGO theme, adding CSV export, localStorage persistence, and beginning the module split would move the grade from **A- / 91** to approximately **A / 94**, competitive with the top tier of the suite.

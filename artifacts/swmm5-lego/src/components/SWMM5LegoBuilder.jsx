@@ -9,29 +9,29 @@ const CELL = 34;
 const SPC = 100; // ft spacing
 
 const EL = {
-  // ── SURFACES ──
-  grass:    { lbl:"Grass",      clr:"#4ade80", bdr:"#16a34a", e:"🌱", cat:"surface", cn:39,  pI:0,   nI:0.015, nP:0.24, sI:0.06, sP:0.3  },
-  roof:     { lbl:"Roof",       clr:"#94a3b8", bdr:"#64748b", e:"🏠", cat:"surface", cn:98,  pI:100, nI:0.012, nP:0.1,  sI:0.05, sP:0.05 },
-  road:     { lbl:"Road",       clr:"#475569", bdr:"#334155", e:"🛣️", cat:"surface", cn:98,  pI:95,  nI:0.015, nP:0.1,  sI:0.06, sP:0.05 },
-  driveway: { lbl:"Driveway",   clr:"#78716c", bdr:"#57534e", e:"🅿️", cat:"surface", cn:98,  pI:90,  nI:0.014, nP:0.1,  sI:0.05, sP:0.05 },
-  sidewalk: { lbl:"Sidewalk",   clr:"#d6d3d1", bdr:"#a8a29e", e:"🚶", cat:"surface", cn:98,  pI:95,  nI:0.014, nP:0.1,  sI:0.05, sP:0.05 },
-  lid_pond: { lbl:"LID Pond",   clr:"#a3e635", bdr:"#65a30d", e:"🌿", cat:"surface", cn:65,  pI:10,  nI:0.1,   nP:0.3,  sI:0.1,  sP:0.5  },
-  perm_pave:{ lbl:"Perm Pave",  clr:"#22d3ee", bdr:"#06b6d4", e:"🧱", cat:"surface", cn:72,  pI:30,  nI:0.015, nP:0.2,  sI:0.05, sP:0.2  },
-  grn_roof: { lbl:"Green Roof", clr:"#34d399", bdr:"#059669", e:"🍃", cat:"surface", cn:55,  pI:5,   nI:0.1,   nP:0.4,  sI:0.1,  sP:0.5  },
-  rain_brl: { lbl:"Rain Barrel", clr:"#818cf8", bdr:"#6366f1", e:"🛢️", cat:"surface", cn:85,  pI:50,  nI:0.015, nP:0.2,  sI:0.5,  sP:0.3  },
-  swale:    { lbl:"Swale",      clr:"#2dd4bf", bdr:"#14b8a6", e:"〰️", cat:"surface", cn:58,  pI:0,   nI:0.15,  nP:0.35, sI:0.2,  sP:0.4  },
+  // ── SURFACES ──  (LEGO brick colors)
+  grass:    { lbl:"Grass",      clr:"#70C442", bdr:"#4B9F4A", e:"🌱", cat:"surface", cn:39,  pI:0,   nI:0.015, nP:0.24, sI:0.06, sP:0.3  },
+  roof:     { lbl:"Roof",       clr:"#D01012", bdr:"#A00C0E", e:"🏠", cat:"surface", cn:98,  pI:100, nI:0.012, nP:0.1,  sI:0.05, sP:0.05 },
+  road:     { lbl:"Road",       clr:"#6C6E68", bdr:"#4A4C47", e:"🛣️", cat:"surface", cn:98,  pI:95,  nI:0.015, nP:0.1,  sI:0.06, sP:0.05 },
+  driveway: { lbl:"Driveway",   clr:"#9BA19D", bdr:"#787D79", e:"🅿️", cat:"surface", cn:98,  pI:90,  nI:0.014, nP:0.1,  sI:0.05, sP:0.05 },
+  sidewalk: { lbl:"Sidewalk",   clr:"#E4CD9E", bdr:"#C4AD7E", e:"🚶", cat:"surface", cn:98,  pI:95,  nI:0.014, nP:0.1,  sI:0.05, sP:0.05 },
+  lid_pond: { lbl:"LID Pond",   clr:"#5A93DB", bdr:"#3A73BB", e:"🌿", cat:"surface", cn:65,  pI:10,  nI:0.1,   nP:0.3,  sI:0.1,  sP:0.5  },
+  perm_pave:{ lbl:"Perm Pave",  clr:"#7FC5AA", bdr:"#5FA58A", e:"🧱", cat:"surface", cn:72,  pI:30,  nI:0.015, nP:0.2,  sI:0.05, sP:0.2  },
+  grn_roof: { lbl:"Green Roof", clr:"#4B9F4A", bdr:"#3A8A3A", e:"🍃", cat:"surface", cn:55,  pI:5,   nI:0.1,   nP:0.4,  sI:0.1,  sP:0.5  },
+  rain_brl: { lbl:"Rain Barrel", clr:"#003F87", bdr:"#002F67", e:"🛢️", cat:"surface", cn:85,  pI:50,  nI:0.015, nP:0.2,  sI:0.5,  sP:0.3  },
+  swale:    { lbl:"Swale",      clr:"#7FC5AA", bdr:"#4B9F4A", e:"〰️", cat:"surface", cn:58,  pI:0,   nI:0.15,  nP:0.35, sI:0.2,  sP:0.4  },
   // ── NODES ──
-  manhole:  { lbl:"Manhole",    clr:"#fbbf24", bdr:"#d97706", e:"⚙️",  cat:"node", maxD:6 },
-  inlet:    { lbl:"Inlet",      clr:"#38bdf8", bdr:"#0284c7", e:"🔽",  cat:"node", maxD:4 },
-  outfall:  { lbl:"Outfall",    clr:"#f87171", bdr:"#dc2626", e:"🌊",  cat:"node" },
-  storage:  { lbl:"Storage",    clr:"#c084fc", bdr:"#9333ea", e:"🏊",  cat:"node", maxD:10 },
-  divider:  { lbl:"Divider",    clr:"#f59e0b", bdr:"#d97706", e:"🔀",  cat:"node", maxD:6 },
+  manhole:  { lbl:"Manhole",    clr:"#6C6E68", bdr:"#4A4C47", e:"⚙️",  cat:"node", maxD:6 },
+  inlet:    { lbl:"Inlet",      clr:"#006DB7", bdr:"#004D87", e:"🔽",  cat:"node", maxD:4 },
+  outfall:  { lbl:"Outfall",    clr:"#003F87", bdr:"#002F67", e:"🌊",  cat:"node" },
+  storage:  { lbl:"Storage",    clr:"#FE8A18", bdr:"#CE6A08", e:"🏊",  cat:"node", maxD:10 },
+  divider:  { lbl:"Divider",    clr:"#F2C717", bdr:"#C2A707", e:"🔀",  cat:"node", maxD:6 },
   // ── LINKS ──
-  pipe:     { lbl:"Pipe",       clr:"#60a5fa", bdr:"#2563eb", e:"🔵", cat:"link", diam:1.5, mann:0.013 },
-  channel:  { lbl:"Channel",    clr:"#67e8f9", bdr:"#22d3ee", e:"🟦", cat:"link", diam:3.0, mann:0.025 },
-  pump:     { lbl:"Pump",       clr:"#fb923c", bdr:"#ea580c", e:"⬆️", cat:"link", diam:2.0, mann:0.013 },
-  orifice:  { lbl:"Orifice",    clr:"#a78bfa", bdr:"#7c3aed", e:"🔘", cat:"link", diam:1.0, mann:0.013 },
-  weir:     { lbl:"Weir",       clr:"#fbbf24", bdr:"#d97706", e:"🚧", cat:"link", diam:2.0, mann:0.013 },
+  pipe:     { lbl:"Pipe",       clr:"#5A93DB", bdr:"#3A73BB", e:"🔵", cat:"link", diam:1.5, mann:0.013 },
+  channel:  { lbl:"Channel",    clr:"#006DB7", bdr:"#004D87", e:"🟦", cat:"link", diam:3.0, mann:0.025 },
+  pump:     { lbl:"Pump",       clr:"#FE8A18", bdr:"#CE6A08", e:"⬆️", cat:"link", diam:2.0, mann:0.013 },
+  orifice:  { lbl:"Orifice",    clr:"#5A93DB", bdr:"#3A73BB", e:"🔘", cat:"link", diam:1.0, mann:0.013 },
+  weir:     { lbl:"Weir",       clr:"#F2C717", bdr:"#C2A707", e:"🚧", cat:"link", diam:2.0, mann:0.013 },
 };
 
 const CATS = [
@@ -1272,21 +1272,18 @@ function importINP(text, requestedSize) {
 
 function GridCell({ element, isHov, hasErr, flowIntensity, depthFrac, row, col }) {
   const el = element ? EL[element] : null;
-  const base = el ? el.clr : "#1e293b";
-  const bdr = el ? el.bdr : "#334155";
+  const base = el ? el.clr : "transparent";
 
-  // Flow animation overlay
-  let flowGlow = "none";
+  let flowGlow = "";
   if (flowIntensity > 0 && el) {
     const alpha = Math.min(flowIntensity, 1);
-    flowGlow = `inset 0 0 ${8 + alpha * 12}px rgba(56,189,248,${alpha * 0.8})`;
+    flowGlow = `, inset 0 0 ${8 + alpha * 12}px rgba(56,189,248,${alpha * 0.8})`;
   }
   if (depthFrac > 0 && el?.cat === "node") {
     const alpha = Math.min(depthFrac, 1);
-    flowGlow = `inset 0 0 ${10 + alpha * 14}px rgba(251,191,36,${alpha * 0.7})`;
+    flowGlow = `, inset 0 0 ${10 + alpha * 14}px rgba(251,191,36,${alpha * 0.7})`;
   }
 
-  // Build tooltip text
   let tip = `(${row}, ${col})`;
   if (el) {
     tip = `${el.e} ${el.lbl} @ (${row}, ${col})`;
@@ -1306,32 +1303,39 @@ function GridCell({ element, isHov, hasErr, flowIntensity, depthFrac, row, col }
     tip += "\nEmpty — click to place";
   }
 
+  const brickShadow = el
+    ? `inset 3px 3px 0 0 rgba(255,255,255,0.20), inset -3px -4px 0 0 rgba(0,0,0,0.30), 2px 3px 0 0 rgba(0,0,0,0.40)${flowGlow}`
+    : "none";
+  const errShadow = hasErr ? `0 0 8px rgba(239,68,68,0.6)${flowGlow}` : brickShadow;
+
   return (
     <div title={tip} style={{
       width: CELL, height: CELL,
-      background: el ? `linear-gradient(135deg, ${base}, ${base}cc)` : isHov ? "#334155" : "#1e293b",
-      border: `2px solid ${hasErr ? "#ef4444" : isHov ? "#fbbf24" : bdr}`,
+      background: el ? base : "transparent",
+      border: hasErr ? "2px solid #ef4444" : isHov && !el ? "2px solid rgba(255,255,255,0.25)" : el ? "none" : "none",
       borderRadius: 3, cursor: "pointer",
       display: "flex", alignItems: "center", justifyContent: "center",
-      fontSize: el ? 14 : 0, position: "relative",
-      boxShadow: hasErr ? "0 0 8px rgba(239,68,68,0.5)" : flowGlow,
-      transition: "box-shadow 0.2s ease",
+      fontSize: el ? 13 : 0, position: "relative",
+      boxShadow: errShadow,
+      transition: "box-shadow 0.15s ease, transform 0.1s ease",
       userSelect: "none",
+      margin: el ? 0 : 0,
     }}>
       {el && <div style={{
-        width: 7, height: 7, borderRadius: "50%",
-        background: `radial-gradient(circle at 35% 35%, ${el.bdr}dd, ${el.bdr}88)`,
-        position: "absolute", top: 2, left: "50%", transform: "translateX(-50%)",
-        boxShadow: "0 1px 1px rgba(0,0,0,0.3)",
+        width: 10, height: 10, borderRadius: "50%",
+        background: "inherit",
+        filter: "brightness(1.15)",
+        position: "absolute", top: 3, left: 3,
+        boxShadow: "0 0 0 1.5px rgba(0,0,0,0.30), inset 0 -2px 0px rgba(0,0,0,0.20), inset 0 1px 0px rgba(255,255,255,0.35)",
+        zIndex: 1,
       }} />}
-      {el ? el.e : ""}
-      {/* Water level indicator for nodes during sim */}
+      <span style={{ position: "relative", zIndex: 2, textShadow: el ? "1px 1px 0 rgba(0,0,0,0.4)" : "none" }}>{el ? el.e : ""}</span>
       {depthFrac > 0 && el?.cat === "node" && (
         <div style={{
           position: "absolute", bottom: 0, left: 0, right: 0,
           height: `${Math.min(depthFrac * 100, 100)}%`,
           background: "rgba(56,189,248,0.35)",
-          borderRadius: "0 0 1px 1px",
+          borderRadius: "0 0 2px 2px",
           transition: "height 0.3s ease",
         }} />
       )}
@@ -1344,16 +1348,22 @@ function PalBtn({ type, sel, onClick }) {
   const on = sel === type;
   return (
     <button onClick={() => onClick(type)} title={`${el.lbl}${el.cn !== undefined ? ` • CN:${el.cn} • %Imp:${el.pI}` : ""}${el.maxD ? ` • MaxD:${el.maxD}ft` : ""}${el.diam ? ` • Dia:${el.diam}ft` : ""}`} style={{
-      display: "flex", flexDirection: "column", alignItems: "center", gap: 1,
-      padding: "4px 2px", background: on ? `linear-gradient(135deg, ${el.clr}, ${el.bdr})` : "rgba(255,255,255,0.06)",
-      border: `2px solid ${on ? el.bdr : "rgba(255,255,255,0.1)"}`, borderRadius: 6,
-      color: on ? "#fff" : "#cbd5e1", cursor: "pointer",
+      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end",
+      gap: 1, padding: "14px 2px 4px",
+      background: on ? el.clr : "rgba(255,255,255,0.06)",
+      border: "none", borderRadius: 4,
+      color: on ? "#fff" : "#A0A19B", cursor: "pointer",
       fontFamily: "'Fredoka', sans-serif", fontWeight: on ? 700 : 500,
-      width: "100%", transition: "all 0.15s",
-      boxShadow: on ? `0 3px 10px ${el.clr}44` : "none",
+      width: "100%", transition: "all 0.12s", position: "relative",
+      boxShadow: on
+        ? `inset 3px 3px 0 rgba(0,0,0,0.15), inset -1px -1px 0 rgba(255,255,255,0.10), 0px 1px 0 rgba(0,0,0,0.40)`
+        : `inset 2px 2px 0 rgba(255,255,255,0.15), inset -2px -3px 0 rgba(0,0,0,0.20), 2px 3px 0 rgba(0,0,0,0.35)`,
+      outline: on ? `3px solid #F2C717` : "none",
+      outlineOffset: on ? 2 : 0,
+      transform: on ? "translateY(2px)" : "none",
     }}>
-      <span style={{ fontSize: 14, lineHeight: 1 }}>{el.e}</span>
-      <span style={{ fontSize: 8, lineHeight: 1 }}>{el.lbl}</span>
+      <span style={{ fontSize: 13, lineHeight: 1, position: "relative", zIndex: 2, textShadow: on ? "1px 1px 0 rgba(0,0,0,0.5)" : "none" }}>{el.e}</span>
+      <span style={{ fontSize: 7, lineHeight: 1, position: "relative", zIndex: 2, textShadow: on ? "1px 1px 0 rgba(0,0,0,0.5)" : "none", fontWeight: 800 }}>{el.lbl}</span>
     </button>
   );
 }
@@ -1540,11 +1550,11 @@ export default function SWMM5LegoBuilder() {
 
   return (
     <div style={{
-      minHeight: "100vh", background: "linear-gradient(145deg, #0f172a, #1e293b 50%, #0f172a)",
-      color: "#e2e8f0", fontFamily: "'Fredoka', system-ui, sans-serif", padding: 12,
+      minHeight: "100vh", background: "linear-gradient(145deg, #1B2A34, #2A3A44 50%, #1B2A34)",
+      color: "#F4F4F4", fontFamily: "'Fredoka', 'Nunito', system-ui, sans-serif", padding: 12,
       display: "flex", flexDirection: "column", alignItems: "center",
     }}>
-      <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet" />
 
       {/* ═══ ONBOARDING TUTORIAL ═══ */}
       {showTutorial && (() => {
@@ -1552,8 +1562,8 @@ export default function SWMM5LegoBuilder() {
           { title: "🧱 Welcome to SWMM5 Lego Builder!", sub: "Build stormwater networks like LEGO — drag, drop, simulate!", icon: "🌧️",
             body: "This is a browser-based SWMM5 model editor with a full JavaScript hydraulic engine. You can paint surfaces, place pipes and nodes, then run real-time simulations — all without installing EPA SWMM5.",
             visual: [
-              { e: "🌱", l: "Grass", c: "#4ade80" }, { e: "🏠", l: "Roof", c: "#f59e0b" }, { e: "🛣️", l: "Road", c: "#475569" },
-              { e: "🔵", l: "Manhole", c: "#fbbf24" }, { e: "🟫", l: "Pipe", c: "#60a5fa" }, { e: "🔴", l: "Outfall", c: "#f87171" },
+              { e: "🌱", l: "Grass", c: "#70C442" }, { e: "🏠", l: "Roof", c: "#FE8A18" }, { e: "🛣️", l: "Road", c: "#6C6E68" },
+              { e: "🔵", l: "Manhole", c: "#F2C717" }, { e: "🟫", l: "Pipe", c: "#5A93DB" }, { e: "🔴", l: "Outfall", c: "#D01012" },
             ]},
           { title: "🎨 Step 1: Paint Your Catchment", sub: "Select elements from the palette and paint on the grid", icon: "🖌️",
             body: "LEFT PANEL: Click any element to select it. GRID: Click or drag to paint. Each surface type has real SWMM5 properties — Curve Number, Manning's n, depression storage. Grass (CN=39) absorbs rain; roads (CN=98) shed it immediately.",
@@ -1580,16 +1590,17 @@ export default function SWMM5LegoBuilder() {
             display: "flex", alignItems: "center", justifyContent: "center",
           }} onClick={e => e.target === e.currentTarget && setShowTutorial(false)}>
             <div style={{
-              width: "min(680px, 90vw)", background: "linear-gradient(160deg, #1e293b, #0f172a 60%, #1e293b)",
-              borderRadius: 20, border: "2px solid rgba(251,191,36,0.3)", padding: 0, overflow: "hidden",
-              boxShadow: "0 25px 50px rgba(0,0,0,0.5), 0 0 80px rgba(251,191,36,0.08)",
+              width: "min(680px, 90vw)", background: "#F4F4F4",
+              borderRadius: 4, border: "4px solid #F2C717", padding: 0, overflow: "hidden",
+              boxShadow: "6px 6px 0 rgba(0,0,0,0.5), inset 0 0 0 2px rgba(255,255,255,0.8)",
+              color: "#1B2A34",
             }}>
               {/* Progress bar */}
-              <div style={{ height: 4, background: "rgba(255,255,255,0.05)" }}>
+              <div style={{ height: 6, background: "#E4CD9E" }}>
                 <div style={{
-                  height: "100%", borderRadius: 2, transition: "width 0.4s ease",
+                  height: "100%", borderRadius: 0, transition: "width 0.4s ease",
                   width: `${((tutStep + 1) / steps.length) * 100}%`,
-                  background: "linear-gradient(90deg, #fbbf24, #38bdf8, #4ade80)",
+                  background: "#D01012",
                 }} />
               </div>
 
@@ -1598,20 +1609,21 @@ export default function SWMM5LegoBuilder() {
                 <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
                   {steps.map((_, i) => (
                     <div key={i} onClick={() => setTutStep(i)} style={{
-                      width: i === tutStep ? 32 : 10, height: 10, borderRadius: 5, cursor: "pointer",
-                      background: i === tutStep ? "linear-gradient(90deg, #fbbf24, #38bdf8)" : i < tutStep ? "#4ade80" : "rgba(255,255,255,0.1)",
+                      width: i === tutStep ? 32 : 12, height: 12, borderRadius: 3, cursor: "pointer",
+                      background: i === tutStep ? "#D01012" : i < tutStep ? "#4B9F4A" : "#E4CD9E",
                       transition: "all 0.3s ease",
+                      boxShadow: "inset 1px 1px 0 rgba(255,255,255,0.3), 1px 1px 0 rgba(0,0,0,0.2)",
                     }} />
                   ))}
                 </div>
 
                 {/* Icon & Title */}
                 <div style={{ fontSize: 48, marginBottom: 8 }}>{step.icon}</div>
-                <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 4px", color: "#fbbf24", fontFamily: "'Fredoka'" }}>{step.title}</h2>
-                <p style={{ fontSize: 14, color: "#94a3b8", margin: "0 0 16px", fontStyle: "italic" }}>{step.sub}</p>
+                <h2 style={{ fontSize: 24, fontWeight: 900, margin: "0 0 4px", color: "#D01012", fontFamily: "'Fredoka'", textShadow: "2px 2px 0 rgba(0,0,0,0.1)" }}>{step.title}</h2>
+                <p style={{ fontSize: 14, color: "#6C6E68", margin: "0 0 16px", fontStyle: "italic", fontWeight: 600 }}>{step.sub}</p>
 
                 {/* Body */}
-                <p style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.7, margin: "0 0 16px" }}>{step.body}</p>
+                <p style={{ fontSize: 13, color: "#1B2A34", lineHeight: 1.7, margin: "0 0 16px" }}>{step.body}</p>
 
                 {/* Visual elements (step 0) */}
                 {step.visual && (
@@ -1619,11 +1631,12 @@ export default function SWMM5LegoBuilder() {
                     {step.visual.map((v, i) => (
                       <div key={i} style={{
                         display: "flex", alignItems: "center", gap: 6, padding: "6px 12px",
-                        background: "rgba(255,255,255,0.04)", borderRadius: 8,
-                        border: `1px solid ${v.c}33`,
+                        background: "#fff", borderRadius: 4,
+                        border: "2px solid #E4CD9E",
+                        boxShadow: "2px 2px 0 rgba(0,0,0,0.15)",
                       }}>
                         <span style={{ fontSize: 20 }}>{v.e}</span>
-                        <span style={{ fontSize: 11, color: v.c, fontWeight: 700 }}>{v.l}</span>
+                        <span style={{ fontSize: 11, color: "#1B2A34", fontWeight: 800 }}>{v.l}</span>
                       </div>
                     ))}
                   </div>
@@ -1631,9 +1644,9 @@ export default function SWMM5LegoBuilder() {
 
                 {/* Tips list */}
                 {step.tips && (
-                  <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 10, padding: 12, marginBottom: 16, border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div style={{ background: "#fff", borderRadius: 4, padding: 12, marginBottom: 16, border: "2px solid #E4CD9E" }}>
                     {step.tips.map((tip, i) => (
-                      <div key={i} style={{ fontSize: 11, color: "#94a3b8", padding: "4px 0", lineHeight: 1.5 }}>{tip}</div>
+                      <div key={i} style={{ fontSize: 11, color: "#1B2A34", padding: "4px 0", lineHeight: 1.5, fontWeight: 600 }}>{tip}</div>
                     ))}
                   </div>
                 )}
@@ -1641,27 +1654,29 @@ export default function SWMM5LegoBuilder() {
                 {/* Navigation */}
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
                   <button onClick={() => setShowTutorial(false)} style={{
-                    padding: "8px 16px", borderRadius: 8, border: "1px solid #475569",
-                    background: "transparent", color: "#64748b", cursor: "pointer",
-                    fontSize: 12, fontFamily: "'Fredoka'", fontWeight: 600,
+                    padding: "8px 16px", borderRadius: 4, border: "none",
+                    background: "#6C6E68", color: "#F4F4F4", cursor: "pointer",
+                    fontSize: 12, fontFamily: "'Fredoka'", fontWeight: 800,
+                    boxShadow: "inset 2px 2px 0 rgba(255,255,255,0.15), inset -2px -3px 0 rgba(0,0,0,0.20), 0 3px 0 rgba(0,0,0,0.35)",
                   }}>Skip Tutorial</button>
                   <div style={{ display: "flex", gap: 8 }}>
                     {tutStep > 0 && (
                       <button onClick={() => setTutStep(s => s - 1)} style={{
-                        padding: "8px 20px", borderRadius: 8, border: "1px solid #475569",
-                        background: "rgba(255,255,255,0.05)", color: "#94a3b8", cursor: "pointer",
-                        fontSize: 12, fontFamily: "'Fredoka'", fontWeight: 600,
+                        padding: "8px 20px", borderRadius: 4, border: "none",
+                        background: "#9BA19D", color: "#F4F4F4", cursor: "pointer",
+                        fontSize: 12, fontFamily: "'Fredoka'", fontWeight: 800,
+                        boxShadow: "inset 2px 2px 0 rgba(255,255,255,0.15), inset -2px -3px 0 rgba(0,0,0,0.20), 0 3px 0 rgba(0,0,0,0.35)",
                       }}>← Back</button>
                     )}
                     <button onClick={() => {
                       if (isLast) { setShowTutorial(false); }
                       else setTutStep(s => s + 1);
                     }} style={{
-                      padding: "8px 24px", borderRadius: 8, border: "none",
-                      background: isLast ? "linear-gradient(135deg, #4ade80, #22c55e)" : "linear-gradient(135deg, #fbbf24, #f59e0b)",
-                      color: "#0f172a", cursor: "pointer",
-                      fontSize: 13, fontFamily: "'Fredoka'", fontWeight: 800,
-                      boxShadow: `0 4px 12px ${isLast ? "rgba(74,222,128,0.3)" : "rgba(251,191,36,0.3)"}`,
+                      padding: "8px 24px", borderRadius: 4, border: "none",
+                      background: isLast ? "#4B9F4A" : "#D01012",
+                      color: "#F4F4F4", cursor: "pointer",
+                      fontSize: 13, fontFamily: "'Fredoka'", fontWeight: 900,
+                      boxShadow: "inset 2px 2px 0 rgba(255,255,255,0.25), inset -2px -3px 0 rgba(0,0,0,0.20), 0 4px 0 rgba(0,0,0,0.35)",
                     }}>{isLast ? "🚀 Start Building!" : `Next → (${tutStep + 1}/${steps.length})`}</button>
                   </div>
                 </div>
@@ -1674,18 +1689,21 @@ export default function SWMM5LegoBuilder() {
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: 8, position: "relative" }}>
         <h1 style={{
-          fontSize: 26, fontWeight: 800, margin: 0,
-          background: "linear-gradient(135deg, #fbbf24, #f59e0b 30%, #38bdf8 60%, #4ade80)",
-          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-        }}>🧱 SWMM5 Lego Builder</h1>
-        <p style={{ fontSize: 11, color: "#64748b", margin: "2px 0 0" }}>
-          Build • Validate • Simulate • Export — SWMM5 engine in JavaScript
+          fontSize: 28, fontWeight: 900, margin: 0,
+          color: "#F2C717",
+          textShadow: "3px 3px 0 rgba(0,0,0,0.5), -1px -1px 0 rgba(0,0,0,0.3)",
+          letterSpacing: 1,
+          fontFamily: "'Fredoka', 'Nunito', sans-serif",
+        }}>🧱 SWMM5 LEGO BUILDER</h1>
+        <p style={{ fontSize: 11, color: "#9BA19D", margin: "2px 0 0", fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase" }}>
+          Build • Validate • Simulate • Export
         </p>
         <button onClick={() => { setShowTutorial(true); setTutStep(0); }} title="Show tutorial" style={{
-          position: "absolute", top: 2, right: 0, width: 28, height: 28, borderRadius: "50%",
-          border: "2px solid rgba(251,191,36,0.3)", background: "rgba(251,191,36,0.08)",
-          color: "#fbbf24", fontSize: 14, fontWeight: 800, cursor: "pointer",
+          position: "absolute", top: 2, right: 0, width: 30, height: 30, borderRadius: 4,
+          border: "none", background: "#F2C717", color: "#1B2A34",
+          fontSize: 14, fontWeight: 900, cursor: "pointer",
           fontFamily: "'Fredoka'", display: "flex", alignItems: "center", justifyContent: "center",
+          boxShadow: "inset 2px 2px 0 rgba(255,255,255,0.30), inset -2px -3px 0 rgba(0,0,0,0.20), 0 3px 0 rgba(0,0,0,0.35)",
         }}>?</button>
       </div>
 
@@ -1695,24 +1713,30 @@ export default function SWMM5LegoBuilder() {
         <div style={{ width: 210, flexShrink: 0, display: "flex", flexDirection: "column", gap: 8 }}>
           <div style={{ display: "flex", gap: 4 }}>
             <button onClick={() => setErasing(false)} style={{
-              flex: 1, padding: "6px 0", borderRadius: 7, border: "2px solid",
-              borderColor: !erasing ? "#4ade80" : "rgba(255,255,255,0.1)",
-              background: !erasing ? "rgba(74,222,128,0.15)" : "rgba(255,255,255,0.04)",
-              color: !erasing ? "#4ade80" : "#94a3b8", cursor: "pointer", fontSize: 11, fontWeight: 700,
-              fontFamily: "'Fredoka', sans-serif",
+              flex: 1, padding: "7px 0", borderRadius: 4, border: "none",
+              background: !erasing ? "#4B9F4A" : "#6C6E68",
+              color: "#F4F4F4", cursor: "pointer", fontSize: 11, fontWeight: 800,
+              fontFamily: "'Fredoka', sans-serif", textTransform: "uppercase", letterSpacing: 0.5,
+              boxShadow: !erasing
+                ? "inset 2px 2px 0 rgba(0,0,0,0.15), 0px 1px 0 rgba(0,0,0,0.40)"
+                : "inset 2px 2px 0 rgba(255,255,255,0.15), inset -2px -3px 0 rgba(0,0,0,0.20), 0 3px 0 rgba(0,0,0,0.35)",
+              transform: !erasing ? "translateY(2px)" : "none",
             }}>🖌️ Paint</button>
             <button onClick={() => setErasing(true)} style={{
-              flex: 1, padding: "6px 0", borderRadius: 7, border: "2px solid",
-              borderColor: erasing ? "#f87171" : "rgba(255,255,255,0.1)",
-              background: erasing ? "rgba(248,113,113,0.15)" : "rgba(255,255,255,0.04)",
-              color: erasing ? "#f87171" : "#94a3b8", cursor: "pointer", fontSize: 11, fontWeight: 700,
-              fontFamily: "'Fredoka', sans-serif",
+              flex: 1, padding: "7px 0", borderRadius: 4, border: "none",
+              background: erasing ? "#D01012" : "#6C6E68",
+              color: "#F4F4F4", cursor: "pointer", fontSize: 11, fontWeight: 800,
+              fontFamily: "'Fredoka', sans-serif", textTransform: "uppercase", letterSpacing: 0.5,
+              boxShadow: erasing
+                ? "inset 2px 2px 0 rgba(0,0,0,0.15), 0px 1px 0 rgba(0,0,0,0.40)"
+                : "inset 2px 2px 0 rgba(255,255,255,0.15), inset -2px -3px 0 rgba(0,0,0,0.20), 0 3px 0 rgba(0,0,0,0.35)",
+              transform: erasing ? "translateY(2px)" : "none",
             }}>🧹 Erase</button>
           </div>
 
           {CATS.map(cat => (
             <div key={cat.k}>
-              <div style={{ fontSize: 9, fontWeight: 700, color: "#64748b", letterSpacing: 1.5, marginBottom: 4 }}>{cat.l}</div>
+              <div style={{ fontSize: 10, fontWeight: 900, color: "#9BA19D", letterSpacing: 2, marginBottom: 4, textTransform: "uppercase", fontFamily: "'Fredoka', sans-serif" }}>{cat.l}</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 3 }}>
                 {cat.items.map(t => <PalBtn key={t} type={t} sel={erasing ? null : sel} onClick={t2 => { setSel(t2); setErasing(false); }} />)}
               </div>
@@ -1722,21 +1746,26 @@ export default function SWMM5LegoBuilder() {
           {!erasing && (() => {
             const el = EL[sel];
             const Row = ({label, value, color}) => (
-              <div style={{ display: "flex", justifyContent: "space-between", padding: "2px 0", borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
-                <span style={{ color: "#64748b", fontSize: 10 }}>{label}</span>
-                <span style={{ color: color || "#e2e8f0", fontWeight: 700, fontSize: 10 }}>{value}</span>
+              <div style={{ display: "flex", justifyContent: "space-between", padding: "3px 0", borderBottom: "1px dotted #ccc", fontFamily: "'Fredoka', sans-serif", fontSize: 11 }}>
+                <span style={{ color: "#1B2A34" }}>{label}</span>
+                <span style={{ color: color || "#D01012", fontWeight: 700 }}>{value}</span>
               </div>
             );
             return (
               <div style={{
-                background: `${el.clr}10`, border: `1.5px solid ${el.clr}33`,
-                borderRadius: 10, padding: 10, transition: "all 0.2s",
+                background: "#F4F4F4", borderRadius: 4, padding: 12, transition: "all 0.2s",
+                border: "3px solid #6C6E68",
+                boxShadow: "4px 4px 0 rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.8)",
+                color: "#1B2A34",
               }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                   <span style={{ fontSize: 24 }}>{el.e}</span>
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 800, color: el.clr }}>{el.lbl}</div>
-                    <div style={{ fontSize: 9, color: "#64748b", fontWeight: 600 }}>
+                    <div style={{
+                      background: "#F2C717", color: "#1B2A34", fontWeight: 900,
+                      padding: "4px 8px", borderRadius: 2, fontSize: 13, display: "inline-block",
+                    }}>{el.lbl}</div>
+                    <div style={{ fontSize: 9, color: "#6C6E68", fontWeight: 600, marginTop: 2 }}>
                       {el.cat === "surface" ? "[SUBCATCHMENTS]" :
                        sel === "outfall" ? "[OUTFALLS]" :
                        sel === "storage" ? "[STORAGE]" :
@@ -1749,15 +1778,15 @@ export default function SWMM5LegoBuilder() {
                   </div>
                 </div>
                 {el.cat === "surface" && <>
-                  <Row label="Curve Number" value={el.cn} color="#fbbf24" />
-                  <Row label="% Impervious" value={`${el.pI}%`} color="#38bdf8" />
-                  <Row label="n-Imperv" value={el.nI.toFixed(3)} color="#a78bfa" />
-                  <Row label="n-Perv" value={el.nP.toFixed(3)} color="#a78bfa" />
-                  <Row label="Ds-Imperv" value={`${el.sI}"`} color="#fb923c" />
-                  <Row label="Ds-Perv" value={`${el.sP}"`} color="#fb923c" />
-                  <Row label="S (retention)" value={`${(1000/el.cn - 10).toFixed(2)}"`} color="#c084fc" />
-                  <Row label="Ia (init abs)" value={`${(0.2*(1000/el.cn - 10)).toFixed(2)}"`} color="#fbbf24" />
-                  <Row label="Runoff Coeff" value={(el.pI/100 * 0.95 + (1-el.pI/100) * el.cn/100).toFixed(3)} color="#4ade80" />
+                  <Row label="Curve Number" value={el.cn} color="#F2C717" />
+                  <Row label="% Impervious" value={`${el.pI}%`} color="#006DB7" />
+                  <Row label="n-Imperv" value={el.nI.toFixed(3)} color="#5A93DB" />
+                  <Row label="n-Perv" value={el.nP.toFixed(3)} color="#5A93DB" />
+                  <Row label="Ds-Imperv" value={`${el.sI}"`} color="#FE8A18" />
+                  <Row label="Ds-Perv" value={`${el.sP}"`} color="#FE8A18" />
+                  <Row label="S (retention)" value={`${(1000/el.cn - 10).toFixed(2)}"`} color="#006DB7" />
+                  <Row label="Ia (init abs)" value={`${(0.2*(1000/el.cn - 10)).toFixed(2)}"`} color="#F2C717" />
+                  <Row label="Runoff Coeff" value={(el.pI/100 * 0.95 + (1-el.pI/100) * el.cn/100).toFixed(3)} color="#70C442" />
                 </>}
                 {el.cat === "node" && <>
                   <Row label="Type" value={
@@ -1765,12 +1794,12 @@ export default function SWMM5LegoBuilder() {
                     sel === "storage" ? "Detention/Tank" :
                     sel === "divider" ? "Flow Splitter" :
                     sel === "inlet" ? "Drop Inlet" : "Standard Junction"
-                  } color="#a78bfa" />
-                  {el.maxD && <Row label="Max Depth" value={`${el.maxD} ft`} color="#38bdf8" />}
-                  <Row label="Init Depth" value="0 ft" color="#64748b" />
-                  <Row label="Surcharge" value={el.maxD ? `${el.maxD} ft` : "N/A"} color="#f87171" />
-                  <Row label="Ponded Area" value={sel === "storage" ? "Variable" : "12.6 ft²"} color="#c084fc" />
-                  <Row label="Invert" value="Auto (0.5 ft/row)" color="#fbbf24" />
+                  } color="#5A93DB" />
+                  {el.maxD && <Row label="Max Depth" value={`${el.maxD} ft`} color="#006DB7" />}
+                  <Row label="Init Depth" value="0 ft" color="#6C6E68" />
+                  <Row label="Surcharge" value={el.maxD ? `${el.maxD} ft` : "N/A"} color="#D01012" />
+                  <Row label="Ponded Area" value={sel === "storage" ? "Variable" : "12.6 ft²"} color="#006DB7" />
+                  <Row label="Invert" value="Auto (0.5 ft/row)" color="#F2C717" />
                 </>}
                 {el.cat === "link" && <>
                   <Row label="Type" value={
@@ -1778,22 +1807,26 @@ export default function SWMM5LegoBuilder() {
                     sel === "orifice" ? "ORIFICE Control" :
                     sel === "weir" ? "WEIR Overflow" :
                     sel === "channel" ? "Open Channel" : "Circular Pipe"
-                  } color="#a78bfa" />
-                  <Row label="Diameter/Size" value={`${el.diam} ft (${(el.diam * 12).toFixed(0)}")`} color="#38bdf8" />
-                  <Row label="Manning's n" value={el.mann.toFixed(4)} color="#fbbf24" />
-                  <Row label="Shape" value={sel === "channel" ? "TRAPEZOIDAL" : "CIRCULAR"} color="#c084fc" />
-                  <Row label="A (full)" value={`${(Math.PI * el.diam * el.diam / 4).toFixed(3)} ft²`} color="#4ade80" />
-                  <Row label="Q (full@1%)" value={`${((1.49/el.mann)*(Math.PI*el.diam*el.diam/4)*Math.pow(el.diam/4,2/3)*Math.pow(.01,.5)).toFixed(2)} CFS`} color="#fb923c" />
-                  <Row label="V (full@1%)" value={`${((1.49/el.mann)*Math.pow(el.diam/4,2/3)*Math.pow(.01,.5)).toFixed(2)} ft/s`} color="#f87171" />
+                  } color="#5A93DB" />
+                  <Row label="Diameter/Size" value={`${el.diam} ft (${(el.diam * 12).toFixed(0)}")`} color="#006DB7" />
+                  <Row label="Manning's n" value={el.mann.toFixed(4)} color="#F2C717" />
+                  <Row label="Shape" value={sel === "channel" ? "TRAPEZOIDAL" : "CIRCULAR"} color="#006DB7" />
+                  <Row label="A (full)" value={`${(Math.PI * el.diam * el.diam / 4).toFixed(3)} ft²`} color="#70C442" />
+                  <Row label="Q (full@1%)" value={`${((1.49/el.mann)*(Math.PI*el.diam*el.diam/4)*Math.pow(el.diam/4,2/3)*Math.pow(.01,.5)).toFixed(2)} CFS`} color="#FE8A18" />
+                  <Row label="V (full@1%)" value={`${((1.49/el.mann)*Math.pow(el.diam/4,2/3)*Math.pow(.01,.5)).toFixed(2)} ft/s`} color="#D01012" />
                 </>}
               </div>
             );
           })()}
 
           {/* SWMM5 Equations */}
-          <div style={{ background: "rgba(0,0,0,0.3)", borderRadius: 8, padding: 8, border: "1px solid rgba(255,255,255,0.08)" }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: "#c084fc", marginBottom: 4 }}>📐 JS ENGINE</div>
-            <div style={{ fontSize: 8, color: "#94a3b8", lineHeight: 1.7 }}>
+          <div style={{
+            background: "#F4F4F4", borderRadius: 4, padding: 8,
+            border: "3px solid #6C6E68", color: "#1B2A34",
+            boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
+          }}>
+            <div style={{ fontSize: 10, fontWeight: 900, color: "#D01012", marginBottom: 4, fontFamily: "'Fredoka'" }}>📐 JS ENGINE</div>
+            <div style={{ fontSize: 8, color: "#4A4C47", lineHeight: 1.7, fontWeight: 600 }}>
               <div>🌧️ SCS Type II storm</div>
               <div>📊 CN infiltration</div>
               <div>⚡ Manning's overland</div>
@@ -1808,40 +1841,48 @@ export default function SWMM5LegoBuilder() {
         <div style={{ display: "flex", flexDirection: "column", gap: 8, flexGrow: 1, maxWidth: 780 }}>
           {/* Grid */}
           <div style={{
-            background: "rgba(0,0,0,0.4)", borderRadius: 12, padding: 10,
-            border: "3px solid rgba(251,191,36,0.2)",
+            background: "#4B9F4A", borderRadius: 4, padding: 10,
+            border: "4px solid #3A8A3A",
+            borderBottom: "6px solid #2A6A2A",
+            borderRight: "6px solid #2A6A2A",
+            boxShadow: "4px 4px 0 0 rgba(0,0,0,0.4)",
           }}>
             {/* Toolbar */}
             <div style={{ display: "flex", gap: 5, marginBottom: 6, justifyContent: "center", flexWrap: "wrap" }}>
               {[
-                { l: "↩ Undo", fn: () => { if (hist.length) { setGrid(hist[hist.length-1]); setHist(h => h.slice(0,-1)); } }, c: "#94a3b8" },
-                { l: "🗑️ Clear", fn: () => { save(); setGrid(emptyGrid(gridSize)); doReset(); }, c: "#f87171" },
-                { l: "🎲 Demos", fn: () => setShowDemos(s => !s), c: "#a78bfa" },
-                { l: "✅ Validate", fn: () => setValidation(validateModel(grid)), c: "#4ade80" },
-                { l: "🔧 Fix", fn: doFix, c: "#fbbf24" },
-                { l: "🚀 Run SWMM5", fn: doRun, c: "#38bdf8" },
-                ...(isRunning ? [{ l: "⏸ Stop", fn: doStop, c: "#f87171" }] : []),
-                ...(simResult && !isRunning ? [{ l: "🔄 Reset", fn: doReset, c: "#94a3b8" }] : []),
-                { l: "📦 Export .inp", fn: doExport, c: "#c084fc" },
-                { l: "📂 Import .inp", fn: () => fileRef.current?.click(), c: "#fb923c" },
+                { l: "↩ UNDO", fn: () => { if (hist.length) { setGrid(hist[hist.length-1]); setHist(h => h.slice(0,-1)); } }, bg: "#F2C717", fg: "#1B2A34" },
+                { l: "🗑️ CLEAR", fn: () => { save(); setGrid(emptyGrid(gridSize)); doReset(); }, bg: "#D01012", fg: "#fff" },
+                { l: "🎲 DEMOS", fn: () => setShowDemos(s => !s), bg: "#FE8A18", fg: "#fff" },
+                { l: "✅ VALIDATE", fn: () => setValidation(validateModel(grid)), bg: "#4B9F4A", fg: "#fff" },
+                { l: "🔧 FIX", fn: doFix, bg: "#F2C717", fg: "#1B2A34" },
+                { l: "🚀 RUN SWMM5", fn: doRun, bg: "#006DB7", fg: "#fff" },
+                ...(isRunning ? [{ l: "⏸ STOP", fn: doStop, bg: "#D01012", fg: "#fff" }] : []),
+                ...(simResult && !isRunning ? [{ l: "🔄 RESET", fn: doReset, bg: "#6C6E68", fg: "#fff" }] : []),
+                { l: "📦 EXPORT", fn: doExport, bg: "#FE8A18", fg: "#fff" },
+                { l: "📂 IMPORT", fn: () => fileRef.current?.click(), bg: "#006DB7", fg: "#fff" },
               ].map((b, i) => (
                 <button key={i} onClick={b.fn} style={{
-                  padding: "4px 10px", borderRadius: 7, border: `1.5px solid ${b.c}44`,
-                  background: b.l === "🚀 Run SWMM5" ? `${b.c}25` : `${b.c}10`,
-                  color: b.c, cursor: "pointer", fontSize: 10, fontWeight: 700,
-                  fontFamily: "'Fredoka', sans-serif",
-                  boxShadow: b.l === "🚀 Run SWMM5" ? `0 0 12px ${b.c}33` : "none",
+                  padding: "5px 12px", borderRadius: 4, border: "none",
+                  background: b.bg, color: b.fg, cursor: "pointer",
+                  fontSize: 10, fontWeight: 800, letterSpacing: 0.5,
+                  fontFamily: "'Fredoka', sans-serif", textTransform: "uppercase",
+                  boxShadow: "inset 2px 2px 0 rgba(255,255,255,0.30), inset -2px -3px 0 rgba(0,0,0,0.20), 0 4px 0 rgba(0,0,0,0.35), 2px 0 0 rgba(0,0,0,0.15)",
                 }}>{b.l}</button>
               ))}
               {/* Grid size selector */}
-              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                <span style={{ fontSize: 9, color: "#64748b", fontWeight: 600 }}>Grid:</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
+                <span style={{ fontSize: 9, color: "#F4F4F4", fontWeight: 800, textShadow: "1px 1px 0 rgba(0,0,0,0.3)" }}>Grid:</span>
                 {[20, 25, 30, 40, 50].map(sz => (
                   <button key={sz} onClick={() => resizeGrid(sz)} style={{
-                    padding: "3px 6px", borderRadius: 5, fontSize: 9, fontWeight: 700, cursor: "pointer",
-                    background: gridSize === sz ? "rgba(251,191,36,0.2)" : "rgba(255,255,255,0.03)",
-                    border: `1px solid ${gridSize === sz ? "#fbbf24" : "rgba(255,255,255,0.08)"}`,
-                    color: gridSize === sz ? "#fbbf24" : "#64748b", fontFamily: "'Fredoka', sans-serif",
+                    width: 36, height: 28, borderRadius: 3, fontSize: 8, fontWeight: 800, cursor: "pointer",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    background: gridSize === sz ? "#F2C717" : "#6C6E68",
+                    border: "none",
+                    color: gridSize === sz ? "#1B2A34" : "#F4F4F4", fontFamily: "'Fredoka', sans-serif",
+                    boxShadow: gridSize === sz
+                      ? "inset 2px 2px 0 rgba(0,0,0,0.15), 0px 1px 0 rgba(0,0,0,0.40)"
+                      : "inset 2px 2px 0 rgba(255,255,255,0.15), inset -2px -3px 0 rgba(0,0,0,0.30), 2px 3px 0 rgba(0,0,0,0.40)",
+                    outline: gridSize === sz ? "2px solid white" : "none",
                   }}>{sz}×{sz}</button>
                 ))}
               </div>
@@ -1852,23 +1893,24 @@ export default function SWMM5LegoBuilder() {
             {showDemos && (
               <div style={{
                 display: "flex", gap: 4, marginBottom: 6, flexWrap: "wrap", justifyContent: "center",
-                padding: 8, borderRadius: 8, background: "rgba(167,139,250,0.08)",
-                border: "1.5px solid rgba(167,139,250,0.25)",
+                padding: 8, borderRadius: 4, background: "#F4F4F4",
+                border: "3px solid #6C6E68", boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
               }}>
                 {DEMOS.map((d, i) => (
                   <button key={i} onClick={() => loadDemo(i)} title={d.desc} style={{
-                    padding: "5px 10px", borderRadius: 7,
-                    border: "1.5px solid rgba(167,139,250,0.3)",
-                    background: "rgba(167,139,250,0.1)",
-                    color: "#e2e8f0", cursor: "pointer", fontSize: 10, fontWeight: 700,
+                    padding: "5px 10px", borderRadius: 4,
+                    border: "none",
+                    background: "#FE8A18",
+                    color: "#fff", cursor: "pointer", fontSize: 10, fontWeight: 800,
                     fontFamily: "'Fredoka', sans-serif",
-                    transition: "all 0.15s",
+                    transition: "all 0.12s",
+                    boxShadow: "inset 2px 2px 0 rgba(255,255,255,0.25), inset -2px -3px 0 rgba(0,0,0,0.20), 0 3px 0 rgba(0,0,0,0.35)",
                   }}
-                  onMouseEnter={e => { e.target.style.background = "rgba(167,139,250,0.25)"; e.target.style.borderColor = "#a78bfa"; }}
-                  onMouseLeave={e => { e.target.style.background = "rgba(167,139,250,0.1)"; e.target.style.borderColor = "rgba(167,139,250,0.3)"; }}
+                  onMouseEnter={e => { e.target.style.transform = "translateY(-2px)"; }}
+                  onMouseLeave={e => { e.target.style.transform = "none"; }}
                   >
                     <div>{d.name}</div>
-                    <div style={{ fontSize: 8, color: "#94a3b8", fontWeight: 500 }}>{d.desc}</div>
+                    <div style={{ fontSize: 8, color: "#1B2A34", fontWeight: 600 }}>{d.desc}</div>
                   </button>
                 ))}
               </div>
@@ -1878,36 +1920,42 @@ export default function SWMM5LegoBuilder() {
             {simResult && (
               <div style={{
                 display: "flex", alignItems: "center", gap: 12, justifyContent: "center",
-                marginBottom: 6, padding: "4px 10px", borderRadius: 6,
-                background: isRunning ? "rgba(56,189,248,0.1)" : "rgba(74,222,128,0.1)",
-                border: `1px solid ${isRunning ? "rgba(56,189,248,0.3)" : "rgba(74,222,128,0.3)"}`,
+                marginBottom: 6, padding: "5px 12px", borderRadius: 4,
+                background: isRunning ? "#006DB7" : "#4B9F4A",
+                boxShadow: "inset 2px 2px 0 rgba(255,255,255,0.20), inset -2px -3px 0 rgba(0,0,0,0.20), 0 3px 0 rgba(0,0,0,0.35)",
               }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: isRunning ? "#38bdf8" : "#4ade80" }}>
+                <span style={{ fontSize: 10, fontWeight: 800, color: "#F4F4F4", textShadow: "1px 1px 0 rgba(0,0,0,0.3)" }}>
                   {isRunning ? "⏱️ SIMULATING" : "✅ COMPLETE"}
                 </span>
-                <span style={{ fontSize: 10, color: "#94a3b8" }}>
+                <span style={{ fontSize: 10, color: "#F4F4F4", fontWeight: 600 }}>
                   t = {curTime.toFixed(1)} min
                 </span>
-                <span style={{ fontSize: 10, color: "#94a3b8" }}>
+                <span style={{ fontSize: 10, color: "#F4F4F4", fontWeight: 600 }}>
                   Rain: {(simResult.systemHistory[simStep]?.rainfall || 0).toFixed(2)} in/hr
                 </span>
-                <span style={{ fontSize: 9, color: "#f87171", fontWeight: 600 }}>
+                <span style={{ fontSize: 9, color: "#F2C717", fontWeight: 800 }}>
                   {STORMS[stormIdx].name}
                 </span>
                 {/* Progress bar */}
-                <div style={{ width: 100, height: 4, borderRadius: 2, background: "#1e293b" }}>
+                <div style={{ width: 100, height: 6, borderRadius: 3, background: "rgba(0,0,0,0.3)" }}>
                   <div style={{
                     width: `${(simStep / Math.max(simResult.systemHistory.length - 1, 1)) * 100}%`,
-                    height: "100%", borderRadius: 2,
-                    background: isRunning ? "#38bdf8" : "#4ade80",
+                    height: "100%", borderRadius: 3,
+                    background: "#F2C717",
                     transition: "width 0.05s linear",
                   }} />
                 </div>
               </div>
             )}
 
-            {/* Grid */}
-            <div style={{ overflowX: "auto" }}>
+            {/* Grid — baseplate with stud pattern */}
+            <div style={{
+              overflowX: "auto",
+              backgroundImage: "radial-gradient(circle at center, rgba(255,255,255,0.18) 3px, transparent 3px)",
+              backgroundSize: `${CELL}px ${CELL}px`,
+              backgroundPosition: `${CELL/2}px ${CELL/2}px`,
+              borderRadius: 2,
+            }}>
               {grid.map((row, r) => (
                 <div key={r} style={{ display: "flex" }}>
                   {row.map((cell, c) => (
@@ -1946,24 +1994,25 @@ export default function SWMM5LegoBuilder() {
               if (sc && sc.history[simStep]) simData = { type: "subcatch", ...sc.history[simStep], id: sc.id, area: sc.area_ac, cn: sc.cn, pctI: sc.pctImperv };
             }
             const Row = ({label, value, color}) => (
-              <div style={{ display: "flex", justifyContent: "space-between", padding: "2px 0", borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
-                <span style={{ color: "#64748b", fontSize: 9 }}>{label}</span>
-                <span style={{ color: color || "#e2e8f0", fontWeight: 700, fontSize: 9 }}>{value}</span>
+              <div style={{ display: "flex", justifyContent: "space-between", padding: "3px 0", borderBottom: "1px dotted #ccc" }}>
+                <span style={{ color: "#1B2A34", fontSize: 9 }}>{label}</span>
+                <span style={{ color: color || "#D01012", fontWeight: 700, fontSize: 9 }}>{value}</span>
               </div>
             );
-            const secTitle = el?.clr || "#94a3b8";
+            const secTitle = el?.clr || "#6C6E68";
             return (
               <div style={{
-                background: "rgba(0,0,0,0.5)", borderRadius: 10, padding: 10,
-                border: `2px solid ${el ? el.clr + "44" : "rgba(255,255,255,0.1)"}`,
-                width: GRID * CELL, boxSizing: "border-box",
+                background: "#F4F4F4", borderRadius: 4, padding: 10,
+                border: "3px solid #6C6E68",
+                boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
+                width: GRID * CELL, boxSizing: "border-box", color: "#1B2A34",
               }}>
                 {/* Header row */}
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     {el && <span style={{ fontSize: 22 }}>{el.e}</span>}
                     <div>
-                      <div style={{ fontSize: 13, fontWeight: 800, color: el ? el.clr : "#94a3b8" }}>
+                      <div style={{ fontSize: 13, fontWeight: 900, color: el ? el.clr : "#6C6E68" }}>
                         {el ? `${el.lbl} — ${
                           el.cat === "surface" ? "[SUBCATCHMENTS]" :
                           elKey === "outfall" ? "[OUTFALLS]" :
@@ -1976,113 +2025,114 @@ export default function SWMM5LegoBuilder() {
                           "[CONDUITS]"
                         }` : "Empty Cell"}
                       </div>
-                      <div style={{ fontSize: 9, color: "#64748b" }}>
+                      <div style={{ fontSize: 9, color: "#6C6E68", fontWeight: 600 }}>
                         Grid ({r}, {c}) • SWMM Coord ({(c * SPC).toFixed(0)}, {((GRID-1-r) * SPC).toFixed(0)}) ft • Invert: {invert} ft
                       </div>
                     </div>
                   </div>
                   <button onClick={() => setInspCell(null)} style={{
-                    padding: "3px 10px", borderRadius: 5, border: "1px solid #475569",
-                    background: "rgba(71,85,105,0.2)", color: "#94a3b8", cursor: "pointer",
-                    fontSize: 11, fontFamily: "'Fredoka', sans-serif", fontWeight: 700,
+                    padding: "3px 10px", borderRadius: 4, border: "none",
+                    background: "#6C6E68", color: "#F4F4F4", cursor: "pointer",
+                    fontSize: 11, fontFamily: "'Fredoka', sans-serif", fontWeight: 800,
+                    boxShadow: "inset 1px 1px 0 rgba(255,255,255,0.15), 0 2px 0 rgba(0,0,0,0.3)",
                   }}>✕</button>
                 </div>
                 {el && (
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
                     {/* Col 1: Core SWMM Properties */}
-                    <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 8, padding: 8 }}>
-                      <div style={{ fontSize: 8, fontWeight: 800, color: secTitle, marginBottom: 5, letterSpacing: 1.5, textTransform: "uppercase" }}>
+                    <div style={{ background: "#fff", borderRadius: 4, padding: 8, border: "2px solid #E4CD9E" }}>
+                      <div style={{ fontSize: 9, fontWeight: 900, color: "#D01012", marginBottom: 5, letterSpacing: 1.5, textTransform: "uppercase" }}>
                         Properties
                       </div>
                       {el.cat === "surface" && <>
-                        <Row label="Curve Number" value={el.cn} color="#fbbf24" />
-                        <Row label="% Impervious" value={`${el.pI}%`} color="#38bdf8" />
-                        <Row label="n-Imperv" value={el.nI.toFixed(3)} color="#a78bfa" />
-                        <Row label="n-Perv" value={el.nP.toFixed(3)} color="#a78bfa" />
-                        <Row label="Ds-Imperv" value={`${el.sI}"`} color="#fb923c" />
-                        <Row label="Ds-Perv" value={`${el.sP}"`} color="#fb923c" />
+                        <Row label="Curve Number" value={el.cn} color="#F2C717" />
+                        <Row label="% Impervious" value={`${el.pI}%`} color="#006DB7" />
+                        <Row label="n-Imperv" value={el.nI.toFixed(3)} color="#5A93DB" />
+                        <Row label="n-Perv" value={el.nP.toFixed(3)} color="#5A93DB" />
+                        <Row label="Ds-Imperv" value={`${el.sI}"`} color="#FE8A18" />
+                        <Row label="Ds-Perv" value={`${el.sP}"`} color="#FE8A18" />
                       </>}
                       {el.cat === "node" && <>
-                        <Row label="Invert Elev" value={`${invert} ft`} color="#fbbf24" />
-                        {el.maxD && <Row label="Max Depth" value={`${el.maxD} ft`} color="#38bdf8" />}
-                        <Row label="Type" value={elKey === "outfall" ? "FREE" : elKey === "inlet" ? "Drop Inlet" : "Standard"} color="#a78bfa" />
-                        <Row label="Init Depth" value="0 ft" color="#64748b" />
-                        <Row label="Ponded Area" value="0 ft²" color="#64748b" />
-                        <Row label="Surcharge" value={el.maxD ? `${el.maxD} ft` : "N/A"} color="#f87171" />
+                        <Row label="Invert Elev" value={`${invert} ft`} color="#F2C717" />
+                        {el.maxD && <Row label="Max Depth" value={`${el.maxD} ft`} color="#006DB7" />}
+                        <Row label="Type" value={elKey === "outfall" ? "FREE" : elKey === "inlet" ? "Drop Inlet" : "Standard"} color="#5A93DB" />
+                        <Row label="Init Depth" value="0 ft" color="#6C6E68" />
+                        <Row label="Ponded Area" value="0 ft²" color="#6C6E68" />
+                        <Row label="Surcharge" value={el.maxD ? `${el.maxD} ft` : "N/A"} color="#D01012" />
                       </>}
                       {el.cat === "link" && <>
-                        <Row label="Shape" value="CIRCULAR" color="#fbbf24" />
-                        <Row label="Diameter" value={`${el.diam} ft (${(el.diam * 12).toFixed(0)}")`} color="#38bdf8" />
-                        <Row label="Manning's n" value={el.mann.toFixed(4)} color="#a78bfa" />
-                        <Row label="Offset" value="DEPTH" color="#64748b" />
-                        <Row label="Init Flow" value="0 CFS" color="#64748b" />
-                        <Row label="Max Flow" value="∞" color="#64748b" />
+                        <Row label="Shape" value="CIRCULAR" color="#F2C717" />
+                        <Row label="Diameter" value={`${el.diam} ft (${(el.diam * 12).toFixed(0)}")`} color="#006DB7" />
+                        <Row label="Manning's n" value={el.mann.toFixed(4)} color="#5A93DB" />
+                        <Row label="Offset" value="DEPTH" color="#6C6E68" />
+                        <Row label="Init Flow" value="0 CFS" color="#6C6E68" />
+                        <Row label="Max Flow" value="∞" color="#6C6E68" />
                       </>}
                     </div>
                     {/* Col 2: Computed / Derived */}
-                    <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 8, padding: 8 }}>
-                      <div style={{ fontSize: 8, fontWeight: 800, color: "#c084fc", marginBottom: 5, letterSpacing: 1.5, textTransform: "uppercase" }}>
+                    <div style={{ background: "#fff", borderRadius: 4, padding: 8, border: "2px solid #E4CD9E" }}>
+                      <div style={{ fontSize: 9, fontWeight: 900, color: "#006DB7", marginBottom: 5, letterSpacing: 1.5, textTransform: "uppercase" }}>
                         {el.cat === "surface" ? "Infiltration" : "Hydraulics"}
                       </div>
                       {el.cat === "surface" && <>
-                        <Row label="Method" value="CURVE_NUMBER" color="#c084fc" />
-                        <Row label="S (storage)" value={`${(1000/el.cn - 10).toFixed(2)}"`} color="#fbbf24" />
-                        <Row label="Ia (init abs)" value={`${(0.2*(1000/el.cn - 10)).toFixed(2)}"`} color="#fb923c" />
-                        <Row label="Runoff Coeff" value={(el.pI/100 * 0.95 + (1-el.pI/100) * el.cn/100).toFixed(3)} color="#4ade80" />
-                        <Row label="Routing" value="→ OUTLET" color="#64748b" />
-                        <Row label="% Zero Imperv" value="25%" color="#64748b" />
+                        <Row label="Method" value="CURVE_NUMBER" color="#006DB7" />
+                        <Row label="S (storage)" value={`${(1000/el.cn - 10).toFixed(2)}"`} color="#F2C717" />
+                        <Row label="Ia (init abs)" value={`${(0.2*(1000/el.cn - 10)).toFixed(2)}"`} color="#FE8A18" />
+                        <Row label="Runoff Coeff" value={(el.pI/100 * 0.95 + (1-el.pI/100) * el.cn/100).toFixed(3)} color="#70C442" />
+                        <Row label="Routing" value="→ OUTLET" color="#6C6E68" />
+                        <Row label="% Zero Imperv" value="25%" color="#6C6E68" />
                       </>}
                       {el.cat === "node" && <>
-                        <Row label="Head (dry)" value={`${invert} ft`} color="#38bdf8" />
-                        <Row label="Crown" value={`${(parseFloat(invert) + (el.maxD || 6)).toFixed(2)} ft`} color="#fbbf24" />
-                        <Row label="Storage Vol" value={`${(12.566 * (el.maxD || 6)).toFixed(1)} ft³`} color="#c084fc" />
-                        <Row label="Surf Area" value="12.6 ft²" color="#a78bfa" />
-                        <Row label="Flooding" value={el.maxD ? "PONDED" : "FREE"} color="#f87171" />
-                        <Row label="Allow Ponding" value="YES" color="#64748b" />
+                        <Row label="Head (dry)" value={`${invert} ft`} color="#006DB7" />
+                        <Row label="Crown" value={`${(parseFloat(invert) + (el.maxD || 6)).toFixed(2)} ft`} color="#F2C717" />
+                        <Row label="Storage Vol" value={`${(12.566 * (el.maxD || 6)).toFixed(1)} ft³`} color="#006DB7" />
+                        <Row label="Surf Area" value="12.6 ft²" color="#5A93DB" />
+                        <Row label="Flooding" value={el.maxD ? "PONDED" : "FREE"} color="#D01012" />
+                        <Row label="Allow Ponding" value="YES" color="#6C6E68" />
                       </>}
                       {el.cat === "link" && <>
-                        <Row label="A (full)" value={`${(Math.PI * el.diam * el.diam / 4).toFixed(3)} ft²`} color="#38bdf8" />
-                        <Row label="Wetted P" value={`${(Math.PI * el.diam).toFixed(3)} ft`} color="#a78bfa" />
-                        <Row label="Hyd Radius" value={`${(el.diam / 4).toFixed(3)} ft`} color="#fbbf24" />
-                        <Row label="Q (full@1%)" value={`${((1.49/el.mann)*(Math.PI*el.diam*el.diam/4)*Math.pow(el.diam/4,2/3)*Math.pow(.01,.5)).toFixed(2)} CFS`} color="#4ade80" />
-                        <Row label="V (full@1%)" value={`${((1.49/el.mann)*Math.pow(el.diam/4,2/3)*Math.pow(.01,.5)).toFixed(2)} ft/s`} color="#c084fc" />
-                        <Row label="Froude (full)" value={`${((1.49/el.mann)*Math.pow(el.diam/4,2/3)*Math.pow(.01,.5)/Math.sqrt(32.2*el.diam/2)).toFixed(2)}`} color="#f87171" />
+                        <Row label="A (full)" value={`${(Math.PI * el.diam * el.diam / 4).toFixed(3)} ft²`} color="#006DB7" />
+                        <Row label="Wetted P" value={`${(Math.PI * el.diam).toFixed(3)} ft`} color="#5A93DB" />
+                        <Row label="Hyd Radius" value={`${(el.diam / 4).toFixed(3)} ft`} color="#F2C717" />
+                        <Row label="Q (full@1%)" value={`${((1.49/el.mann)*(Math.PI*el.diam*el.diam/4)*Math.pow(el.diam/4,2/3)*Math.pow(.01,.5)).toFixed(2)} CFS`} color="#70C442" />
+                        <Row label="V (full@1%)" value={`${((1.49/el.mann)*Math.pow(el.diam/4,2/3)*Math.pow(.01,.5)).toFixed(2)} ft/s`} color="#006DB7" />
+                        <Row label="Froude (full)" value={`${((1.49/el.mann)*Math.pow(el.diam/4,2/3)*Math.pow(.01,.5)/Math.sqrt(32.2*el.diam/2)).toFixed(2)}`} color="#D01012" />
                       </>}
                     </div>
                     {/* Col 3: Live Simulation */}
-                    <div style={{ background: simData ? "rgba(56,189,248,0.04)" : "rgba(255,255,255,0.03)", borderRadius: 8, padding: 8, border: simData ? "1px solid rgba(56,189,248,0.15)" : "none" }}>
-                      <div style={{ fontSize: 8, fontWeight: 800, color: simData ? "#38bdf8" : "#475569", marginBottom: 5, letterSpacing: 1.5, textTransform: "uppercase" }}>
+                    <div style={{ background: simData ? "#fff" : "#fff", borderRadius: 4, padding: 8, border: simData ? "2px solid #006DB7" : "2px solid #E4CD9E" }}>
+                      <div style={{ fontSize: 9, fontWeight: 900, color: simData ? "#006DB7" : "#6C6E68", marginBottom: 5, letterSpacing: 1.5, textTransform: "uppercase" }}>
                         {simData ? `Live @ ${(simResult.systemHistory[simStep]?.t || 0).toFixed(1)} min` : "Simulation"}
                       </div>
                       {simData ? (<>
                         {simData.type === "subcatch" && <>
-                          <Row label="Runoff" value={`${simData.runoff.toFixed(4)} CFS`} color="#4ade80" />
-                          <Row label="Rainfall" value={`${simData.rain.toFixed(2)} in/hr`} color="#a78bfa" />
-                          <Row label="Ponded Depth" value={`${simData.depth.toFixed(3)}"`} color="#38bdf8" />
-                          <Row label="Cum Rainfall" value={`${simData.cumRain.toFixed(3)}"`} color="#fbbf24" />
-                          <Row label="Subcatch Area" value={`${simData.area.toFixed(2)} ac`} color="#94a3b8" />
-                          <Row label="Weighted CN" value={simData.cn.toFixed(0)} color="#fb923c" />
+                          <Row label="Runoff" value={`${simData.runoff.toFixed(4)} CFS`} color="#70C442" />
+                          <Row label="Rainfall" value={`${simData.rain.toFixed(2)} in/hr`} color="#5A93DB" />
+                          <Row label="Ponded Depth" value={`${simData.depth.toFixed(3)}"`} color="#006DB7" />
+                          <Row label="Cum Rainfall" value={`${simData.cumRain.toFixed(3)}"`} color="#F2C717" />
+                          <Row label="Subcatch Area" value={`${simData.area.toFixed(2)} ac`} color="#6C6E68" />
+                          <Row label="Weighted CN" value={simData.cn.toFixed(0)} color="#FE8A18" />
                         </>}
                         {simData.type === "node" && <>
-                          <Row label="Water Depth" value={`${simData.depth.toFixed(3)} ft`} color="#fbbf24" />
-                          <Row label="HGL" value={`${simData.head.toFixed(2)} ft`} color="#38bdf8" />
-                          <Row label="Inflow" value={`${simData.inflow.toFixed(4)} CFS`} color="#4ade80" />
-                          {simData.outflow !== undefined && <Row label="Outflow" value={`${simData.outflow.toFixed(4)} CFS`} color="#f87171" />}
-                          <Row label="% Full" value={`${((simData.depth/(simData.maxD||6))*100).toFixed(1)}%`} color="#a78bfa" />
-                          <Row label="Freeboard" value={`${((simData.maxD||6)-simData.depth).toFixed(2)} ft`} color="#fb923c" />
+                          <Row label="Water Depth" value={`${simData.depth.toFixed(3)} ft`} color="#F2C717" />
+                          <Row label="HGL" value={`${simData.head.toFixed(2)} ft`} color="#006DB7" />
+                          <Row label="Inflow" value={`${simData.inflow.toFixed(4)} CFS`} color="#70C442" />
+                          {simData.outflow !== undefined && <Row label="Outflow" value={`${simData.outflow.toFixed(4)} CFS`} color="#D01012" />}
+                          <Row label="% Full" value={`${((simData.depth/(simData.maxD||6))*100).toFixed(1)}%`} color="#5A93DB" />
+                          <Row label="Freeboard" value={`${((simData.maxD||6)-simData.depth).toFixed(2)} ft`} color="#FE8A18" />
                         </>}
                         {simData.type === "pipe" && <>
-                          <Row label="Flow" value={`${simData.flow.toFixed(4)} CFS`} color="#38bdf8" />
-                          <Row label="Velocity" value={`${simData.velocity.toFixed(2)} ft/s`} color="#4ade80" />
-                          <Row label="Water Depth" value={`${simData.depth.toFixed(3)} ft`} color="#fbbf24" />
-                          <Row label="% Full" value={`${((simData.depth/1.5)*100).toFixed(1)}%`} color="#a78bfa" />
-                          <Row label="d/D Ratio" value={(simData.depth/1.5).toFixed(3)} color="#c084fc" />
-                          <Row label="Capacity Used" value={`${(simData.flow/Math.max(((1.49/0.013)*(Math.PI*1.5*1.5/4)*Math.pow(1.5/4,2/3)*Math.pow(.01,.5)),0.001)*100).toFixed(1)}%`} color="#f87171" />
+                          <Row label="Flow" value={`${simData.flow.toFixed(4)} CFS`} color="#006DB7" />
+                          <Row label="Velocity" value={`${simData.velocity.toFixed(2)} ft/s`} color="#70C442" />
+                          <Row label="Water Depth" value={`${simData.depth.toFixed(3)} ft`} color="#F2C717" />
+                          <Row label="% Full" value={`${((simData.depth/1.5)*100).toFixed(1)}%`} color="#5A93DB" />
+                          <Row label="d/D Ratio" value={(simData.depth/1.5).toFixed(3)} color="#006DB7" />
+                          <Row label="Capacity Used" value={`${(simData.flow/Math.max(((1.49/0.013)*(Math.PI*1.5*1.5/4)*Math.pow(1.5/4,2/3)*Math.pow(.01,.5)),0.001)*100).toFixed(1)}%`} color="#D01012" />
                         </>}
                       </>) : (
                         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 6 }}>
                           <div style={{ fontSize: 22, opacity: 0.3 }}>🚀</div>
-                          <div style={{ fontSize: 8, color: "#475569", textAlign: "center", lineHeight: 1.5 }}>
+                          <div style={{ fontSize: 8, color: "#6C6E68", textAlign: "center", lineHeight: 1.5 }}>
                             Run SWMM5 to see<br/>live simulation data<br/>for this element
                           </div>
                         </div>
@@ -2091,7 +2141,7 @@ export default function SWMM5LegoBuilder() {
                   </div>
                 )}
                 {!el && (
-                  <div style={{ fontSize: 10, color: "#64748b", padding: 8, textAlign: "center" }}>
+                  <div style={{ fontSize: 10, color: "#6C6E68", padding: 8, textAlign: "center" }}>
                     Empty cell — select a palette element and paint here
                   </div>
                 )}
@@ -2102,37 +2152,37 @@ export default function SWMM5LegoBuilder() {
           {/* Validation */}
           {validation && (validation.errors.length > 0 || validation.warnings.length > 0) && (
             <div style={{
-              background: "rgba(0,0,0,0.4)", borderRadius: 10, padding: 10,
+              background: "#F4F4F4", borderRadius: 4, padding: 10, boxShadow: "4px 4px 0 rgba(0,0,0,0.4)", color: "#1B2A34",
               border: `2px solid ${validation.errors.length > 0 ? "#ef444466" : "#fbbf2444"}`,
             }}>
               {validation.errors.map((e, i) => (
                 <div key={`e${i}`} style={{ fontSize: 10, color: "#fca5a5", padding: "3px 0" }}>🚫 {e}</div>
               ))}
               {validation.warnings.map((w, i) => (
-                <div key={`w${i}`} style={{ fontSize: 10, color: "#fcd34d", padding: "3px 0" }}>⚠️ {w}</div>
+                <div key={`w${i}`} style={{ fontSize: 10, color: "#F2C717", padding: "3px 0" }}>⚠️ {w}</div>
               ))}
               {validation.errors.length > 0 && (
                 <button onClick={doFix} style={{
                   marginTop: 6, padding: "6px 16px", borderRadius: 8, border: "2px solid #fbbf24",
-                  background: "rgba(251,191,36,0.1)", color: "#fbbf24", cursor: "pointer",
+                  background: "rgba(251,191,36,0.1)", color: "#F2C717", cursor: "pointer",
                   fontSize: 11, fontWeight: 800, fontFamily: "'Fredoka', sans-serif", width: "100%",
                 }}>🔧 Auto-Fix Model</button>
               )}
-              {fixLog.map((f, i) => <div key={i} style={{ fontSize: 9, color: "#86efac", marginTop: 3 }}>✓ {f}</div>)}
+              {fixLog.map((f, i) => <div key={i} style={{ fontSize: 9, color: "#70C442", marginTop: 3 }}>✓ {f}</div>)}
             </div>
           )}
 
           {/* Import / Fix Log (shown when no validation but log exists) */}
           {!validation && fixLog.length > 0 && (
             <div style={{
-              background: "rgba(0,0,0,0.4)", borderRadius: 12, padding: 12,
-              border: "2px solid rgba(74,222,128,0.2)", maxHeight: 400, overflowY: "auto",
+              background: "#F4F4F4", borderRadius: 4, padding: 12,
+              border: "3px solid #6C6E68", boxShadow: "4px 4px 0 rgba(0,0,0,0.4)", color: "#1B2A34", maxHeight: 400, overflowY: "auto",
             }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                <div style={{ fontSize: 13, fontWeight: 800, color: "#4ade80" }}>📂 Import Summary</div>
+                <div style={{ fontSize: 13, fontWeight: 900, color: "#4B9F4A" }}>📂 Import Summary</div>
                 <button onClick={() => setFixLog([])} style={{
                   padding: "2px 8px", borderRadius: 5, border: "1px solid #475569",
-                  background: "rgba(71,85,105,0.2)", color: "#94a3b8", cursor: "pointer",
+                  background: "#6C6E68", color: "#F4F4F4", cursor: "pointer",
                   fontSize: 10, fontFamily: "'Fredoka', sans-serif",
                 }}>✕</button>
               </div>
@@ -2144,7 +2194,7 @@ export default function SWMM5LegoBuilder() {
                 return (
                   <div key={i} style={{
                     fontSize: isSep ? 10 : isSub ? 9 : 10,
-                    color: isSep ? "#fbbf24" : isWarn ? "#fcd34d" : isHeader ? "#38bdf8" : isSub ? "#94a3b8" : "#86efac",
+                    color: isSep ? "#FE8A18" : isWarn ? "#D01012" : isHeader ? "#006DB7" : isSub ? "#6C6E68" : "#4B9F4A",
                     padding: isSep ? "6px 0 2px" : "1px 0",
                     fontWeight: isSep || isHeader ? 700 : 400,
                     fontFamily: isSub ? "'Consolas', monospace" : "inherit",
@@ -2158,8 +2208,8 @@ export default function SWMM5LegoBuilder() {
           {/* RESULTS — Hydrographs */}
           {simResult && chartData.length > 1 && (
             <div style={{
-              background: "rgba(0,0,0,0.4)", borderRadius: 12, padding: 12,
-              border: "2px solid rgba(56,189,248,0.2)",
+              background: "#F4F4F4", borderRadius: 4, padding: 12,
+              border: "3px solid #6C6E68", boxShadow: "4px 4px 0 rgba(0,0,0,0.4)", color: "#1B2A34",
             }}>
               {/* Tabs */}
               <div style={{ display: "flex", gap: 4, marginBottom: 10 }}>
@@ -2171,9 +2221,9 @@ export default function SWMM5LegoBuilder() {
                 ].map(t => (
                   <button key={t.k} onClick={() => setTab(t.k)} style={{
                     padding: "4px 12px", borderRadius: 6,
-                    background: tab === t.k ? "rgba(56,189,248,0.2)" : "rgba(255,255,255,0.04)",
-                    border: `1.5px solid ${tab === t.k ? "#38bdf8" : "rgba(255,255,255,0.1)"}`,
-                    color: tab === t.k ? "#38bdf8" : "#94a3b8",
+                    background: tab === t.k ? "#006DB7" : "#E4CD9E",
+                    border: "none",
+                    color: tab === t.k ? "#F4F4F4" : "#1B2A34",
                     cursor: "pointer", fontSize: 10, fontWeight: 700, fontFamily: "'Fredoka', sans-serif",
                   }}>{t.l}</button>
                 ))}
@@ -2181,34 +2231,34 @@ export default function SWMM5LegoBuilder() {
 
               {tab === "system" && (
                 <div>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#38bdf8", marginBottom: 6 }}>
+                  <div style={{ fontSize: 12, fontWeight: 900, color: "#006DB7", marginBottom: 6 }}>
                     System Hydrograph — Rainfall vs Runoff vs Outfall
                   </div>
                   <ResponsiveContainer width="100%" height={220}>
                     <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                      <XAxis dataKey="t" tick={{ fontSize: 9, fill: "#64748b" }} label={{ value: "Time (min)", position: "insideBottom", offset: -3, fontSize: 9, fill: "#64748b" }} />
-                      <YAxis tick={{ fontSize: 9, fill: "#64748b" }} label={{ value: "Flow (CFS)", angle: -90, position: "insideLeft", fontSize: 9, fill: "#64748b" }} />
-                      <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8, fontSize: 10 }}
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E4CD9E" />
+                      <XAxis dataKey="t" tick={{ fontSize: 9, fill: "#1B2A34" }} label={{ value: "Time (min)", position: "insideBottom", offset: -3, fontSize: 9, fill: "#1B2A34" }} />
+                      <YAxis tick={{ fontSize: 9, fill: "#1B2A34" }} label={{ value: "Flow (CFS)", angle: -90, position: "insideLeft", fontSize: 9, fill: "#1B2A34" }} />
+                      <Tooltip contentStyle={{ background: "#fff", border: "2px solid #6C6E68", borderRadius: 4, fontSize: 10, color: "#1B2A34" }}
                         formatter={(v, n) => [v.toFixed(3), n]} labelFormatter={v => `${v.toFixed(1)} min`} />
                       <Legend wrapperStyle={{ fontSize: 9 }} />
-                      <Line type="monotone" dataKey="totalRunoff" stroke="#4ade80" strokeWidth={2} dot={false} name="Runoff" />
-                      <Line type="monotone" dataKey="totalPipeFlow" stroke="#60a5fa" strokeWidth={2} dot={false} name="Pipe Flow" />
-                      <Line type="monotone" dataKey="outfallFlow" stroke="#f87171" strokeWidth={2} dot={false} name="Outfall" />
+                      <Line type="monotone" dataKey="totalRunoff" stroke="#70C442" strokeWidth={2} dot={false} name="Runoff" />
+                      <Line type="monotone" dataKey="totalPipeFlow" stroke="#5A93DB" strokeWidth={2} dot={false} name="Pipe Flow" />
+                      <Line type="monotone" dataKey="outfallFlow" stroke="#D01012" strokeWidth={2} dot={false} name="Outfall" />
                     </LineChart>
                   </ResponsiveContainer>
                   {/* Rainfall bars */}
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#a78bfa", marginTop: 8, marginBottom: 4 }}>
+                  <div style={{ fontSize: 11, fontWeight: 900, color: "#006DB7", marginTop: 8, marginBottom: 4 }}>
                     Rainfall Hyetograph (in/hr)
                   </div>
                   <ResponsiveContainer width="100%" height={100}>
                     <BarChart data={chartData.filter((_, i) => i % 20 === 0)} margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                      <XAxis dataKey="t" tick={{ fontSize: 8, fill: "#64748b" }} />
-                      <YAxis tick={{ fontSize: 8, fill: "#64748b" }} />
-                      <Bar dataKey="rainfall" fill="#a78bfa" radius={[2, 2, 0, 0]} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E4CD9E" />
+                      <XAxis dataKey="t" tick={{ fontSize: 8, fill: "#1B2A34" }} />
+                      <YAxis tick={{ fontSize: 8, fill: "#1B2A34" }} />
+                      <Bar dataKey="rainfall" fill="#5A93DB" radius={[2, 2, 0, 0]} />
                       {simStep < simResult.systemHistory.length && (
-                        <ReferenceLine x={curTime} stroke="#fbbf24" strokeDasharray="3 3" />
+                        <ReferenceLine x={curTime} stroke="#F2C717" strokeDasharray="3 3" />
                       )}
                     </BarChart>
                   </ResponsiveContainer>
@@ -2217,28 +2267,28 @@ export default function SWMM5LegoBuilder() {
 
               {tab === "subcatch" && simResult.subcatchments.length > 0 && (
                 <div>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#4ade80", marginBottom: 6 }}>
+                  <div style={{ fontSize: 12, fontWeight: 900, color: "#4B9F4A", marginBottom: 6 }}>
                     Subcatchment Runoff ({simResult.subcatchments.length} subcatchments)
                   </div>
                   <ResponsiveContainer width="100%" height={220}>
                     <LineChart data={simResult.subcatchments[0].history.slice(0, simStep + 1)} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                      <XAxis dataKey="t" tick={{ fontSize: 9, fill: "#64748b" }} />
-                      <YAxis tick={{ fontSize: 9, fill: "#64748b" }} label={{ value: "CFS", angle: -90, position: "insideLeft", fontSize: 9, fill: "#64748b" }} />
-                      <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8, fontSize: 10 }}
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E4CD9E" />
+                      <XAxis dataKey="t" tick={{ fontSize: 9, fill: "#1B2A34" }} />
+                      <YAxis tick={{ fontSize: 9, fill: "#1B2A34" }} label={{ value: "CFS", angle: -90, position: "insideLeft", fontSize: 9, fill: "#1B2A34" }} />
+                      <Tooltip contentStyle={{ background: "#fff", border: "2px solid #6C6E68", borderRadius: 4, fontSize: 10, color: "#1B2A34" }}
                         formatter={(v) => [v.toFixed(4)]} labelFormatter={v => `${v.toFixed(1)} min`} />
                       <Legend wrapperStyle={{ fontSize: 9 }} />
-                      <Line type="monotone" dataKey="runoff" stroke="#4ade80" strokeWidth={2} dot={false} name="Runoff (CFS)" />
-                      <Line type="monotone" dataKey="rain" stroke="#a78bfa" strokeWidth={1.5} dot={false} name="Rain (in/hr)" />
+                      <Line type="monotone" dataKey="runoff" stroke="#70C442" strokeWidth={2} dot={false} name="Runoff (CFS)" />
+                      <Line type="monotone" dataKey="rain" stroke="#5A93DB" strokeWidth={1.5} dot={false} name="Rain (in/hr)" />
                     </LineChart>
                   </ResponsiveContainer>
                   {/* Stats table */}
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 4, marginTop: 6 }}>
                     {simResult.subcatchments.slice(0, 6).map((sc, i) => (
-                      <div key={i} style={{ background: "rgba(255,255,255,0.04)", borderRadius: 6, padding: 6, textAlign: "center" }}>
-                        <div style={{ fontSize: 10, fontWeight: 700, color: "#4ade80" }}>{sc.id}</div>
-                        <div style={{ fontSize: 8, color: "#94a3b8" }}>{sc.area_ac.toFixed(2)} ac • CN={sc.cn.toFixed(0)}</div>
-                        <div style={{ fontSize: 8, color: "#64748b" }}>{sc.pctImperv.toFixed(0)}% imperv</div>
+                      <div key={i} style={{ background: "#fff", borderRadius: 4, padding: 6, textAlign: "center", border: "2px solid #E4CD9E" }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: "#70C442" }}>{sc.id}</div>
+                        <div style={{ fontSize: 8, color: "#6C6E68" }}>{sc.area_ac.toFixed(2)} ac • CN={sc.cn.toFixed(0)}</div>
+                        <div style={{ fontSize: 8, color: "#6C6E68" }}>{sc.pctImperv.toFixed(0)}% imperv</div>
                       </div>
                     ))}
                   </div>
@@ -2247,20 +2297,20 @@ export default function SWMM5LegoBuilder() {
 
               {tab === "node" && simResult.nodes.length > 0 && (
                 <div>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#fbbf24", marginBottom: 6 }}>
+                  <div style={{ fontSize: 12, fontWeight: 900, color: "#FE8A18", marginBottom: 6 }}>
                     Node Depths ({simResult.nodes.length} junctions)
                   </div>
                   <ResponsiveContainer width="100%" height={220}>
                     <LineChart margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                      <XAxis dataKey="t" type="number" tick={{ fontSize: 9, fill: "#64748b" }}
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E4CD9E" />
+                      <XAxis dataKey="t" type="number" tick={{ fontSize: 9, fill: "#1B2A34" }}
                         domain={[0, simResult.totalTime / 60]} />
-                      <YAxis tick={{ fontSize: 9, fill: "#64748b" }} label={{ value: "Depth (ft)", angle: -90, position: "insideLeft", fontSize: 9, fill: "#64748b" }} />
-                      <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8, fontSize: 10 }}
+                      <YAxis tick={{ fontSize: 9, fill: "#1B2A34" }} label={{ value: "Depth (ft)", angle: -90, position: "insideLeft", fontSize: 9, fill: "#1B2A34" }} />
+                      <Tooltip contentStyle={{ background: "#fff", border: "2px solid #6C6E68", borderRadius: 4, fontSize: 10, color: "#1B2A34" }}
                         formatter={(v) => [v.toFixed(3)]} labelFormatter={v => `${Number(v).toFixed(1)} min`} />
                       <Legend wrapperStyle={{ fontSize: 9 }} />
                       {simResult.nodes.slice(0, 5).map((n, i) => {
-                        const colors = ["#fbbf24", "#38bdf8", "#f87171", "#4ade80", "#c084fc"];
+                        const colors = ["#F2C717", "#006DB7", "#D01012", "#70C442", "#006DB7"];
                         return <Line key={i} data={n.history.slice(0, simStep + 1)} type="monotone" dataKey="depth"
                           stroke={colors[i % 5]} strokeWidth={1.5} dot={false} name={n.id} />;
                       })}
@@ -2271,20 +2321,20 @@ export default function SWMM5LegoBuilder() {
 
               {tab === "pipe" && simResult.conduits.length > 0 && (
                 <div>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#60a5fa", marginBottom: 6 }}>
+                  <div style={{ fontSize: 12, fontWeight: 900, color: "#006DB7", marginBottom: 6 }}>
                     Conduit Flows ({simResult.conduits.length} pipes)
                   </div>
                   <ResponsiveContainer width="100%" height={220}>
                     <LineChart margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                      <XAxis dataKey="t" type="number" tick={{ fontSize: 9, fill: "#64748b" }}
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E4CD9E" />
+                      <XAxis dataKey="t" type="number" tick={{ fontSize: 9, fill: "#1B2A34" }}
                         domain={[0, simResult.totalTime / 60]} />
-                      <YAxis tick={{ fontSize: 9, fill: "#64748b" }} label={{ value: "Flow (CFS)", angle: -90, position: "insideLeft", fontSize: 9, fill: "#64748b" }} />
-                      <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8, fontSize: 10 }}
+                      <YAxis tick={{ fontSize: 9, fill: "#1B2A34" }} label={{ value: "Flow (CFS)", angle: -90, position: "insideLeft", fontSize: 9, fill: "#1B2A34" }} />
+                      <Tooltip contentStyle={{ background: "#fff", border: "2px solid #6C6E68", borderRadius: 4, fontSize: 10, color: "#1B2A34" }}
                         formatter={(v) => [v.toFixed(4)]} labelFormatter={v => `${Number(v).toFixed(1)} min`} />
                       <Legend wrapperStyle={{ fontSize: 9 }} />
                       {simResult.conduits.slice(0, 5).map((cd, i) => {
-                        const colors = ["#60a5fa", "#38bdf8", "#818cf8", "#a78bfa", "#c084fc"];
+                        const colors = ["#5A93DB", "#006DB7", "#818cf8", "#5A93DB", "#006DB7"];
                         return <Line key={i} data={cd.history.slice(0, simStep + 1)} type="monotone" dataKey="flow"
                           stroke={colors[i % 5]} strokeWidth={1.5} dot={false} name={cd.id} />;
                       })}
@@ -2299,14 +2349,14 @@ export default function SWMM5LegoBuilder() {
                   marginTop: 8, display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6,
                 }}>
                   {[
-                    { l: "Peak Runoff", v: Math.max(...simResult.systemHistory.map(s => s.totalRunoff)).toFixed(3), u: "CFS", c: "#4ade80" },
-                    { l: "Peak Pipe", v: Math.max(...simResult.systemHistory.map(s => s.totalPipeFlow)).toFixed(3), u: "CFS", c: "#60a5fa" },
-                    { l: "Peak Outfall", v: Math.max(...simResult.systemHistory.map(s => s.outfallFlow)).toFixed(3), u: "CFS", c: "#f87171" },
-                    { l: "Max Node Depth", v: Math.max(...simResult.nodes.flatMap(n => n.history.map(h => h.depth))).toFixed(2), u: "ft", c: "#fbbf24" },
+                    { l: "Peak Runoff", v: Math.max(...simResult.systemHistory.map(s => s.totalRunoff)).toFixed(3), u: "CFS", c: "#70C442" },
+                    { l: "Peak Pipe", v: Math.max(...simResult.systemHistory.map(s => s.totalPipeFlow)).toFixed(3), u: "CFS", c: "#5A93DB" },
+                    { l: "Peak Outfall", v: Math.max(...simResult.systemHistory.map(s => s.outfallFlow)).toFixed(3), u: "CFS", c: "#D01012" },
+                    { l: "Max Node Depth", v: Math.max(...simResult.nodes.flatMap(n => n.history.map(h => h.depth))).toFixed(2), u: "ft", c: "#F2C717" },
                   ].map((s, i) => (
-                    <div key={i} style={{ background: "rgba(255,255,255,0.04)", borderRadius: 8, padding: 8, textAlign: "center" }}>
+                    <div key={i} style={{ background: "#fff", borderRadius: 4, padding: 8, textAlign: "center", border: "2px solid #E4CD9E", boxShadow: "2px 2px 0 rgba(0,0,0,0.15)" }}>
                       <div style={{ fontSize: 16, fontWeight: 800, color: s.c, fontFamily: "'Fredoka', sans-serif" }}>{s.v}</div>
-                      <div style={{ fontSize: 8, color: "#94a3b8" }}>{s.l} ({s.u})</div>
+                      <div style={{ fontSize: 8, color: "#6C6E68" }}>{s.l} ({s.u})</div>
                     </div>
                   ))}
                 </div>
@@ -2316,21 +2366,21 @@ export default function SWMM5LegoBuilder() {
 
           {/* Export modal */}
           {showInp && (
-            <div style={{ background: "rgba(0,0,0,0.5)", borderRadius: 10, padding: 10, border: "2px solid #c084fc44" }}>
+            <div style={{ background: "#F4F4F4", borderRadius: 4, padding: 10, border: "3px solid #6C6E68", boxShadow: "4px 4px 0 rgba(0,0,0,0.4)", color: "#1B2A34" }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                <span style={{ fontSize: 12, fontWeight: 800, color: "#c084fc" }}>📦 SWMM5 .inp</span>
+                <span style={{ fontSize: 12, fontWeight: 900, color: "#D01012" }}>📦 SWMM5 .inp</span>
                 <div style={{ display: "flex", gap: 4 }}>
                   <button onClick={() => {
                     const b = new Blob([inpText], { type: "text/plain" });
                     const a = document.createElement("a"); a.href = URL.createObjectURL(b);
                     a.download = "swmm5_lego.inp"; a.click();
-                  }} style={{ padding: "3px 10px", borderRadius: 6, border: "1px solid #4ade80", background: "rgba(74,222,128,0.1)", color: "#4ade80", cursor: "pointer", fontSize: 10, fontWeight: 700, fontFamily: "'Fredoka', sans-serif" }}>💾 Download</button>
-                  <button onClick={() => navigator.clipboard.writeText(inpText)} style={{ padding: "3px 10px", borderRadius: 6, border: "1px solid #a78bfa", background: "rgba(167,139,250,0.1)", color: "#a78bfa", cursor: "pointer", fontSize: 10, fontWeight: 700, fontFamily: "'Fredoka', sans-serif" }}>📋 Copy</button>
-                  <button onClick={() => setShowInp(false)} style={{ padding: "3px 8px", borderRadius: 6, border: "1px solid #64748b", background: "rgba(100,116,139,0.1)", color: "#94a3b8", cursor: "pointer", fontSize: 10, fontWeight: 700 }}>✕</button>
+                  }} style={{ padding: "3px 10px", borderRadius: 6, border: "1px solid #4ade80", background: "rgba(74,222,128,0.1)", color: "#70C442", cursor: "pointer", fontSize: 10, fontWeight: 700, fontFamily: "'Fredoka', sans-serif" }}>💾 Download</button>
+                  <button onClick={() => navigator.clipboard.writeText(inpText)} style={{ padding: "3px 10px", borderRadius: 6, border: "1px solid #a78bfa", background: "rgba(167,139,250,0.1)", color: "#5A93DB", cursor: "pointer", fontSize: 10, fontWeight: 700, fontFamily: "'Fredoka', sans-serif" }}>📋 Copy</button>
+                  <button onClick={() => setShowInp(false)} style={{ padding: "3px 8px", borderRadius: 4, border: "none", background: "#6C6E68", color: "#F4F4F4", cursor: "pointer", fontSize: 10, fontWeight: 700 }}>✕</button>
                 </div>
               </div>
               <pre style={{
-                background: "#0f172a", color: "#94a3b8", padding: 10, borderRadius: 6,
+                background: "#1B2A34", color: "#F4F4F4", padding: 10, borderRadius: 6,
                 fontSize: 8, lineHeight: 1.3, maxHeight: 200, overflow: "auto",
                 fontFamily: "'Courier New', monospace", whiteSpace: "pre",
               }}>{inpText}</pre>
@@ -2341,8 +2391,15 @@ export default function SWMM5LegoBuilder() {
         {/* RIGHT — Stats */}
         <div style={{ width: 280, flexShrink: 0, display: "flex", flexDirection: "column", gap: 10 }}>
           {/* Quick stats */}
-          <div style={{ background: "rgba(0,0,0,0.3)", borderRadius: 12, padding: 14, border: "1px solid rgba(255,255,255,0.08)" }}>
-            <div style={{ fontSize: 14, fontWeight: 800, color: "#fbbf24", marginBottom: 10, letterSpacing: 0.5 }}>📊 NETWORK</div>
+          <div style={{
+            background: "#F4F4F4", borderRadius: 4, padding: 14,
+            border: "3px solid #6C6E68", color: "#1B2A34",
+            boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
+          }}>
+            <div style={{
+              background: "#F2C717", color: "#1B2A34", fontWeight: 900,
+              padding: "4px 8px", borderRadius: 2, fontSize: 14, display: "inline-block", marginBottom: 10,
+            }}>📊 NETWORK</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
               {(() => {
                 const counts = {};
@@ -2353,73 +2410,105 @@ export default function SWMM5LegoBuilder() {
                 const impCells = Object.entries(counts).filter(([k]) => EL[k].cn >= 90).reduce((s, [, v]) => s + v, 0);
                 const wcn = surfs > 0 ? Object.entries(counts).filter(([k]) => EL[k].cn !== undefined).reduce((s, [k, v]) => s + EL[k].cn * v, 0) / surfs : 0;
                 return [
-                  { l: "Blocks", v: total, c: "#60a5fa" },
-                  { l: "Nodes", v: nds, c: "#fbbf24" },
-                  { l: "Pipes", v: counts.pipe || 0, c: "#38bdf8" },
-                  { l: "%Imperv", v: surfs > 0 ? `${((impCells / surfs) * 100).toFixed(0)}%` : "0%", c: "#f87171" },
-                  { l: "Wtd CN", v: wcn.toFixed(0), c: "#c084fc" },
-                  { l: "Surfaces", v: surfs, c: "#4ade80" },
-                  { l: "Area (ac)", v: surfs > 0 ? (surfs * 100 * 100 / 43560).toFixed(1) : "0", c: "#fb923c" },
-                  { l: "Outfalls", v: counts.outfall || 0, c: "#f87171" },
-                  { l: "S (in)", v: wcn > 0 ? (1000/wcn - 10).toFixed(1) : "—", c: "#a78bfa" },
+                  { l: "Blocks", v: total, c: "#006DB7" },
+                  { l: "Nodes", v: nds, c: "#FE8A18" },
+                  { l: "Pipes", v: counts.pipe || 0, c: "#5A93DB" },
+                  { l: "%Imperv", v: surfs > 0 ? `${((impCells / surfs) * 100).toFixed(0)}%` : "0%", c: "#D01012" },
+                  { l: "Wtd CN", v: wcn.toFixed(0), c: "#4B9F4A" },
+                  { l: "Surfaces", v: surfs, c: "#70C442" },
+                  { l: "Area (ac)", v: surfs > 0 ? (surfs * 100 * 100 / 43560).toFixed(1) : "0", c: "#FE8A18" },
+                  { l: "Outfalls", v: counts.outfall || 0, c: "#003F87" },
+                  { l: "S (in)", v: wcn > 0 ? (1000/wcn - 10).toFixed(1) : "—", c: "#6C6E68" },
                 ].map((s, i) => (
-                  <div key={i} style={{ background: "rgba(255,255,255,0.04)", borderRadius: 8, padding: "8px 6px", textAlign: "center" }}>
-                    <div style={{ fontSize: 20, fontWeight: 800, color: s.c, fontFamily: "'Fredoka'" }}>{s.v}</div>
-                    <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600 }}>{s.l}</div>
+                  <div key={i} style={{
+                    background: "#fff", borderRadius: 4, padding: "8px 6px", textAlign: "center",
+                    border: "2px solid #E4CD9E",
+                    boxShadow: "inset 1px 1px 0 rgba(255,255,255,0.8), 2px 2px 0 rgba(0,0,0,0.15)",
+                  }}>
+                    <div style={{ fontSize: 20, fontWeight: 900, color: s.c, fontFamily: "'Fredoka'" }}>{s.v}</div>
+                    <div style={{ fontSize: 10, color: "#6C6E68", fontWeight: 700 }}>{s.l}</div>
                   </div>
                 ));
               })()}
             </div>
           </div>
 
-          <div style={{ background: "rgba(0,0,0,0.3)", borderRadius: 12, padding: 14, border: "1px solid rgba(255,255,255,0.08)" }}>
-            <div style={{ fontSize: 13, fontWeight: 800, color: "#38bdf8", marginBottom: 8 }}>💡 SWMM5 MAP</div>
-            <div style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.9 }}>
-              <div><span style={{ color: "#4ade80", fontSize: 14 }}>■</span> Surfaces → [SUBCATCHMENTS]</div>
-              <div><span style={{ color: "#fbbf24", fontSize: 14 }}>■</span> Manholes → [JUNCTIONS]</div>
-              <div><span style={{ color: "#38bdf8", fontSize: 14 }}>■</span> Inlets → [JUNCTIONS]</div>
-              <div><span style={{ color: "#f87171", fontSize: 14 }}>■</span> Outfalls → [OUTFALLS]</div>
-              <div><span style={{ color: "#c084fc", fontSize: 14 }}>■</span> Storage → [STORAGE]</div>
-              <div><span style={{ color: "#f59e0b", fontSize: 14 }}>■</span> Dividers → [DIVIDERS]</div>
-              <div><span style={{ color: "#60a5fa", fontSize: 14 }}>■</span> Pipes → [CONDUITS]</div>
-              <div><span style={{ color: "#67e8f9", fontSize: 14 }}>■</span> Channels → [CONDUITS]</div>
-              <div><span style={{ color: "#fb923c", fontSize: 14 }}>■</span> Pumps → [PUMPS]</div>
-              <div><span style={{ color: "#a78bfa", fontSize: 14 }}>■</span> Orifices → [ORIFICES]</div>
-              <div><span style={{ color: "#fbbf24", fontSize: 14 }}>■</span> Weirs → [WEIRS]</div>
-              <div><span style={{ color: "#a3e635", fontSize: 14 }}>■</span> LID → BioRetention</div>
+          <div style={{
+            background: "#F4F4F4", borderRadius: 4, padding: 14,
+            border: "3px solid #6C6E68", color: "#1B2A34",
+            boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
+          }}>
+            <div style={{
+              background: "#006DB7", color: "#F4F4F4", fontWeight: 900,
+              padding: "4px 8px", borderRadius: 2, fontSize: 13, display: "inline-block", marginBottom: 8,
+            }}>💡 SWMM5 MAP</div>
+            <div style={{ fontSize: 11, color: "#1B2A34", lineHeight: 1.9, fontWeight: 600 }}>
+              <div><span style={{ color: "#70C442", fontSize: 14 }}>■</span> Surfaces → [SUBCATCHMENTS]</div>
+              <div><span style={{ color: "#6C6E68", fontSize: 14 }}>■</span> Manholes → [JUNCTIONS]</div>
+              <div><span style={{ color: "#006DB7", fontSize: 14 }}>■</span> Inlets → [JUNCTIONS]</div>
+              <div><span style={{ color: "#003F87", fontSize: 14 }}>■</span> Outfalls → [OUTFALLS]</div>
+              <div><span style={{ color: "#FE8A18", fontSize: 14 }}>■</span> Storage → [STORAGE]</div>
+              <div><span style={{ color: "#F2C717", fontSize: 14 }}>■</span> Dividers → [DIVIDERS]</div>
+              <div><span style={{ color: "#5A93DB", fontSize: 14 }}>■</span> Pipes → [CONDUITS]</div>
+              <div><span style={{ color: "#006DB7", fontSize: 14 }}>■</span> Channels → [CONDUITS]</div>
+              <div><span style={{ color: "#FE8A18", fontSize: 14 }}>■</span> Pumps → [PUMPS]</div>
+              <div><span style={{ color: "#5A93DB", fontSize: 14 }}>■</span> Orifices → [ORIFICES]</div>
+              <div><span style={{ color: "#F2C717", fontSize: 14 }}>■</span> Weirs → [WEIRS]</div>
+              <div><span style={{ color: "#70C442", fontSize: 14 }}>■</span> LID → BioRetention</div>
             </div>
           </div>
 
-          <div style={{ background: "rgba(0,0,0,0.3)", borderRadius: 12, padding: 14, border: "1px solid rgba(255,255,255,0.08)" }}>
-            <div style={{ fontSize: 13, fontWeight: 800, color: "#4ade80", marginBottom: 8 }}>🎮 WORKFLOW</div>
-            <div style={{ fontSize: 12, color: "#94a3b8", lineHeight: 2.0 }}>
+          <div style={{
+            background: "#F4F4F4", borderRadius: 4, padding: 14,
+            border: "3px solid #6C6E68", color: "#1B2A34",
+            boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
+          }}>
+            <div style={{
+              background: "#4B9F4A", color: "#F4F4F4", fontWeight: 900,
+              padding: "4px 8px", borderRadius: 2, fontSize: 13, display: "inline-block", marginBottom: 8,
+            }}>🎮 WORKFLOW</div>
+            <div style={{ fontSize: 12, color: "#1B2A34", lineHeight: 2.0, fontWeight: 600 }}>
               <div>1️⃣ Paint surfaces & nodes</div>
               <div>2️⃣ Connect with pipes</div>
-              <div>3️⃣ <strong style={{ color: "#4ade80" }}>Validate</strong> the model</div>
-              <div>4️⃣ <strong style={{ color: "#fbbf24" }}>Fix</strong> if errors found</div>
-              <div>5️⃣ <strong style={{ color: "#38bdf8" }}>🚀 Run SWMM5</strong></div>
+              <div>3️⃣ <strong style={{ color: "#4B9F4A" }}>Validate</strong> the model</div>
+              <div>4️⃣ <strong style={{ color: "#FE8A18" }}>Fix</strong> if errors found</div>
+              <div>5️⃣ <strong style={{ color: "#006DB7" }}>🚀 Run SWMM5</strong></div>
               <div>6️⃣ View animated results</div>
-              <div>7️⃣ <strong style={{ color: "#c084fc" }}>Export</strong> .inp file</div>
-              <div>8️⃣ <strong style={{ color: "#fb923c" }}>Import</strong> .inp file</div>
+              <div>7️⃣ <strong style={{ color: "#FE8A18" }}>Export</strong> .inp file</div>
+              <div>8️⃣ <strong style={{ color: "#006DB7" }}>Import</strong> .inp file</div>
             </div>
           </div>
 
-          <div style={{ background: "rgba(0,0,0,0.3)", borderRadius: 12, padding: 12, border: "1px solid rgba(255,255,255,0.08)", flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
-            <div style={{ fontSize: 13, fontWeight: 800, color: "#f87171", marginBottom: 6 }}>🌧️ DESIGN STORMS ({STORMS.length})</div>
+          <div style={{
+            background: "#F4F4F4", borderRadius: 4, padding: 12,
+            border: "3px solid #6C6E68", color: "#1B2A34",
+            boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
+            flex: 1, display: "flex", flexDirection: "column", minHeight: 0,
+          }}>
+            <div style={{
+              background: "#D01012", color: "#F4F4F4", fontWeight: 900,
+              padding: "4px 8px", borderRadius: 2, fontSize: 13, display: "inline-block", marginBottom: 6,
+            }}>🌧️ DESIGN STORMS ({STORMS.length})</div>
             {/* Category filter */}
             <div style={{ display: "flex", flexWrap: "wrap", gap: 3, marginBottom: 6 }}>
               <button onClick={() => setStormCat("all")} style={{
-                padding: "3px 8px", borderRadius: 5, fontSize: 10, fontWeight: 700, cursor: "pointer",
-                background: stormCat === "all" ? "rgba(248,113,113,0.2)" : "rgba(255,255,255,0.03)",
-                border: `1px solid ${stormCat === "all" ? "#f87171" : "rgba(255,255,255,0.08)"}`,
-                color: stormCat === "all" ? "#fca5a5" : "#64748b", fontFamily: "'Fredoka', sans-serif",
+                padding: "3px 8px", borderRadius: 3, fontSize: 10, fontWeight: 800, cursor: "pointer",
+                background: stormCat === "all" ? "#D01012" : "#E4CD9E",
+                border: "none",
+                color: stormCat === "all" ? "#F4F4F4" : "#1B2A34", fontFamily: "'Fredoka', sans-serif",
+                boxShadow: stormCat === "all"
+                  ? "inset 1px 1px 0 rgba(0,0,0,0.15), 0 1px 0 rgba(0,0,0,0.3)"
+                  : "inset 1px 1px 0 rgba(255,255,255,0.4), 1px 2px 0 rgba(0,0,0,0.2)",
               }}>ALL</button>
               {STORM_CATS.map(c => (
                 <button key={c.key} onClick={() => setStormCat(c.key)} style={{
-                  padding: "3px 8px", borderRadius: 5, fontSize: 10, fontWeight: 600, cursor: "pointer",
-                  background: stormCat === c.key ? "rgba(248,113,113,0.2)" : "rgba(255,255,255,0.03)",
-                  border: `1px solid ${stormCat === c.key ? "#f87171" : "rgba(255,255,255,0.08)"}`,
-                  color: stormCat === c.key ? "#fca5a5" : "#64748b", fontFamily: "'Fredoka', sans-serif",
+                  padding: "3px 8px", borderRadius: 3, fontSize: 10, fontWeight: 700, cursor: "pointer",
+                  background: stormCat === c.key ? "#D01012" : "#E4CD9E",
+                  border: "none",
+                  color: stormCat === c.key ? "#F4F4F4" : "#1B2A34", fontFamily: "'Fredoka', sans-serif",
+                  boxShadow: stormCat === c.key
+                    ? "inset 1px 1px 0 rgba(0,0,0,0.15), 0 1px 0 rgba(0,0,0,0.3)"
+                    : "inset 1px 1px 0 rgba(255,255,255,0.4), 1px 2px 0 rgba(0,0,0,0.2)",
                 }}>{c.label.split(" ")[0]}</button>
               ))}
             </div>
@@ -2429,15 +2518,16 @@ export default function SWMM5LegoBuilder() {
                 if (stormCat !== "all" && st.cat !== stormCat) return null;
                 return (
                   <button key={i} onClick={() => { setStormIdx(i); doReset(); }} title={`${st.desc}\nTotal: ${st.total} • Peak: ${st.peak}`} style={{
-                    padding: "5px 8px", borderRadius: 6, textAlign: "left", flexShrink: 0,
-                    background: stormIdx === i ? "rgba(248,113,113,0.15)" : "rgba(255,255,255,0.03)",
-                    border: `1.5px solid ${stormIdx === i ? "#f87171" : "rgba(255,255,255,0.06)"}`,
-                    color: stormIdx === i ? "#fca5a5" : "#94a3b8",
+                    padding: "5px 8px", borderRadius: 3, textAlign: "left", flexShrink: 0,
+                    background: stormIdx === i ? "#D01012" : "#fff",
+                    border: stormIdx === i ? "2px solid #A00C0E" : "2px solid #E4CD9E",
+                    color: stormIdx === i ? "#F4F4F4" : "#1B2A34",
                     cursor: "pointer", fontFamily: "'Fredoka', sans-serif", transition: "all 0.12s",
+                    boxShadow: stormIdx === i ? "inset 1px 1px 0 rgba(255,255,255,0.2), 0 2px 0 rgba(0,0,0,0.3)" : "none",
                   }}>
-                    <div style={{ fontSize: 11, fontWeight: stormIdx === i ? 700 : 500, lineHeight: 1.3 }}>{st.name}</div>
+                    <div style={{ fontSize: 11, fontWeight: stormIdx === i ? 800 : 600, lineHeight: 1.3 }}>{st.name}</div>
                     {stormIdx === i && (
-                      <div style={{ fontSize: 9, color: "#fb923c", marginTop: 2 }}>
+                      <div style={{ fontSize: 9, color: "#F2C717", marginTop: 2, fontWeight: 700 }}>
                         {st.desc} — Peak: {st.peak} • {st.total}
                       </div>
                     )}
@@ -2449,8 +2539,12 @@ export default function SWMM5LegoBuilder() {
         </div>
       </div>
 
-      <div style={{ marginTop: 8, fontSize: 8, color: "#475569", textAlign: "center" }}>
-        SWMM5.org • SWMM5 Lego Builder with JS Engine • The Dickinson Canon • {new Date().getFullYear()}
+      <div style={{
+        marginTop: 8, fontSize: 9, color: "#9BA19D", textAlign: "center",
+        fontWeight: 700, letterSpacing: 0.5,
+        textShadow: "1px 1px 0 rgba(0,0,0,0.3)",
+      }}>
+        SWMM5.org • SWMM5 LEGO Builder with JS Engine • The Dickinson Canon • {new Date().getFullYear()}
       </div>
     </div>
   );
