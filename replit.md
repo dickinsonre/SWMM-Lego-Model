@@ -21,7 +21,8 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 ```text
 artifacts-monorepo/
 ├── artifacts/              # Deployable applications
-│   └── api-server/         # Express API server
+│   ├── api-server/         # Express API server
+│   └── swmm5-lego/         # SWMM5 Lego Builder (React + Vite, frontend-only)
 ├── lib/                    # Shared libraries
 │   ├── api-spec/           # OpenAPI spec + Orval codegen config
 │   ├── api-client-react/   # Generated React Query hooks
@@ -34,6 +35,27 @@ artifacts-monorepo/
 ├── tsconfig.json           # Root TS project references
 └── package.json            # Root package with hoisted devDeps
 ```
+
+## Applications
+
+### SWMM5 Lego Builder (`artifacts/swmm5-lego`)
+
+Interactive browser-based stormwater management model builder. Features:
+- Grid-based editor for painting surfaces (grass, roof, road, etc.), nodes (manhole, inlet, outfall), and links (pipe, channel, pump)
+- Full JavaScript SWMM5 simulation engine with SCS Curve Number infiltration, Manning's overland flow, and Manning's pipe flow
+- 49 design storms from 6 continents (US SCS Types, European, Asian, etc.)
+- Real-time animated simulation with flow visualization on the grid
+- Result charts (system hydrograph, subcatchment, pipe, and node results)
+- SWMM Inspector panel for live element data during simulation
+- Export to .INP format (compatible with EPA SWMM5)
+- Import .INP files from EPA SWMM5
+- 11 built-in demo scenarios (Residential, Highway, Stadium, etc.)
+- Resizable grid (20x20 to 50x50)
+- Model validation and auto-fix
+- No backend required — entirely frontend
+
+**Key dependencies**: React, recharts (charts), Vite (build)
+**Entry**: `src/components/SWMM5LegoBuilder.jsx` (single self-contained component)
 
 ## TypeScript & Composite Projects
 

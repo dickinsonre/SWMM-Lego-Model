@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "SWMM5 Lego Model"
+version = "1.0.0"
+id = "artifacts/swmm5-lego"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+localPort = 19554
+name = "web"
+paths = ["/"]
+
+[services.development]
+run = "pnpm --filter @workspace/swmm5-lego run dev"
+
+[services.env]
+PORT = "19554"
+BASE_PATH = "/"
+
+[services.production]
+build = ["pnpm", "--filter", "@workspace/swmm5-lego", "run", "build"]
+publicDir = "artifacts/swmm5-lego/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
