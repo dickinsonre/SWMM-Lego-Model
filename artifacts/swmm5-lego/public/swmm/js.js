@@ -187,10 +187,12 @@ var Module = typeof Module !== 'undefined' ? Module : {};
     }
   
    }
-   loadPackage({"files": [{"filename": "/data/Example1.inp", "start": 0, "end": 18010, "audio": 0}, {"filename": "/data/Example1.out", "start": 18010, "end": 18010, "audio": 0}, {"filename": "/data/Example1.rpt", "start": 18010, "end": 18010, "audio": 0}], "remote_package_size": 18010, "package_uuid": "2edd5ea3-bd3f-45ac-ad55-d8397970e485"});
+   loadPackage({"files": [{"filename": "/data/Example1.inp", "start": 0, "end": 18010, "audio": 0}, {"filename": "/data/Example1.out", "start": 18010, "end": 18010, "audio": 0}, {"filename": "/data/Example1.rpt", "start": 18010, "end": 18010, "audio": 0}], "remote_package_size": 18010, "package_uuid": "05d7e4d4-8a34-4c96-ba7f-7e0ea4acb977"});
   
   })();
   
+
+
 
 
 // Sometimes an existing Module object exists with properties
@@ -4285,6 +4287,10 @@ var ASM_CONSTS = {
   }
   }
 
+  function ___sys_link(oldpath, newpath) {
+      return -34; // no hardlinks for us
+    }
+
   function ___sys_open(path, flags, varargs) {SYSCALLS.varargs = varargs;
   try {
   
@@ -4410,6 +4416,7 @@ var ASM_CONSTS = {
       }
       return ret;
     }
+  Module["_time"] = _time;
 
 var FSNode = /** @constructor */ function(parent, name, mode, rdev) {
     if (!parent) {
@@ -4492,6 +4499,7 @@ var asmLibraryArg = {
   "__localtime_r": ___localtime_r,
   "__sys_fcntl64": ___sys_fcntl64,
   "__sys_ioctl": ___sys_ioctl,
+  "__sys_link": ___sys_link,
   "__sys_open": ___sys_open,
   "__sys_rmdir": ___sys_rmdir,
   "__sys_unlink": ___sys_unlink,
@@ -4517,11 +4525,6 @@ var _swmm_run = Module["_swmm_run"] = function() {
 };
 
 /** @type {function(...*):?} */
-var _swmm_transcribe = Module["_swmm_transcribe"] = function() {
-  return (_swmm_transcribe = Module["_swmm_transcribe"] = Module["asm"]["swmm_transcribe"]).apply(null, arguments);
-};
-
-/** @type {function(...*):?} */
 var _free = Module["_free"] = function() {
   return (_free = Module["_free"] = Module["asm"]["free"]).apply(null, arguments);
 };
@@ -4539,6 +4542,11 @@ var _main = Module["_main"] = function() {
 /** @type {function(...*):?} */
 var ___errno_location = Module["___errno_location"] = function() {
   return (___errno_location = Module["___errno_location"] = Module["asm"]["__errno_location"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var _link = Module["_link"] = function() {
+  return (_link = Module["_link"] = Module["asm"]["link"]).apply(null, arguments);
 };
 
 /** @type {function(...*):?} */
@@ -4751,6 +4759,13 @@ noExitRuntime = true;
 run();
 
 
+
+
+
+//Module["Pointer_stringify"] = Pointer_stringify;
+Module["intArrayToString"] = intArrayToString;
+Module["getValue"] = getValue;
+Module["cwrap"] = cwrap;
 
 
 

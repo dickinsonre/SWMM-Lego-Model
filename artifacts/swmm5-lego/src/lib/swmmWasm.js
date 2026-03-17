@@ -26,19 +26,25 @@ export function isSwmmReady() { return ready; }
 export async function runSwmmWasm(inpContent) {
   await initSwmmWasm();
   const M = window.Module;
+
   try { M.FS.unlink('/input.inp'); } catch(e) {}
   try { M.FS.unlink('/output.rpt'); } catch(e) {}
   try { M.FS.unlink('/output.out'); } catch(e) {}
 
   const enc = new TextEncoder();
   const bytes = enc.encode(inpContent);
+
+  try {
+    M.FS.createPath('/', '/', true, true);
+    M.FS.ignorePermissions = true;
+  } catch(e) {}
+
   M.FS.createDataFile('/', 'input.inp', bytes, true, true);
 
   let returnCode = -1;
   try {
-    returnCode = M.ccall('swmm_run', 'number',
-      ['string','string','string'],
-      ['/input.inp','/output.rpt','/output.out']);
+    const swmm_run = M.cwrap('swmm_run', 'number', ['string', 'string', 'string']);
+    returnCode = swmm_run('/input.inp', '/output.rpt', '/output.out');
   } catch(e) {
     return { returnCode: -99, rpt: `WASM execution error: ${e.message}`, error: e.message };
   }
