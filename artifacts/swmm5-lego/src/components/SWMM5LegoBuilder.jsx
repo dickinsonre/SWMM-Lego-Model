@@ -1311,8 +1311,8 @@ export default function SWMM5LegoBuilder() {
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6, marginBottom: 10 }}>
                       {[
                         { l: "Subcatchments", v: p.subcatchRunoff.length, c: "#70C442" },
-                        { l: "Nodes", v: p.nodeDepth.length, c: "#FE8A18", warn: p.nodeSurcharge.length > 0 ? `${p.nodeSurcharge.length} surcharged` : null },
-                        { l: "Links", v: p.linkFlow.length, c: "#5A93DB", warn: p.conduitSurcharge.length > 0 ? `${p.conduitSurcharge.length} surcharged` : null },
+                        { l: "Nodes", v: p.nodeDepth.length, c: "#FE8A18", warn: (p.nodeSurcharge||[]).length > 0 ? `${p.nodeSurcharge.length} surcharged` : null },
+                        { l: "Links", v: p.linkFlow.length, c: "#5A93DB", warn: (p.conduitSurcharge||[]).length > 0 ? `${p.conduitSurcharge.length} surcharged` : null },
                         { l: "Outfalls", v: p.outfallLoading.length, c: "#D01012" },
                       ].map((s, i) => (
                         <div key={i} style={{ background: "#fff", borderRadius: 4, padding: 8, textAlign: "center", border: `2px solid ${s.warn ? "#D01012" : "#E4CD9E"}`, boxShadow: "2px 2px 0 rgba(0,0,0,0.1)" }}>
@@ -1493,7 +1493,7 @@ export default function SWMM5LegoBuilder() {
                       </table>
                     )}
 
-                    {p.nodeSurcharge.length > 0 && <>
+                    {(p.nodeSurcharge||[]).length > 0 && <>
                       <SectionTitle color="#FE8A18">⚠️ Node Surcharge Summary</SectionTitle>
                       <table style={{ width: "100%", borderCollapse: "collapse" }}>
                         <thead><tr><TH>Node</TH><TH>Type</TH><TH>Hrs Surcharged</TH><TH>Max Height Above Crown (ft)</TH><TH>Min Depth Below Rim (ft)</TH></tr></thead>
@@ -1510,7 +1510,7 @@ export default function SWMM5LegoBuilder() {
                       </table>
                     </>}
 
-                    {p.nodeSurcharge.length === 0 && p.nodeDepth.length > 0 && (
+                    {(p.nodeSurcharge||[]).length === 0 && p.nodeDepth.length > 0 && (
                       <div style={{ fontSize: 9, color: "#4B9F4A", fontWeight: 700, marginTop: 6, fontFamily: "'Fredoka'" }}>
                         ✅ No node surcharging detected
                       </div>
@@ -1540,7 +1540,7 @@ export default function SWMM5LegoBuilder() {
                       </table>
                     )}
 
-                    {p.conduitSurcharge.length > 0 && <>
+                    {(p.conduitSurcharge||[]).length > 0 && <>
                       <SectionTitle color="#D01012">⚠️ Conduit Surcharge Summary</SectionTitle>
                       <table style={{ width: "100%", borderCollapse: "collapse" }}>
                         <thead><tr><TH>Conduit</TH><TH>Hrs Upstream Full</TH><TH>Hrs Downstream Full</TH><TH>Hrs Above Normal</TH><TH>Hrs Capacity Limited</TH></tr></thead>
@@ -1558,7 +1558,7 @@ export default function SWMM5LegoBuilder() {
                       </table>
                     </>}
 
-                    {p.pumpingSummary.length > 0 && <>
+                    {(p.pumpingSummary||[]).length > 0 && <>
                       <SectionTitle color="#006DB7">⚙️ Pumping Summary</SectionTitle>
                       <table style={{ width: "100%", borderCollapse: "collapse" }}>
                         <thead><tr><TH>Pump</TH><TH>% Utilized</TH><TH>Startups</TH><TH>Min Flow</TH><TH>Avg Flow</TH><TH>Max Flow (CFS)</TH><TH>Total Vol (gal)</TH></tr></thead>
@@ -1575,7 +1575,7 @@ export default function SWMM5LegoBuilder() {
                       </table>
                     </>}
 
-                    {p.conduitSurcharge.length === 0 && p.pumpingSummary.length === 0 && p.linkFlow.length > 0 && (
+                    {(p.conduitSurcharge||[]).length === 0 && (p.pumpingSummary||[]).length === 0 && p.linkFlow.length > 0 && (
                       <div style={{ fontSize: 9, color: "#4B9F4A", fontWeight: 700, marginTop: 6, fontFamily: "'Fredoka'" }}>
                         ✅ No conduit surcharging detected
                       </div>
