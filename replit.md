@@ -69,8 +69,8 @@ Interactive browser-based stormwater management model builder. Features:
 - Grid cell borders: red=error, orange=CFL/validation warning, yellow=custom property override
 
 **Dual Simulation Engines**:
-1. **JS Engine** (🚀 RUN SWMM5): Animated real-time simulation with SCS CN infiltration, Manning's equations, 15-second routing timestep, flow visualization on grid
-2. **EPA SWMM5 WASM** (🔬 EPA SWMM5): Full EPA SWMM5 solver compiled to WebAssembly, runs entirely in-browser with Dynamic Wave routing, produces standard .RPT output with 6-tab results viewer (Summary, Subcatchments, Nodes, Links, Continuity, Raw RPT) including recharts bar charts
+1. **Quick Sim** (🚀 QUICK SIM): Simplified animated JS hydrology — SCS Curve Number infiltration + Manning's equations, 15-second routing timestep, real-time flow visualization on grid. Not actual SWMM — a teaching/preview tool.
+2. **EPA SWMM5 WASM** (🔬 EPA SWMM5): Full EPA SWMM5 v5.2 solver compiled to WebAssembly, runs entirely in-browser with Dynamic Wave routing, produces standard .RPT output with 6-tab results viewer (Summary, Subcatchments, Nodes, Links, Continuity, Raw RPT) including recharts bar charts
 
 **Key dependencies**: React, recharts (charts), Vite (build)
 

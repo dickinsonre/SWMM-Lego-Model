@@ -416,8 +416,8 @@ export default function SWMM5LegoBuilder() {
           { title: "✅ Step 3: Validate & Fix", sub: "Check your model for errors before running", icon: "🛡️",
             body: "Click ✅ Validate to check model integrity. Common errors: no outfall, disconnected pipes. Click 🔧 Fix to auto-repair — it will add missing outfalls and connect orphaned elements. Error cells flash red on the grid.",
             tips: ["✅ Validates: outfall exists, pipes connected, surfaces drain", "🔧 Auto-fix: adds outfalls, connects pipes", "❌ Red border = error cell", "⚠️ Warnings don't block simulation"] },
-          { title: "🚀 Step 4: Run SWMM5!", sub: "Watch your network handle a design storm in real-time", icon: "⚡",
-            body: "Click 🚀 Run SWMM5 to simulate. The JavaScript engine computes SCS Curve Number infiltration, Manning's overland flow, and Manning's pipe flow at 15-second timesteps. Watch animated flow through pipes, rising water in manholes, and live hydrographs.",
+          { title: "🚀 Step 4: Run a Simulation!", sub: "Watch your network handle a design storm in real-time", icon: "⚡",
+            body: "Click 🚀 Quick Sim for an animated preview — it uses simplified SCS Curve Number infiltration and Manning's equations (not full SWMM). For real EPA SWMM5 results, use 🔬 EPA SWMM5 which runs the actual solver via WebAssembly.",
             tips: ["🌧️ 49 design storms from 6 continents", "📊 Real-time hydrograph charts", "🔍 Click any cell for SWMM Inspector panel", "⏸️ Pause/resume animation anytime", "📈 System, subcatchment, pipe & node result tabs"] },
           { title: "📦 Step 5: Export & Import", sub: "Take your model into EPA SWMM5 or bring one in", icon: "💾",
             body: "📦 Export .inp generates a complete SWMM5 input file — runs directly in EPA SWMM5. 📂 Import .inp reads any standard SWMM5 file and maps it onto the grid. Load demos like Residential, Highway, Stadium, or School Campus to explore pre-built networks.",
@@ -645,8 +645,9 @@ export default function SWMM5LegoBuilder() {
           }}>
             <div style={{ fontSize: 10, fontWeight: 900, color: "#D01012", marginBottom: 4, fontFamily: "'Fredoka'" }}>📐 DUAL ENGINES</div>
             <div style={{ fontSize: 8, color: "#4A4C47", lineHeight: 1.7, fontWeight: 600 }}>
-              <div style={{ fontWeight: 800, color: "#006DB7", marginBottom: 2 }}>🚀 JS Engine (animated):</div>
-              <div>CN infiltration + Manning's</div>
+              <div style={{ fontWeight: 800, color: "#006DB7", marginBottom: 2 }}>🚀 Quick Sim (animated):</div>
+              <div>Simplified JS hydrology</div>
+              <div>SCS-CN + Manning's eqns</div>
               <div>Δt=15s routing + animation</div>
               <div style={{ fontWeight: 800, color: "#D01012", marginTop: 4, marginBottom: 2 }}>🔬 EPA SWMM5 v5.2 (WASM):</div>
               <div>Full SWMM5 solver in-browser</div>
@@ -691,7 +692,7 @@ export default function SWMM5LegoBuilder() {
                 { l: "✅ VALIDATE", fn: () => setValidation(validateModel(grid)), color: "green", tip: "Check model for errors" },
                 { l: "🔧 FIX", fn: doFix, color: "yellow", tip: "Auto-fix validation errors" },
                 { sep: true },
-                { l: "🚀 RUN SWMM5", fn: doRun, color: "blue", tip: "Run animated JS simulation [R]" },
+                { l: "🚀 QUICK SIM", fn: doRun, color: "blue", tip: "Run animated JS hydrology sim (SCS-CN + Manning's) [R]" },
                 ...(isRunning ? [{ l: "⏸ STOP", fn: doStop, color: "red", tip: "Stop the running simulation" }] : []),
                 ...(simResult && !isRunning ? [{ l: "🔄 RESET", fn: doReset, color: "gray", tip: "Clear simulation results and reset the grid display" }] : []),
                 { l: "💾 SAVE/LOAD", fn: () => { setSaveSlots(getSaveSlots()); setShowSavePanel(true); }, color: "green", tip: "Save/load models to browser storage (auto-save + 5 named slots)" },
@@ -1639,7 +1640,7 @@ export default function SWMM5LegoBuilder() {
               <div>3️⃣ Right-click to edit properties</div>
               <div>4️⃣ <strong style={{ color: "#4B9F4A" }}>Validate</strong> the model</div>
               <div>5️⃣ <strong style={{ color: "#FE8A18" }}>Fix</strong> if errors found</div>
-              <div>6️⃣ <strong style={{ color: "#006DB7" }}>🚀 Run SWMM5</strong></div>
+              <div>6️⃣ <strong style={{ color: "#006DB7" }}>🚀 Quick Sim</strong> or <strong style={{ color: "#D01012" }}>🔬 EPA SWMM5</strong></div>
               <div>7️⃣ View results + export CSV</div>
               <div>8️⃣ <strong style={{ color: "#4B9F4A" }}>Save</strong> / <strong style={{ color: "#FE8A18" }}>Export</strong> .inp</div>
             </div>
@@ -1858,7 +1859,7 @@ export default function SWMM5LegoBuilder() {
         fontWeight: 700, letterSpacing: 0.5,
         textShadow: "1px 1px 0 rgba(0,0,0,0.3)",
       }}>
-        SWMM5.org • SWMM5 LEGO Builder with JS Engine • The Dickinson Canon • {new Date().getFullYear()}
+        SWMM5.org • SWMM5 LEGO Builder • EPA SWMM5 WASM + Quick Sim • The Dickinson Canon • {new Date().getFullYear()}
       </div>
     </div>
   );
