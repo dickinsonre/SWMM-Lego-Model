@@ -11,6 +11,10 @@ export function parseRpt(rptText) {
     nodeFlooding: [],
     outfallLoading: [],
     linkFlow: [],
+    linkSurcharge: [],
+    conduitSurcharge: [],
+    pumpingSummary: [],
+    nodeSurcharge: [],
     flowRouting: [],
     qualityRouting: [],
     runoffQuantity: {},
@@ -180,6 +184,59 @@ export function parseRpt(rptText) {
           });
         }
       });
+    }
+  }
+
+  idx = findSection('Conduit Surcharge Summary');
+  if (idx >= 0) {
+    const noSurcharge = lines.slice(idx, idx + 5).some(l => l.includes('No conduits were surcharged'));
+    if (!noSurcharge) {
+      const t = parseTable(idx);
+      if (t.rows) {
+        t.rows.forEach(r => {
+          if (r.length >= 4) {
+            result.conduitSurcharge.push({
+              name: r[0], hoursUpFull: +r[1] || 0, hoursDnFull: +r[2] || 0,
+              hoursAboveNorm: +r[3] || 0, hoursCapLimited: r[4] ? +r[4] : 0,
+            });
+          }
+        });
+      }
+    }
+  }
+
+  idx = findSection('Pumping Summary');
+  if (idx >= 0) {
+    const t = parseTable(idx);
+    if (t.rows) {
+      t.rows.forEach(r => {
+        if (r.length >= 4) {
+          result.pumpingSummary.push({
+            name: r[0], percentUtilized: +r[1] || 0, numStartups: +r[2] || 0,
+            minFlow: +r[3] || 0, avgFlow: r[4] ? +r[4] : 0, maxFlow: r[5] ? +r[5] : 0,
+            totalVol: r[6] ? +r[6] : 0, powerUsage: r[7] ? +r[7] : 0,
+            percentTimeOff: r[8] ? +r[8] : 0,
+          });
+        }
+      });
+    }
+  }
+
+  idx = findSection('Node Surcharge Summary');
+  if (idx >= 0) {
+    const noSurcharge = lines.slice(idx, idx + 5).some(l => l.includes('No nodes were surcharged'));
+    if (!noSurcharge) {
+      const t = parseTable(idx);
+      if (t.rows) {
+        t.rows.forEach(r => {
+          if (r.length >= 3) {
+            result.nodeSurcharge.push({
+              name: r[0], type: r[1] || '', hoursSurcharged: +r[2] || 0,
+              maxHeightAboveCrown: r[3] ? +r[3] : 0, minDepthBelowRim: r[4] ? +r[4] : 0,
+            });
+          }
+        });
+      }
     }
   }
 

@@ -1311,13 +1311,14 @@ export default function SWMM5LegoBuilder() {
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6, marginBottom: 10 }}>
                       {[
                         { l: "Subcatchments", v: p.subcatchRunoff.length, c: "#70C442" },
-                        { l: "Nodes", v: p.nodeDepth.length, c: "#FE8A18" },
-                        { l: "Links", v: p.linkFlow.length, c: "#5A93DB" },
+                        { l: "Nodes", v: p.nodeDepth.length, c: "#FE8A18", warn: p.nodeSurcharge.length > 0 ? `${p.nodeSurcharge.length} surcharged` : null },
+                        { l: "Links", v: p.linkFlow.length, c: "#5A93DB", warn: p.conduitSurcharge.length > 0 ? `${p.conduitSurcharge.length} surcharged` : null },
                         { l: "Outfalls", v: p.outfallLoading.length, c: "#D01012" },
                       ].map((s, i) => (
-                        <div key={i} style={{ background: "#fff", borderRadius: 4, padding: 8, textAlign: "center", border: "2px solid #E4CD9E", boxShadow: "2px 2px 0 rgba(0,0,0,0.1)" }}>
+                        <div key={i} style={{ background: "#fff", borderRadius: 4, padding: 8, textAlign: "center", border: `2px solid ${s.warn ? "#D01012" : "#E4CD9E"}`, boxShadow: "2px 2px 0 rgba(0,0,0,0.1)" }}>
                           <div style={{ fontSize: 20, fontWeight: 900, color: s.c, fontFamily: "'Fredoka'" }}>{s.v}</div>
                           <div style={{ fontSize: 9, color: "#6C6E68", fontWeight: 700 }}>{s.l}</div>
+                          {s.warn && <div style={{ fontSize: 7, color: "#D01012", fontWeight: 800, marginTop: 2 }}>⚠️ {s.warn}</div>}
                         </div>
                       ))}
                     </div>
@@ -1491,6 +1492,29 @@ export default function SWMM5LegoBuilder() {
                         </tbody>
                       </table>
                     )}
+
+                    {p.nodeSurcharge.length > 0 && <>
+                      <SectionTitle color="#FE8A18">⚠️ Node Surcharge Summary</SectionTitle>
+                      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                        <thead><tr><TH>Node</TH><TH>Type</TH><TH>Hrs Surcharged</TH><TH>Max Height Above Crown (ft)</TH><TH>Min Depth Below Rim (ft)</TH></tr></thead>
+                        <tbody>
+                          {p.nodeSurcharge.map((n, i) => (
+                            <tr key={i} style={{ background: i % 2 ? "#F8F8F8" : "#fff" }}>
+                              <TD c="#FE8A18">{n.name}</TD><TD>{n.type}</TD>
+                              <TD r c={n.hoursSurcharged > 0 ? "#D01012" : "#4B9F4A"}>{n.hoursSurcharged}</TD>
+                              <TD r>{n.maxHeightAboveCrown}</TD>
+                              <TD r c={n.minDepthBelowRim <= 0 ? "#D01012" : "#4B9F4A"}>{n.minDepthBelowRim}</TD>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </>}
+
+                    {p.nodeSurcharge.length === 0 && p.nodeDepth.length > 0 && (
+                      <div style={{ fontSize: 9, color: "#4B9F4A", fontWeight: 700, marginTop: 6, fontFamily: "'Fredoka'" }}>
+                        ✅ No node surcharging detected
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -1514,6 +1538,47 @@ export default function SWMM5LegoBuilder() {
                           );})}
                         </tbody>
                       </table>
+                    )}
+
+                    {p.conduitSurcharge.length > 0 && <>
+                      <SectionTitle color="#D01012">⚠️ Conduit Surcharge Summary</SectionTitle>
+                      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                        <thead><tr><TH>Conduit</TH><TH>Hrs Upstream Full</TH><TH>Hrs Downstream Full</TH><TH>Hrs Above Normal</TH><TH>Hrs Capacity Limited</TH></tr></thead>
+                        <tbody>
+                          {p.conduitSurcharge.map((c, i) => (
+                            <tr key={i} style={{ background: i % 2 ? "#F8F8F8" : "#fff" }}>
+                              <TD c="#5A93DB">{c.name}</TD>
+                              <TD r c={c.hoursUpFull > 0 ? "#D01012" : "#4B9F4A"}>{c.hoursUpFull}</TD>
+                              <TD r c={c.hoursDnFull > 0 ? "#D01012" : "#4B9F4A"}>{c.hoursDnFull}</TD>
+                              <TD r c={c.hoursAboveNorm > 0 ? "#FE8A18" : "#4B9F4A"}>{c.hoursAboveNorm}</TD>
+                              <TD r c={c.hoursCapLimited > 0 ? "#D01012" : "#4B9F4A"}>{c.hoursCapLimited}</TD>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </>}
+
+                    {p.pumpingSummary.length > 0 && <>
+                      <SectionTitle color="#006DB7">⚙️ Pumping Summary</SectionTitle>
+                      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                        <thead><tr><TH>Pump</TH><TH>% Utilized</TH><TH>Startups</TH><TH>Min Flow</TH><TH>Avg Flow</TH><TH>Max Flow (CFS)</TH><TH>Total Vol (gal)</TH></tr></thead>
+                        <tbody>
+                          {p.pumpingSummary.map((pm, i) => (
+                            <tr key={i} style={{ background: i % 2 ? "#F8F8F8" : "#fff" }}>
+                              <TD c="#5A93DB">{pm.name}</TD>
+                              <TD r>{pm.percentUtilized}</TD><TD r>{pm.numStartups}</TD>
+                              <TD r>{pm.minFlow}</TD><TD r>{pm.avgFlow}</TD>
+                              <TD r c="#006DB7">{pm.maxFlow}</TD><TD r>{pm.totalVol}</TD>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </>}
+
+                    {p.conduitSurcharge.length === 0 && p.pumpingSummary.length === 0 && p.linkFlow.length > 0 && (
+                      <div style={{ fontSize: 9, color: "#4B9F4A", fontWeight: 700, marginTop: 6, fontFamily: "'Fredoka'" }}>
+                        ✅ No conduit surcharging detected
+                      </div>
                     )}
                   </div>
                 )}
