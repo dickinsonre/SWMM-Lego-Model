@@ -632,20 +632,20 @@ export default function SWMM5LegoBuilder() {
           }}>
             <div style={{ display: "flex", gap: 5, marginBottom: 6, justifyContent: "center", flexWrap: "wrap" }}>
               {[
-                { l: "↩ UNDO", fn: () => { if (hist.length) { const entry = hist[hist.length-1]; setGridGlobal(entry.gridSize); setGridSize(entry.gridSize); setGrid(entry.grid); setHist(h => h.slice(0,-1)); } }, bg: "#F2C717", fg: "#1B2A34" },
-                { l: "🗑️ CLEAR", fn: () => { save(); setGrid(emptyGrid(gridSize)); doReset(); }, bg: "#D01012", fg: "#fff" },
-                { l: "🎲 DEMOS", fn: () => setShowDemos(s => !s), bg: "#FE8A18", fg: "#fff" },
-                { l: "✅ VALIDATE", fn: () => setValidation(validateModel(grid)), bg: "#4B9F4A", fg: "#fff" },
-                { l: "🔧 FIX", fn: doFix, bg: "#F2C717", fg: "#1B2A34" },
-                { l: "🚀 RUN SWMM5", fn: doRun, bg: "#006DB7", fg: "#fff" },
-                ...(isRunning ? [{ l: "⏸ STOP", fn: doStop, bg: "#D01012", fg: "#fff" }] : []),
-                ...(simResult && !isRunning ? [{ l: "🔄 RESET", fn: doReset, bg: "#6C6E68", fg: "#fff" }] : []),
-                { l: "💾 SAVE/LOAD", fn: () => { setSaveSlots(getSaveSlots()); setShowSavePanel(true); }, bg: "#4B9F4A", fg: "#fff" },
-                { l: wasmLoading ? "⏳ RUNNING..." : "🔬 EPA SWMM5", fn: doRunWasm, bg: "#D01012", fg: "#fff" },
-                { l: "📦 EXPORT", fn: doExport, bg: "#FE8A18", fg: "#fff" },
-                { l: "📂 IMPORT", fn: () => fileRef.current?.click(), bg: "#006DB7", fg: "#fff" },
+                { l: "↩ UNDO", fn: () => { if (hist.length) { const entry = hist[hist.length-1]; setGridGlobal(entry.gridSize); setGridSize(entry.gridSize); setGrid(entry.grid); setHist(h => h.slice(0,-1)); } }, bg: "#F2C717", fg: "#1B2A34", tip: "Undo last grid change (up to 30 steps)" },
+                { l: "🗑️ CLEAR", fn: () => { save(); setGrid(emptyGrid(gridSize)); doReset(); }, bg: "#D01012", fg: "#fff", tip: "Clear entire grid and reset simulation" },
+                { l: "🎲 DEMOS", fn: () => setShowDemos(s => !s), bg: "#FE8A18", fg: "#fff", tip: "Load a pre-built demo model (Residential, Parking Lot, etc.)" },
+                { l: "✅ VALIDATE", fn: () => setValidation(validateModel(grid)), bg: "#4B9F4A", fg: "#fff", tip: "Check model for errors: missing outfalls, disconnected pipes, CFL violations" },
+                { l: "🔧 FIX", fn: doFix, bg: "#F2C717", fg: "#1B2A34", tip: "Auto-fix validation errors: add missing outfalls, connect orphan pipes" },
+                { l: "🚀 RUN SWMM5", fn: doRun, bg: "#006DB7", fg: "#fff", tip: "Run animated JS simulation with real-time flow visualization on the grid" },
+                ...(isRunning ? [{ l: "⏸ STOP", fn: doStop, bg: "#D01012", fg: "#fff", tip: "Stop the running simulation" }] : []),
+                ...(simResult && !isRunning ? [{ l: "🔄 RESET", fn: doReset, bg: "#6C6E68", fg: "#fff", tip: "Clear simulation results and reset the grid display" }] : []),
+                { l: "💾 SAVE/LOAD", fn: () => { setSaveSlots(getSaveSlots()); setShowSavePanel(true); }, bg: "#4B9F4A", fg: "#fff", tip: "Save/load models to browser storage (auto-save + 5 named slots)" },
+                { l: wasmLoading ? "⏳ RUNNING..." : "🔬 EPA SWMM5", fn: doRunWasm, bg: "#D01012", fg: "#fff", tip: "Run full EPA SWMM5 solver (WASM) with Dynamic Wave routing and detailed RPT output" },
+                { l: "📦 EXPORT", fn: doExport, bg: "#FE8A18", fg: "#fff", tip: "Export model as EPA SWMM5 .INP file (compatible with desktop SWMM5)" },
+                { l: "📂 IMPORT", fn: () => fileRef.current?.click(), bg: "#006DB7", fg: "#fff", tip: "Import an EPA SWMM5 .INP file from your computer" },
               ].map((b, i) => (
-                <button key={i} onClick={b.fn} style={{
+                <button key={i} onClick={b.fn} title={b.tip} style={{
                   padding: "5px 12px", borderRadius: 4, border: "none",
                   background: b.bg, color: b.fg, cursor: "pointer",
                   fontSize: 10, fontWeight: 800, letterSpacing: 0.5,
@@ -656,7 +656,7 @@ export default function SWMM5LegoBuilder() {
               <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
                 <span style={{ fontSize: 9, color: "#F4F4F4", fontWeight: 800, textShadow: "1px 1px 0 rgba(0,0,0,0.3)" }}>Grid:</span>
                 {[20, 25, 30, 40, 50].map(sz => (
-                  <button key={sz} onClick={() => resizeGrid(sz)} style={{
+                  <button key={sz} onClick={() => resizeGrid(sz)} title={`Resize grid to ${sz}×${sz} cells`} style={{
                     width: 36, height: 28, borderRadius: 3, fontSize: 8, fontWeight: 800, cursor: "pointer",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     background: gridSize === sz ? "#F2C717" : "#6C6E68",

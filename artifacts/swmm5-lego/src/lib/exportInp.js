@@ -22,9 +22,9 @@ export function exportINP(grid, storm, cellProps) {
   ln("[RAINGAGES]"); ln(`RG1              INTENSITY 0:${String(rainIntv).padStart(2,'0')}     1.0      TIMESERIES TS_Rain`); ln();
 
   ln("[SUBCATCHMENTS]");
-  ln(";;Name           Rain Gage        Outlet           Area     %Imperv  Width    %Slope");
+  ln(";;Name           Rain Gage        Outlet           Area     %Imperv  Width    %Slope   CurbLen  SnowPack");
   model.subcatchments.forEach(sc => {
-    ln(`${sc.id.padEnd(17)}RG1              ${sc.outlet.id.padEnd(17)}${sc.area_ac.toFixed(2).padStart(8)} ${sc.pctImperv.toFixed(0).padStart(8)} ${sc.width.toFixed(0).padStart(8)} ${sc.slope.toFixed(1).padStart(8)}`);
+    ln(`${sc.id.padEnd(17)}RG1              ${sc.outlet.id.padEnd(17)}${sc.area_ac.toFixed(2).padStart(8)} ${sc.pctImperv.toFixed(0).padStart(8)} ${sc.width.toFixed(0).padStart(8)} ${sc.slope.toFixed(1).padStart(8)} ${"0".padStart(8)}`);
   }); ln();
 
   ln("[SUBAREAS]");
