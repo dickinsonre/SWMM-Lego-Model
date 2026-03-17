@@ -1367,7 +1367,7 @@ export default function SWMM5LegoBuilder() {
                     </>}
 
                     {p.linkFlow.length > 0 && (() => {
-                      const barData = p.linkFlow.map(l => ({ name: l.name, maxFlow: +l.maxFlow, maxVeloc: +l.maxVeloc, depthFrac: +(l.maxDepthFrac || 0) }));
+                      const barData = p.linkFlow.map(l => ({ name: l.name, maxFlow: isNaN(+l.maxFlow)?0:+l.maxFlow, maxVeloc: isNaN(+l.maxVeloc)?0:+l.maxVeloc, depthFrac: isNaN(+l.maxDepthFrac)?0:+l.maxDepthFrac }));
                       return <>
                         <SectionTitle color="#006DB7">📊 Link Peak Flows</SectionTitle>
                         <ResponsiveContainer width="100%" height={160}>
@@ -1384,7 +1384,7 @@ export default function SWMM5LegoBuilder() {
                     })()}
 
                     {p.nodeDepth.length > 0 && (() => {
-                      const barData = p.nodeDepth.map(n => ({ name: n.name, maxDepth: +n.maxDepth, avgDepth: +n.avgDepth }));
+                      const barData = p.nodeDepth.map(n => ({ name: n.name, maxDepth: isNaN(+n.maxDepth)?0:+n.maxDepth, avgDepth: isNaN(+n.avgDepth)?0:+n.avgDepth }));
                       return <>
                         <SectionTitle color="#F2C717">📊 Node Peak Depths</SectionTitle>
                         <ResponsiveContainer width="100%" height={160}>
@@ -1423,7 +1423,7 @@ export default function SWMM5LegoBuilder() {
                     )}
                     {p.subcatchRunoff.length > 0 && (() => {
                       const barData = p.subcatchRunoff.map(sc => ({
-                        name: sc.name, precip: sc.precip, runoff: sc.runoff_in, infil: sc.infil,
+                        name: sc.name, precip: isNaN(+sc.precip)?0:+sc.precip, runoff: isNaN(+sc.runoff_in)?0:+sc.runoff_in, infil: isNaN(+sc.infil)?0:+sc.infil,
                       }));
                       return <>
                         <SectionTitle color="#4B9F4A">📊 Subcatchment Water Balance</SectionTitle>
@@ -1501,13 +1501,17 @@ export default function SWMM5LegoBuilder() {
                       <table style={{ width: "100%", borderCollapse: "collapse" }}>
                         <thead><tr><TH>Name</TH><TH>Type</TH><TH>Max Flow (CFS)</TH><TH>Max Veloc (ft/s)</TH><TH>Max d/D</TH></tr></thead>
                         <tbody>
-                          {p.linkFlow.map((l, i) => (
+                          {p.linkFlow.map((l, i) => {
+                            const mf = isNaN(+l.maxFlow) ? 0 : +l.maxFlow;
+                            const mv = isNaN(+l.maxVeloc) ? 0 : +l.maxVeloc;
+                            const md = isNaN(+l.maxDepthFrac) ? 0 : +l.maxDepthFrac;
+                            return (
                             <tr key={i} style={{ background: i % 2 ? "#F8F8F8" : "#fff" }}>
                               <TD c="#5A93DB">{l.name}</TD><TD>{l.type}</TD>
-                              <TD r c="#006DB7">{l.maxFlow}</TD><TD r>{l.maxVeloc}</TD>
-                              <TD r c={+l.maxDepthFrac >= 1 ? "#D01012" : "#4B9F4A"}>{l.maxDepthFrac}</TD>
+                              <TD r c="#006DB7">{mf}</TD><TD r>{mv}</TD>
+                              <TD r c={md >= 1 ? "#D01012" : "#4B9F4A"}>{md}</TD>
                             </tr>
-                          ))}
+                          );})}
                         </tbody>
                       </table>
                     )}

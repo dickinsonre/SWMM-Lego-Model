@@ -44,18 +44,25 @@ export function parseRpt(rptText) {
     return -1;
   };
 
+  const SWMM_TYPES = new Set(['CONDUIT','PUMP','ORIFICE','WEIR','JUNCTION','OUTFALL','STORAGE','DIVIDER','SUBCATCHMENT']);
+
   const parseTable = (startIdx) => {
     if (startIdx < 0) return [];
     let i = startIdx + 1;
     while (i < lines.length && !lines[i].includes('---')) i++;
     if (i >= lines.length) return [];
+    while (i + 1 < lines.length && lines[i + 1].trim().startsWith('---')) i++;
     const headerLine = lines[i - 1];
     i++;
     const rows = [];
     while (i < lines.length && lines[i].trim() && !lines[i].includes('****') && !lines[i].includes('===')) {
       const parts = lines[i].trim().split(/\s{2,}|\s+/);
       if (parts.length >= 2 && parts[0] !== '') {
-        rows.push(parts);
+        const hasNumericData = parts.slice(1).some(p => /^-?[\d.]+$/.test(p));
+        const hasSwmmType = SWMM_TYPES.has(parts[1]?.toUpperCase());
+        if (hasNumericData || hasSwmmType) {
+          rows.push(parts);
+        }
       }
       i++;
     }
