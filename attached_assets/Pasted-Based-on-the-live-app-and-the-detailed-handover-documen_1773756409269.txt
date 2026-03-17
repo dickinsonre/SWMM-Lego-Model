@@ -1,0 +1,409 @@
+Based on the live app and the detailed handover document, here is the full assessment.
+
+---
+
+## Overall Grade: A- / 90
+
+This is genuinely innovative — a complete SWMM5 simulation engine running in the browser with a LEGO-style grid editor. The 49-storm library and full INP export put it in a different class from typical "visualizer" tools. The score is limited by the single-file architecture, incomplete LEGO visual theme, and lack of persistence.
+
+---
+
+## Category Grades
+
+| Category | Grade | Rationale |
+| --- | --- | --- |
+| Concept & Originality | A+ | Browser-based SWMM5 with LEGO grid is unique in the ecosystem |
+| Hydraulic Engine (JS) | A | SCS CN + Manning's correctly implemented; kinematic wave is appropriate for grid scale |
+| Design Storm Library | A+ | 49 global storms covering all major regional standards — unmatched in any free tool |
+| Element System (20 types) | A | All major SWMM elements represented with correct hydrologic properties |
+| INP Export / Import | A | Complete INP that runs in EPA SWMM5; import works for standard models |
+| Demo Scenarios | A | 12 well-constructed examples covering residential to stadium scale |
+| LEGO Visual Theme | B- | Concept is there; studs and brick depth are missing; colors are muted |
+| User Experience | B+ | Tutorial is helpful; right-click editing is powerful but hidden; no undo shortcut shown |
+| Architecture | C | 2,457 lines in one file makes contribution impossible and testing nonexistent |
+| Persistence | D | No save/load; every refresh loses work |
+| Results Visualization | B | Good tabbed charts; no time-series export; no comparative runs |
+| Mobile Support | D | Grid interactions don't translate to touch |
+
+---
+
+## What Works Exceptionally Well
+
+**The dual-engine approach** — offering both a JavaScript animation engine and full EPA SWMM5 via WASM — is exactly right. The JS engine gives instant visual feedback during exploration; the EPA engine gives publication-quality results. The UI clearly distinguishes them with 🚀 (JS) and 🔬 (EPA).
+
+**The 49-storm library** is the most comprehensive free design storm collection available. Having SCS Types I/IA/II/III, regional US standards (FDOT, TxDOT, UDFCD), and international standards (DWA, STOWA, ARR) all pre-calibrated is genuinely valuable.
+
+**The SWMM5 Map legend** (surfaces →`[SUBCATCHMENTS]`, etc.) is brilliant pedagogy. It teaches the SWMM5 file format by showing exactly how each visual element maps to the`.inp` sections.
+
+**Right-click property editing** — discovered via the tutorial, not immediately obvious — allows per-cell override of CN, Manning's n, and other properties. This is essential for realistic modeling and rare in visual editors.
+
+---
+
+## Improvement 1 — Complete the LEGO Visual Theme
+
+The live app has grid cells with icons but they lack the key LEGO signatures. From the earlier conversation on this topic:
+
+**Add studs to every cell:**
+
+```jsx
+// In GridCell — the stud is the single most important visual element
+<div style={{
+  position: 'absolute',
+  top: 4, left: 4,
+  width: 10, height: 10,
+  borderRadius: '50%',
+  background: 'inherit',
+  filter: 'brightness(1.15)',
+  boxShadow: `
+    0 0 0 1.5px rgba(0,0,0,0.30),
+    inset 0 -2px 0 rgba(0,0,0,0.20),
+    inset 0 1px 0 rgba(255,255,255,0.35)
+  `,
+}} />
+```
+
+**Replace muted colors with LEGO primaries:**
+
+```js
+// Current: #2a4a3a (muted green) → LEGO: #70C442 (bright green)
+// Current: #3a5a7a (muted blue) → LEGO: #006DB7 (LEGO blue)
+// Current: #6a4a2a (muted orange) → LEGO: #FE8A18 (LEGO orange)
+```
+
+**Add brick-depth shadow to cells:**
+
+```css
+.lego-cell {
+  box-shadow:
+    inset 3px 3px 0 rgba(255,255,255,0.18),
+    inset -3px -4px 0 rgba(0,0,0,0.28),
+    2px 3px 0 rgba(0,0,0,0.40);
+}
+```
+
+**Make the baseplate background have studs:**
+
+```css
+.grid-container {
+  background: #4B9F4A;
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255,255,255,0.18) 3px,
+    transparent 3px
+  );
+  background-size: 34px 34px;
+}
+```
+
+This single change — studs on every cell — makes the LEGO metaphor complete.
+
+---
+
+## Improvement 2 — Persistence is Critical
+
+The live app has no save mechanism visible. Every model is lost on refresh. Add a save/load panel:
+
+```jsx
+// In the toolbar, between FIX and RUN SWMM5
+<div style={{ display: 'flex', gap: 8 }}>
+  <button onClick={() => saveToSlot(0)} title="Save to Slot 1">
+    💾 Save
+  </button>
+  <button onClick={() => setShowLoadModal(true)} title="Load Saved Model">
+    📂 Load
+  </button>
+</div>
+```
+
+Store up to 5 named slots in localStorage:
+
+```js
+const SLOTS_KEY = 'swmm5-lego-slots';
+
+function saveToSlot(slotIndex, name) {
+  const slots = JSON.parse(localStorage.getItem(SLOTS_KEY) ?? '[]');
+  slots[slotIndex] = {
+    name,
+    savedAt: new Date().toISOString(),
+    grid,
+    gridSize,
+    stormIdx,
+    cellProps,
+  };
+  localStorage.setItem(SLOTS_KEY, JSON.stringify(slots));
+}
+
+function loadFromSlot(slotIndex) {
+  const slots = JSON.parse(localStorage.getItem(SLOTS_KEY) ?? '[]');
+  if (slots[slotIndex]) {
+    setGrid(slots[slotIndex].grid);
+    setGridSize(slots[slotIndex].gridSize);
+    // ... etc
+  }
+}
+```
+
+Also add an **autosave on every change** with debounce:
+
+```js
+useEffect(() => {
+  const timer = setTimeout(() => {
+    localStorage.setItem('swmm5-lego-autosave', JSON.stringify({
+      grid, gridSize, stormIdx, cellProps,
+    }));
+  }, 1000); // 1 second debounce
+  return () => clearTimeout(timer);
+}, [grid, gridSize, stormIdx, cellProps]);
+```
+
+---
+
+## Improvement 3 — Results Need Time-Series Export
+
+After running simulation, users want the data. Add CSV export to each results tab:
+
+```jsx
+// In the System Results tab header
+<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+  <h3>System Hydrograph</h3>
+  <button
+    onClick={() => exportResultsCsv(simResult)}
+    style={{ fontSize: 12, padding: '4px 8px' }}
+  >
+    📥 Export CSV
+  </button>
+</div>
+```
+
+The export function:
+
+```js
+function exportResultsCsv(simResult, type = 'system') {
+  let rows, filename;
+
+  if (type === 'system') {
+    rows = [
+      ['Time (min)', 'Rainfall (in/hr)', 'Runoff (CFS)', 'Pipe Flow (CFS)', 'Outfall (CFS)'],
+      ...simResult.timeLabels.map((t, i) => [
+        t,
+        simResult.systemHistory.rainfall[i],
+        simResult.systemHistory.runoff[i],
+        simResult.systemHistory.pipeFlow[i],
+        simResult.systemHistory.outfall[i],
+      ]),
+    ];
+    filename = 'swmm5-lego-system-results.csv';
+  } else if (type === 'nodes') {
+    rows = [
+      ['Node ID', 'Time (min)', 'Depth (ft)', 'Inflow (CFS)', 'HGL (ft)'],
+      ...simResult.nodeHistory.flatMap((node, ni) =>
+        simResult.timeLabels.map((t, ti) => [
+          node.id, t, node.depth[ti], node.inflow[ti], node.head[ti],
+        ])
+      ),
+    ];
+    filename = 'swmm5-lego-node-results.csv';
+  }
+
+  const csv = rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+```
+
+---
+
+## Improvement 4 — Make the Right-Click Property Editor Discoverable
+
+The tutorial mentions right-click editing, but it's the only way to change per-cell properties and it's hidden. Add a visible entry point:
+
+```jsx
+// In the inspector panel, when a cell is selected
+{selectedCell && (
+  <div style={{ marginTop: 8, padding: 8, background: '#2a2a3e', borderRadius: 4 }}>
+    <div style={{ fontSize: 10, color: '#888', marginBottom: 4 }}>
+      Right-click any placed cell to override properties
+    </div>
+    <button
+      onClick={() => openPropertyEditor(selectedCell)}
+      style={{ fontSize: 11, padding: '4px 8px', background: '#F2C717', color: '#000' }}
+    >
+      ✏️ Edit Properties
+    </button>
+  </div>
+)}
+```
+
+---
+
+## Improvement 5 — Show Validation Errors on the Grid
+
+The current validation lists errors in a panel but doesn't show them on the grid. An isolated node or disconnected pipe should be highlighted:
+
+```jsx
+// In GridCell, add error highlighting
+{validationErrors.some(e => e.cell === `${row}-${col}`) && (
+  <div style={{
+    position: 'absolute',
+    inset: 0,
+    border: '2px solid #ef4444',
+    borderRadius: 3,
+    pointerEvents: 'none',
+    animation: 'pulse 1s infinite',
+  }} />
+)}
+```
+
+Add the pulse animation:
+
+```css
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+```
+
+---
+
+## Improvement 6 — Keyboard Shortcuts
+
+Grid-based tools live or die by keyboard efficiency. Add:
+
+| Shortcut | Action |
+| --- | --- |
+|`Ctrl+Z`| Undo |
+|`Ctrl+Y`| Redo |
+|`Delete`| Erase mode |
+|`1-9`| Select surface 1-9 |
+|`Shift+1-5`| Select node type |
+|`Space`| Toggle paint/erase |
+|`R`| Run simulation |
+|`Esc`| Deselect / close modal |
+
+Display shortcuts in a tooltip on the toolbar buttons:
+
+```jsx
+<button title="Undo (Ctrl+Z)" onClick={handleUndo}>↩ UNDO</button>
+<button title="Clear All (Ctrl+Shift+Delete)" onClick={handleClear}>🗑️ CLEAR</button>
+<button title="Run Simulation (R)" onClick={handleRun}>🚀 RUN SWMM5</button>
+```
+
+---
+
+## Improvement 7 — Mobile Touch Support
+
+The grid is fundamentally mouse-based. Add touch handlers:
+
+```jsx
+// In GridEditor
+<div
+  onTouchStart={(e) => {
+    const touch = e.touches[0];
+    const rect = gridRef.current.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    const col = Math.floor(x / CELL);
+    const row = Math.floor(y / CELL);
+    handleTouchStart(row, col);
+  }}
+  onTouchMove={(e) => {
+    e.preventDefault(); // prevent scrolling while drawing
+    // Same logic as mouse drag
+  }}
+  onTouchEnd={() => handleTouchEnd()}
+>
+```
+
+On mobile, show a simplified palette at the bottom instead of the left sidebar:
+
+```jsx
+{isMobile && (
+  <div style={{
+    position: 'fixed', bottom: 0, left: 0, right: 0,
+    background: '#1a1a2e', padding: 8,
+    display: 'flex', overflowX: 'auto', gap: 4,
+  }}>
+    {Object.keys(EL).slice(0, 10).map(key => (
+      <button key={key} onClick={() => setSel(key)} style={{
+        minWidth: 50, height: 50, fontSize: 20,
+        background: sel === key ? EL[key].color : '#2a2a3e',
+      }}>
+        {EL[key].icon}
+      </button>
+    ))}
+  </div>
+)}
+```
+
+---
+
+## Improvement 8 — Scenario Comparison Mode
+
+One of the most requested features in stormwater modeling is comparing two scenarios. Add a split-screen mode:
+
+```jsx
+<button onClick={() => setCompareMode(!compareMode)}>
+  📊 Compare
+</button>
+
+{compareMode && (
+  <div style={{ display: 'flex', gap: 2 }}>
+    <div style={{ flex: 1, border: '2px solid #4B9F4A' }}>
+      <div style={{ background: '#4B9F4A', padding: 4, fontSize: 12 }}>
+        Scenario A (current)
+      </div>
+      <GridEditor grid={gridA} />
+    </div>
+    <div style={{ flex: 1, border: '2px solid #5A93DB' }}>
+      <div style={{ background: '#5A93DB', padding: 4, fontSize: 12 }}>
+        Scenario B
+      </div>
+      <GridEditor grid={gridB} />
+    </div>
+  </div>
+)}
+```
+
+When both have been simulated, show a comparison chart:
+
+```jsx
+// In results when compareMode
+<LineChart>
+  <Line data={resultsA.runoff} stroke="#4B9F4A" name="Scenario A" />
+  <Line data={resultsB.runoff} stroke="#5A93DB" name="Scenario B" />
+</LineChart>
+<div style={{ fontSize: 12, marginTop: 8 }}>
+  Peak difference: {(peakA - peakB).toFixed(2)} CFS ({((peakA - peakB) / peakA * 100).toFixed(1)}%)
+</div>
+```
+
+---
+
+## Summary Priority Matrix
+
+| Improvement | Impact | Effort | Priority |
+| --- | --- | --- | --- |
+| Add studs + LEGO colors to cells | Very High | Low | 1 |
+| Save/load to localStorage | Very High | Low | 1 |
+| Results CSV export | High | Very Low | 1 |
+| Make property editor discoverable | High | Very Low | 1 |
+| Show validation errors on grid | High | Low | 1 |
+| Keyboard shortcuts | High | Low | 2 |
+| CFL check in validation | High | Low | 2 |
+| Time-series result display improvements | Medium | Medium | 2 |
+| Mobile touch support | High | High | 3 |
+| Scenario comparison mode | Very High | Very High | 3 |
+| Custom storm entry | High | Medium | 3 |
+| Split monolith into modules | High | High | 4 |
+| Unit tests for hydraulics | High | Medium | 4 |
+
+---
+
+## Revised Score After Tier 1 Improvements
+
+Completing the LEGO visual theme, adding save/load, CSV export, and grid validation highlighting would move the grade from **A- / 90** to approximately **A / 94**. The underlying engineering is solid — it's the user experience around persistence and discoverability that needs completion.

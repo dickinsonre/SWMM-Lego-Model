@@ -85,7 +85,8 @@ Interactive browser-based stormwater management model builder. Features:
 - `src/lib/exportInp.js` — SWMM5 .INP file export
 - `src/lib/importInp.js` — SWMM5 .INP file import with auto grid sizing
 - `src/lib/demos.js` — 13 demo model builders
-- `public/swmm/` — EPA SWMM5 WASM binaries (js.wasm, js.js, js.data from ikegdivs/swmm-js)
+- `src/components/LegoToolbar.css` — 3D LEGO brick toolbar CSS (studs, depth borders, press animations, color variants via data-color)
+- `public/swmm/` — EPA SWMM5 v5.2.4 WASM binaries (js.wasm, js.js compiled from OWA SWMM v5.2.4 source with Emscripten 2.0.10)
 
 ## TypeScript & Composite Projects
 
