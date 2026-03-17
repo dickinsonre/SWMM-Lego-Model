@@ -4599,6 +4599,9 @@ Module["FS_createPreloadedFile"] = FS.createPreloadedFile;
 Module["FS_createLazyFile"] = FS.createLazyFile;
 Module["FS_createDevice"] = FS.createDevice;
 Module["FS_unlink"] = FS.unlink;
+Module["FS_readFile"] = FS.readFile;
+Module["FS_findObject"] = FS.findObject;
+Module["FS"] = FS;
 
 var calledRun;
 

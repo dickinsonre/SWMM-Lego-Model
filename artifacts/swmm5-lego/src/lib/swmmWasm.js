@@ -26,20 +26,26 @@ export function isSwmmReady() { return ready; }
 export async function runSwmmWasm(inpContent) {
   await initSwmmWasm();
   const M = window.Module;
+  const fs = M.FS;
+  if (!fs) throw new Error('SWMM5 WASM filesystem not initialized');
 
-  try { M.FS.unlink('/input.inp'); } catch(e) {}
-  try { M.FS.unlink('/output.rpt'); } catch(e) {}
-  try { M.FS.unlink('/output.out'); } catch(e) {}
+  try { fs.unlink('/input.inp'); } catch(e) {}
+  try { fs.unlink('/output.rpt'); } catch(e) {}
+  try { fs.unlink('/output.out'); } catch(e) {}
 
   const enc = new TextEncoder();
   const bytes = enc.encode(inpContent);
 
   try {
-    M.FS.createPath('/', '/', true, true);
-    M.FS.ignorePermissions = true;
+    fs.createPath('/', '/', true, true);
+    fs.ignorePermissions = true;
   } catch(e) {}
 
-  M.FS.createDataFile('/', 'input.inp', bytes, true, true);
+  var f = null;
+  try { f = fs.findObject('input.inp'); } catch(e) {}
+  if (f) { try { fs.unlink('input.inp'); } catch(e) {} }
+
+  fs.createDataFile('/', 'input.inp', bytes, true, true);
 
   let returnCode = -1;
   try {
@@ -50,13 +56,13 @@ export async function runSwmmWasm(inpContent) {
   }
 
   let rpt = '';
-  try { rpt = new TextDecoder().decode(M.FS.readFile('/output.rpt')); } catch(e) {
+  try { rpt = new TextDecoder().decode(fs.readFile('/output.rpt')); } catch(e) {
     rpt = `Could not read RPT: ${e.message}`;
   }
 
-  try { M.FS.unlink('/input.inp'); } catch(e) {}
-  try { M.FS.unlink('/output.rpt'); } catch(e) {}
-  try { M.FS.unlink('/output.out'); } catch(e) {}
+  try { fs.unlink('/input.inp'); } catch(e) {}
+  try { fs.unlink('/output.rpt'); } catch(e) {}
+  try { fs.unlink('/output.out'); } catch(e) {}
 
   return { returnCode, rpt };
 }
