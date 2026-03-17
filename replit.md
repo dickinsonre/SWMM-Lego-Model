@@ -55,6 +55,8 @@ Interactive browser-based stormwater management model builder. Features:
 - Per-cell property editing via right-click context menu (override CN, % imperv, Manning's n, slope, pipe diameter, node depth)
 - Time-series CSV export for all result tabs
 - Save/Load to localStorage (auto-save + 5 named slots)
+- Keyboard shortcuts: Ctrl+Z (undo), Space (toggle paint/erase), Del (erase mode), R (run), Esc (close panels), 1-9 (select surface), Shift+1-5 (select node), Q/W/E (pipe/channel/pump)
+- Mobile touch support: single-finger paint/drag on grid with touch-action:none for smooth drawing
 - No backend required — entirely frontend
 
 **Visual Theme**: Full LEGO brick aesthetic

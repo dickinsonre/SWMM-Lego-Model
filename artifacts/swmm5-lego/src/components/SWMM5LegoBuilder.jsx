@@ -130,6 +130,7 @@ export default function SWMM5LegoBuilder() {
   const animRef = useRef(null);
   const fileRef = useRef(null);
   const autoSaveTimer = useRef(null);
+  const gridRef = useRef(null);
 
   const save = useCallback(() => setHist(h => [...h.slice(-30), { grid: grid.map(r => [...r]), gridSize }]), [grid, gridSize]);
   const place = useCallback((r, c) => setGrid(p => { const n = p.map(x => [...x]); n[r][c] = erasing ? null : sel; return n; }), [sel, erasing]);
@@ -152,6 +153,71 @@ export default function SWMM5LegoBuilder() {
     }, 1000);
     return () => clearTimeout(autoSaveTimer.current);
   }, [grid, gridSize, stormIdx, cellProps]);
+
+  const SURFACE_KEYS = ["grass","roof","road","driveway","sidewalk","lid_pond","perm_pave","grn_roof","rain_brl","swale"];
+  const NODE_KEYS = ["manhole","inlet","outfall","storage","divider"];
+  const LINK_KEYS = ["pipe","channel","pump","orifice","weir"];
+
+  useEffect(() => {
+    const handler = (e) => {
+      const tag = e.target.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || tag === "BUTTON" || tag === "A" || e.target.isContentEditable || e.target.getAttribute("role") === "button") return;
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === "z" || e.key === "Z") {
+          e.preventDefault();
+          if (hist.length) { const entry = hist[hist.length-1]; setGridGlobal(entry.gridSize); setGridSize(entry.gridSize); setGrid(entry.grid); setHist(h => h.slice(0,-1)); }
+          return;
+        }
+      }
+      if (e.key === "Escape") {
+        setShowInp(false); setShowRpt(false); setShowSavePanel(false); setShowDemos(false); setCtxMenu(null); setInspCell(null);
+        return;
+      }
+      if (e.key === " ") { e.preventDefault(); setErasing(v => !v); return; }
+      if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); setErasing(true); return; }
+      if (e.key === "r" || e.key === "R") { if (!e.ctrlKey && !e.metaKey && !isRunning) { doRun(); } return; }
+      const num = parseInt(e.key);
+      if (!isNaN(num) && num >= 1 && num <= 9) {
+        if (e.shiftKey) {
+          if (num <= NODE_KEYS.length) { setSel(NODE_KEYS[num-1]); setErasing(false); }
+        } else {
+          if (num <= SURFACE_KEYS.length) { setSel(SURFACE_KEYS[num-1]); setErasing(false); }
+        }
+        return;
+      }
+      if (e.key === "q" || e.key === "Q") { setSel(LINK_KEYS[0]); setErasing(false); }
+      if (e.key === "w" || e.key === "W") { if (!e.ctrlKey) { setSel(LINK_KEYS[1]); setErasing(false); } }
+      if (e.key === "e" || e.key === "E") { if (!e.ctrlKey) { setSel(LINK_KEYS[2]); setErasing(false); } }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  });
+
+  const touchToCell = useCallback((touch) => {
+    if (!gridRef.current) return null;
+    const rect = gridRef.current.getBoundingClientRect();
+    const x = touch.clientX - rect.left + gridRef.current.scrollLeft;
+    const y = touch.clientY - rect.top + gridRef.current.scrollTop;
+    const c = Math.floor(x / CELL);
+    const r = Math.floor(y / CELL);
+    if (r >= 0 && r < gridSize && c >= 0 && c < gridSize) return { r, c };
+    return null;
+  }, [gridSize]);
+
+  const handleTouchStart = useCallback((e) => {
+    if (e.touches.length !== 1) return;
+    const cell = touchToCell(e.touches[0]);
+    if (cell) { save(); place(cell.r, cell.c); setInspCell(cell); setPainting(true); }
+  }, [touchToCell, save, place]);
+
+  const handleTouchMove = useCallback((e) => {
+    e.preventDefault();
+    if (!painting || e.touches.length !== 1) return;
+    const cell = touchToCell(e.touches[0]);
+    if (cell) place(cell.r, cell.c);
+  }, [painting, touchToCell, place]);
+
+  const handleTouchEnd = useCallback(() => { setPainting(false); }, []);
 
   const resizeGrid = (newSize) => {
     save();
@@ -582,9 +648,34 @@ export default function SWMM5LegoBuilder() {
               <div style={{ fontWeight: 800, color: "#006DB7", marginBottom: 2 }}>🚀 JS Engine (animated):</div>
               <div>CN infiltration + Manning's</div>
               <div>Δt=15s routing + animation</div>
-              <div style={{ fontWeight: 800, color: "#D01012", marginTop: 4, marginBottom: 2 }}>🔬 EPA SWMM5 (WASM):</div>
+              <div style={{ fontWeight: 800, color: "#D01012", marginTop: 4, marginBottom: 2 }}>🔬 EPA SWMM5 v5.2 (WASM):</div>
               <div>Full SWMM5 solver in-browser</div>
               <div>DynWave routing + RPT output</div>
+            </div>
+          </div>
+
+          <div style={{
+            background: "#F4F4F4", borderRadius: 4, padding: 8,
+            border: "3px solid #6C6E68", color: "#1B2A34",
+            boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
+          }}>
+            <div style={{ fontSize: 10, fontWeight: 900, color: "#006DB7", marginBottom: 4, fontFamily: "'Fredoka'" }}>⌨️ SHORTCUTS</div>
+            <div style={{ fontSize: 8, color: "#4A4C47", lineHeight: 1.8, fontWeight: 600, fontFamily: "'Fredoka'" }}>
+              {[
+                ["Ctrl+Z", "Undo"],
+                ["Space", "Toggle Paint/Erase"],
+                ["Del", "Erase mode"],
+                ["R", "Run simulation"],
+                ["Esc", "Close panels"],
+                ["1-9", "Select surface"],
+                ["Shift+1-5", "Select node"],
+                ["Q/W/E", "Pipe/Channel/Pump"],
+              ].map(([k, v]) => (
+                <div key={k} style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span style={{ background: "#E0E0E0", borderRadius: 2, padding: "0 4px", fontWeight: 800, fontSize: 7, color: "#1B2A34", border: "1px solid #bbb", boxShadow: "0 1px 0 #999" }}>{k}</span>
+                  <span>{v}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -593,14 +684,14 @@ export default function SWMM5LegoBuilder() {
           <div className="lego-toolbar">
             <div style={{ display: "flex", gap: 5, justifyContent: "center", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
               {[
-                { l: "↩ UNDO", fn: () => { if (hist.length) { const entry = hist[hist.length-1]; setGridGlobal(entry.gridSize); setGridSize(entry.gridSize); setGrid(entry.grid); setHist(h => h.slice(0,-1)); } }, color: "yellow", tip: "Undo last grid change (up to 30 steps)" },
+                { l: "↩ UNDO", fn: () => { if (hist.length) { const entry = hist[hist.length-1]; setGridGlobal(entry.gridSize); setGridSize(entry.gridSize); setGrid(entry.grid); setHist(h => h.slice(0,-1)); } }, color: "yellow", tip: "Undo last grid change [Ctrl+Z]" },
                 { l: "🗑️ CLEAR", fn: () => { save(); setGrid(emptyGrid(gridSize)); doReset(); }, color: "red", tip: "Clear entire grid and reset simulation" },
-                { l: "🎲 DEMOS", fn: () => setShowDemos(s => !s), color: "orange", tip: "Load a pre-built demo model (Residential, Parking Lot, etc.)" },
+                { l: "🎲 DEMOS", fn: () => setShowDemos(s => !s), color: "orange", tip: "Load a pre-built demo model" },
                 { sep: true },
-                { l: "✅ VALIDATE", fn: () => setValidation(validateModel(grid)), color: "green", tip: "Check model for errors: missing outfalls, disconnected pipes, CFL violations" },
-                { l: "🔧 FIX", fn: doFix, color: "yellow", tip: "Auto-fix validation errors: add missing outfalls, connect orphan pipes" },
+                { l: "✅ VALIDATE", fn: () => setValidation(validateModel(grid)), color: "green", tip: "Check model for errors" },
+                { l: "🔧 FIX", fn: doFix, color: "yellow", tip: "Auto-fix validation errors" },
                 { sep: true },
-                { l: "🚀 RUN SWMM5", fn: doRun, color: "blue", tip: "Run animated JS simulation with real-time flow visualization on the grid" },
+                { l: "🚀 RUN SWMM5", fn: doRun, color: "blue", tip: "Run animated JS simulation [R]" },
                 ...(isRunning ? [{ l: "⏸ STOP", fn: doStop, color: "red", tip: "Stop the running simulation" }] : []),
                 ...(simResult && !isRunning ? [{ l: "🔄 RESET", fn: doReset, color: "gray", tip: "Clear simulation results and reset the grid display" }] : []),
                 { l: "💾 SAVE/LOAD", fn: () => { setSaveSlots(getSaveSlots()); setShowSavePanel(true); }, color: "green", tip: "Save/load models to browser storage (auto-save + 5 named slots)" },
@@ -670,13 +761,18 @@ export default function SWMM5LegoBuilder() {
               </div>
             )}
 
-            <div style={{
+            <div ref={gridRef} style={{
               overflowX: "auto",
               backgroundImage: "radial-gradient(circle at center, rgba(255,255,255,0.18) 3px, transparent 3px)",
               backgroundSize: `${CELL}px ${CELL}px`,
               backgroundPosition: `${CELL/2}px ${CELL/2}px`,
               borderRadius: 2,
-            }}>
+              touchAction: "none",
+            }}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
               {grid.map((row, r) => (
                 <div key={r} style={{ display: "flex" }}>
                   {row.map((cell, c) => (
