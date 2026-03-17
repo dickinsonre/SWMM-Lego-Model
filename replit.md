@@ -66,19 +66,26 @@ Interactive browser-based stormwater management model builder. Features:
 - Inspector, validation, results, and export panels all use light #F4F4F4 backgrounds
 - Grid cell borders: red=error, orange=CFL/validation warning, yellow=custom property override
 
+**Dual Simulation Engines**:
+1. **JS Engine** (🚀 RUN SWMM5): Animated real-time simulation with SCS CN infiltration, Manning's equations, 15-second routing timestep, flow visualization on grid
+2. **EPA SWMM5 WASM** (🔬 EPA SWMM5): Full EPA SWMM5 solver compiled to WebAssembly, runs entirely in-browser with Dynamic Wave routing, produces standard .RPT output with 6-tab results viewer (Summary, Subcatchments, Nodes, Links, Continuity, Raw RPT) including recharts bar charts
+
 **Key dependencies**: React, recharts (charts), Vite (build)
 
 **Architecture** (modularized):
-- `src/components/SWMM5LegoBuilder.jsx` — Main React component (~1464 lines, inline styles)
+- `src/components/SWMM5LegoBuilder.jsx` — Main React component (~1828 lines, inline styles)
 - `src/lib/elements.js` — Element definitions (EL, CATS), grid utilities, mutable GRID via getGrid()/setGrid()
 - `src/lib/storms.js` — 49 design storms with storm category definitions
 - `src/lib/hydraulics.js` — SWMM5 JS engine (buildModel, runSWMM5, Manning's equations, CN infiltration)
+- `src/lib/swmmWasm.js` — EPA SWMM5 WASM wrapper (Emscripten module loader, virtual FS I/O, ccall to swmm_run)
+- `src/lib/parseRpt.js` — SWMM5 .RPT output parser (subcatchments, nodes, links, continuity, analysis options)
 - `src/lib/validation.js` — Model validation with CFL checks and auto-fix
 - `src/lib/exportCsv.js` — Time-series CSV export
 - `src/lib/persistence.js` — localStorage save/load (auto-save + named slots)
 - `src/lib/exportInp.js` — SWMM5 .INP file export
 - `src/lib/importInp.js` — SWMM5 .INP file import with auto grid sizing
 - `src/lib/demos.js` — 13 demo model builders
+- `public/swmm/` — EPA SWMM5 WASM binaries (js.wasm, js.js, js.data from ikegdivs/swmm-js)
 
 ## TypeScript & Composite Projects
 

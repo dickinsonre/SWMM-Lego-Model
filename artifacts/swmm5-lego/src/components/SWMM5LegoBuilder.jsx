@@ -10,6 +10,8 @@ import { saveToLocalStorage, loadFromLocalStorage, getSaveSlots, saveToSlot, del
 import { exportINP } from "../lib/exportInp.js";
 import { importINP } from "../lib/importInp.js";
 import { DEMOS } from "../lib/demos.js";
+import { initSwmmWasm, runSwmmWasm, isSwmmReady } from "../lib/swmmWasm.js";
+import { parseRpt } from "../lib/parseRpt.js";
 
 function GridCell({ element, isHov, hasErr, hasWarn, hasOverride, flowIntensity, depthFrac, row, col }) {
   const el = element ? EL[element] : null;
@@ -138,6 +140,12 @@ export default function SWMM5LegoBuilder() {
   const [showSavePanel, setShowSavePanel] = useState(false);
   const [saveSlots, setSaveSlots] = useState(() => getSaveSlots());
   const [saveName, setSaveName] = useState("");
+
+  const [wasmLoading, setWasmLoading] = useState(false);
+  const [wasmRpt, setWasmRpt] = useState(null);
+  const [wasmParsed, setWasmParsed] = useState(null);
+  const [showRpt, setShowRpt] = useState(false);
+  const [rptTab, setRptTab] = useState("summary");
   const animRef = useRef(null);
   const fileRef = useRef(null);
   const autoSaveTimer = useRef(null);
@@ -288,6 +296,31 @@ export default function SWMM5LegoBuilder() {
     if (v.errors.length > 0) return;
     setInpText(exportINP(grid, STORMS[stormIdx], cellProps));
     setShowInp(true);
+  };
+
+  const doRunWasm = async () => {
+    const v = validateModel(grid);
+    setValidation(v);
+    if (v.errors.length > 0) return;
+    setWasmLoading(true);
+    setWasmRpt(null); setWasmParsed(null);
+    try {
+      const inp = exportINP(grid, STORMS[stormIdx], cellProps);
+      const { returnCode, rpt } = await runSwmmWasm(inp);
+      setWasmRpt(rpt);
+      const parsed = parseRpt(rpt);
+      if (returnCode !== 0 && parsed.errors.length === 0) {
+        parsed.errors.push(`SWMM5 returned code ${returnCode}`);
+      }
+      setWasmParsed(parsed);
+      setShowRpt(true);
+      setRptTab("summary");
+    } catch (e) {
+      setWasmRpt(`Error: ${e.message}`);
+      setWasmParsed({ errors: [e.message], warnings: [], subcatchRunoff: [], nodeDepth: [], nodeInflow: [], nodeFlooding: [], outfallLoading: [], linkFlow: [], analysisOptions: {}, runoffQuantity: {}, routingSummary: {}, raw: '' });
+      setShowRpt(true);
+    }
+    setWasmLoading(false);
   };
 
   const doFix = () => { save(); const f = autoFix(grid); setGrid(f.grid); setFixLog(f.fixes); setValidation(validateModel(f.grid)); };
@@ -577,14 +610,14 @@ export default function SWMM5LegoBuilder() {
             border: "3px solid #6C6E68", color: "#1B2A34",
             boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
           }}>
-            <div style={{ fontSize: 10, fontWeight: 900, color: "#D01012", marginBottom: 4, fontFamily: "'Fredoka'" }}>📐 JS ENGINE</div>
+            <div style={{ fontSize: 10, fontWeight: 900, color: "#D01012", marginBottom: 4, fontFamily: "'Fredoka'" }}>📐 DUAL ENGINES</div>
             <div style={{ fontSize: 8, color: "#4A4C47", lineHeight: 1.7, fontWeight: 600 }}>
-              <div>🌧️ SCS Type II storm</div>
-              <div>📊 CN infiltration</div>
-              <div>⚡ Manning's overland</div>
-              <div>🔵 Manning's pipe flow</div>
-              <div>⏱️ Δt = 15 sec routing</div>
-              <div>🌊 Node mass balance</div>
+              <div style={{ fontWeight: 800, color: "#006DB7", marginBottom: 2 }}>🚀 JS Engine (animated):</div>
+              <div>CN infiltration + Manning's</div>
+              <div>Δt=15s routing + animation</div>
+              <div style={{ fontWeight: 800, color: "#D01012", marginTop: 4, marginBottom: 2 }}>🔬 EPA SWMM5 (WASM):</div>
+              <div>Full SWMM5 solver in-browser</div>
+              <div>DynWave routing + RPT output</div>
             </div>
           </div>
         </div>
@@ -608,6 +641,7 @@ export default function SWMM5LegoBuilder() {
                 ...(isRunning ? [{ l: "⏸ STOP", fn: doStop, bg: "#D01012", fg: "#fff" }] : []),
                 ...(simResult && !isRunning ? [{ l: "🔄 RESET", fn: doReset, bg: "#6C6E68", fg: "#fff" }] : []),
                 { l: "💾 SAVE/LOAD", fn: () => { setSaveSlots(getSaveSlots()); setShowSavePanel(true); }, bg: "#4B9F4A", fg: "#fff" },
+                { l: wasmLoading ? "⏳ RUNNING..." : "🔬 EPA SWMM5", fn: doRunWasm, bg: "#D01012", fg: "#fff" },
                 { l: "📦 EXPORT", fn: doExport, bg: "#FE8A18", fg: "#fff" },
                 { l: "📂 IMPORT", fn: () => fileRef.current?.click(), bg: "#006DB7", fg: "#fff" },
               ].map((b, i) => (
@@ -1153,6 +1187,335 @@ export default function SWMM5LegoBuilder() {
               }}>{inpText}</pre>
             </div>
           )}
+
+          {showRpt && wasmParsed && (() => {
+            const p = wasmParsed;
+            const TH = ({children}) => <th style={{ padding: "4px 8px", fontSize: 9, fontWeight: 800, color: "#F4F4F4", background: "#006DB7", textAlign: "left", borderBottom: "2px solid #003F87", whiteSpace: "nowrap" }}>{children}</th>;
+            const TD = ({children, c, r: right}) => <td style={{ padding: "3px 8px", fontSize: 9, color: c || "#1B2A34", fontWeight: 600, textAlign: right ? "right" : "left", borderBottom: "1px solid #E4CD9E", whiteSpace: "nowrap" }}>{children}</td>;
+            const SectionTitle = ({children, color}) => <div style={{ fontSize: 13, fontWeight: 900, color: color || "#D01012", marginBottom: 6, marginTop: 10 }}>{children}</div>;
+            const hasErrors = p.errors.length > 0;
+            const maxFlowLink = p.linkFlow.reduce((a, b) => (+b.maxFlow > +(a?.maxFlow||0) ? b : a), null);
+            const maxDepthNode = p.nodeDepth.reduce((a, b) => (+b.maxDepth > +(a?.maxDepth||0) ? b : a), null);
+            return (
+              <div style={{
+                background: "#F4F4F4", borderRadius: 4, padding: 12,
+                border: "3px solid #D01012", boxShadow: "4px 4px 0 rgba(0,0,0,0.4)", color: "#1B2A34",
+              }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ fontSize: 16, fontWeight: 900, color: "#D01012" }}>🔬 EPA SWMM5 Results</span>
+                    {p.version && <span style={{ fontSize: 8, color: "#6C6E68", fontWeight: 600 }}>{p.version.split(' - ')[1] || ''}</span>}
+                  </div>
+                  <div style={{ display: "flex", gap: 4 }}>
+                    {wasmRpt && <button onClick={() => {
+                      const b = new Blob([wasmRpt], { type: "text/plain" });
+                      const a = document.createElement("a"); a.href = URL.createObjectURL(b);
+                      a.download = "swmm5_lego.rpt"; a.click();
+                    }} style={{ padding: "3px 10px", borderRadius: 3, border: "none", cursor: "pointer",
+                      background: "#4B9F4A", color: "#fff", fontSize: 9, fontWeight: 800,
+                      boxShadow: "0 2px 0 rgba(0,0,0,0.3)", fontFamily: "'Fredoka', sans-serif",
+                    }}>💾 .RPT</button>}
+                    <button onClick={() => setShowRpt(false)} style={{ padding: "3px 8px", borderRadius: 3, border: "none", background: "#6C6E68", color: "#F4F4F4", cursor: "pointer", fontSize: 10, fontWeight: 700 }}>✕</button>
+                  </div>
+                </div>
+
+                {hasErrors && (
+                  <div style={{ background: "#FEE2E2", border: "2px solid #D01012", borderRadius: 4, padding: 8, marginBottom: 8 }}>
+                    {p.errors.map((e, i) => <div key={i} style={{ fontSize: 10, color: "#D01012", fontWeight: 700 }}>🚫 {e}</div>)}
+                  </div>
+                )}
+                {p.warnings.length > 0 && (
+                  <div style={{ background: "#FEF3C7", border: "2px solid #F2C717", borderRadius: 4, padding: 6, marginBottom: 8 }}>
+                    {p.warnings.slice(0, 5).map((w, i) => <div key={i} style={{ fontSize: 9, color: "#92400E", fontWeight: 600 }}>⚠️ {w}</div>)}
+                    {p.warnings.length > 5 && <div style={{ fontSize: 9, color: "#92400E" }}>...and {p.warnings.length - 5} more</div>}
+                  </div>
+                )}
+
+                <div style={{ display: "flex", gap: 4, marginBottom: 10, flexWrap: "wrap" }}>
+                  {[
+                    { k: "summary", l: "📊 Summary" },
+                    { k: "subcatch", l: "🌧️ Subcatchments" },
+                    { k: "nodes", l: "⚙️ Nodes" },
+                    { k: "links", l: "🔵 Links" },
+                    { k: "continuity", l: "💧 Continuity" },
+                    { k: "raw", l: "📄 Raw RPT" },
+                  ].map(t => (
+                    <button key={t.k} onClick={() => setRptTab(t.k)} style={{
+                      padding: "4px 12px", borderRadius: 4,
+                      background: rptTab === t.k ? "#D01012" : "#E4CD9E",
+                      border: "none",
+                      color: rptTab === t.k ? "#F4F4F4" : "#1B2A34",
+                      cursor: "pointer", fontSize: 10, fontWeight: 700, fontFamily: "'Fredoka', sans-serif",
+                      boxShadow: rptTab === t.k ? "inset 1px 1px 0 rgba(0,0,0,0.15), 0 1px 0 rgba(0,0,0,0.3)" : "1px 2px 0 rgba(0,0,0,0.15)",
+                    }}>{t.l}</button>
+                  ))}
+                </div>
+
+                {rptTab === "summary" && (
+                  <div>
+                    {Object.keys(p.analysisOptions).length > 0 && (
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6, marginBottom: 10 }}>
+                        {[
+                          { l: "Flow Units", v: p.analysisOptions["Flow Units"] || "—", c: "#006DB7" },
+                          { l: "Infiltration", v: p.analysisOptions["Infiltration Method"] || p.analysisOptions["Infiltration"] || "—", c: "#4B9F4A" },
+                          { l: "Routing", v: p.analysisOptions["Flow Routing Method"] || p.analysisOptions["Routing Method"] || "—", c: "#FE8A18" },
+                          { l: "Start", v: p.analysisOptions["Starting Date"] || "—", c: "#6C6E68" },
+                        ].map((s, i) => (
+                          <div key={i} style={{ background: "#fff", borderRadius: 4, padding: 8, textAlign: "center", border: "2px solid #E4CD9E" }}>
+                            <div style={{ fontSize: 14, fontWeight: 800, color: s.c, fontFamily: "'Fredoka'" }}>{s.v}</div>
+                            <div style={{ fontSize: 8, color: "#6C6E68", fontWeight: 700 }}>{s.l}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6, marginBottom: 10 }}>
+                      {[
+                        { l: "Subcatchments", v: p.subcatchRunoff.length, c: "#70C442" },
+                        { l: "Nodes", v: p.nodeDepth.length, c: "#FE8A18" },
+                        { l: "Links", v: p.linkFlow.length, c: "#5A93DB" },
+                        { l: "Outfalls", v: p.outfallLoading.length, c: "#D01012" },
+                      ].map((s, i) => (
+                        <div key={i} style={{ background: "#fff", borderRadius: 4, padding: 8, textAlign: "center", border: "2px solid #E4CD9E", boxShadow: "2px 2px 0 rgba(0,0,0,0.1)" }}>
+                          <div style={{ fontSize: 20, fontWeight: 900, color: s.c, fontFamily: "'Fredoka'" }}>{s.v}</div>
+                          <div style={{ fontSize: 9, color: "#6C6E68", fontWeight: 700 }}>{s.l}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {(maxFlowLink || maxDepthNode || p.outfallLoading.length > 0) && (
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
+                        {maxFlowLink && (
+                          <div style={{ background: "#fff", borderRadius: 4, padding: 8, textAlign: "center", border: "2px solid #006DB7" }}>
+                            <div style={{ fontSize: 18, fontWeight: 900, color: "#006DB7", fontFamily: "'Fredoka'" }}>{(+maxFlowLink.maxFlow).toFixed(2)}</div>
+                            <div style={{ fontSize: 8, color: "#6C6E68" }}>Peak Link Flow (CFS)</div>
+                            <div style={{ fontSize: 8, color: "#5A93DB", fontWeight: 700 }}>{maxFlowLink.name}</div>
+                          </div>
+                        )}
+                        {maxDepthNode && (
+                          <div style={{ background: "#fff", borderRadius: 4, padding: 8, textAlign: "center", border: "2px solid #F2C717" }}>
+                            <div style={{ fontSize: 18, fontWeight: 900, color: "#F2C717", fontFamily: "'Fredoka'" }}>{(+maxDepthNode.maxDepth).toFixed(2)}</div>
+                            <div style={{ fontSize: 8, color: "#6C6E68" }}>Max Node Depth (ft)</div>
+                            <div style={{ fontSize: 8, color: "#FE8A18", fontWeight: 700 }}>{maxDepthNode.name}</div>
+                          </div>
+                        )}
+                        {p.outfallLoading.length > 0 && (
+                          <div style={{ background: "#fff", borderRadius: 4, padding: 8, textAlign: "center", border: "2px solid #D01012" }}>
+                            <div style={{ fontSize: 18, fontWeight: 900, color: "#D01012", fontFamily: "'Fredoka'" }}>
+                              {Math.max(...p.outfallLoading.map(o => +o.maxFlow || 0)).toFixed(2)}
+                            </div>
+                            <div style={{ fontSize: 8, color: "#6C6E68" }}>Peak Outfall (CFS)</div>
+                            <div style={{ fontSize: 8, color: "#D01012", fontWeight: 700 }}>{p.outfallLoading[0]?.name || ''}</div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {p.nodeFlooding.length > 0 && <>
+                      <SectionTitle color="#D01012">🚨 Node Flooding ({p.nodeFlooding.length})</SectionTitle>
+                      <div style={{ overflowX: "auto" }}>
+                        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                          <thead><tr><TH>Node</TH><TH>Hours</TH><TH>Max Rate</TH><TH>Total Vol</TH></tr></thead>
+                          <tbody>
+                            {p.nodeFlooding.map((n, i) => (
+                              <tr key={i} style={{ background: i % 2 ? "#F8F8F8" : "#fff" }}>
+                                <TD c="#D01012">{n.name}</TD><TD r>{n.hours}</TD><TD r>{n.maxRate}</TD><TD r>{n.totalFloodVol}</TD>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </>}
+
+                    {p.linkFlow.length > 0 && (() => {
+                      const barData = p.linkFlow.map(l => ({ name: l.name, maxFlow: +l.maxFlow, maxVeloc: +l.maxVeloc, depthFrac: +(l.maxDepthFrac || 0) }));
+                      return <>
+                        <SectionTitle color="#006DB7">📊 Link Peak Flows</SectionTitle>
+                        <ResponsiveContainer width="100%" height={160}>
+                          <BarChart data={barData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#E4CD9E" />
+                            <XAxis dataKey="name" tick={{ fontSize: 8, fill: "#1B2A34" }} />
+                            <YAxis tick={{ fontSize: 8, fill: "#1B2A34" }} label={{ value: "CFS", angle: -90, position: "insideLeft", fontSize: 8 }} />
+                            <Tooltip contentStyle={{ background: "#fff", border: "2px solid #6C6E68", borderRadius: 4, fontSize: 10 }}
+                              formatter={(v, n) => [Number(v).toFixed(3), n]} />
+                            <Bar dataKey="maxFlow" fill="#5A93DB" radius={[3, 3, 0, 0]} name="Peak Flow" />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </>;
+                    })()}
+
+                    {p.nodeDepth.length > 0 && (() => {
+                      const barData = p.nodeDepth.map(n => ({ name: n.name, maxDepth: +n.maxDepth, avgDepth: +n.avgDepth }));
+                      return <>
+                        <SectionTitle color="#F2C717">📊 Node Peak Depths</SectionTitle>
+                        <ResponsiveContainer width="100%" height={160}>
+                          <BarChart data={barData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#E4CD9E" />
+                            <XAxis dataKey="name" tick={{ fontSize: 8, fill: "#1B2A34" }} />
+                            <YAxis tick={{ fontSize: 8, fill: "#1B2A34" }} label={{ value: "ft", angle: -90, position: "insideLeft", fontSize: 8 }} />
+                            <Tooltip contentStyle={{ background: "#fff", border: "2px solid #6C6E68", borderRadius: 4, fontSize: 10 }}
+                              formatter={(v, n) => [Number(v).toFixed(3), n]} />
+                            <Legend wrapperStyle={{ fontSize: 9 }} />
+                            <Bar dataKey="maxDepth" fill="#F2C717" radius={[3, 3, 0, 0]} name="Max Depth" />
+                            <Bar dataKey="avgDepth" fill="#FE8A18" radius={[3, 3, 0, 0]} name="Avg Depth" />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </>;
+                    })()}
+                  </div>
+                )}
+
+                {rptTab === "subcatch" && (
+                  <div style={{ overflowX: "auto" }}>
+                    <SectionTitle color="#70C442">🌧️ Subcatchment Runoff Summary</SectionTitle>
+                    {p.subcatchRunoff.length === 0 ? <div style={{ fontSize: 10, color: "#6C6E68" }}>No subcatchment data in RPT</div> : (
+                      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                        <thead><tr><TH>Name</TH><TH>Precip (in)</TH><TH>Runon (in)</TH><TH>Evap (in)</TH><TH>Infil (in)</TH><TH>Runoff (in)</TH><TH>Peak (CFS)</TH><TH>Coeff</TH></tr></thead>
+                        <tbody>
+                          {p.subcatchRunoff.map((sc, i) => (
+                            <tr key={i} style={{ background: i % 2 ? "#F8F8F8" : "#fff" }}>
+                              <TD c="#70C442">{sc.name}</TD><TD r>{sc.precip}</TD><TD r>{sc.runon}</TD>
+                              <TD r>{sc.evap}</TD><TD r>{sc.infil}</TD><TD r c="#006DB7">{sc.runoff_in}</TD>
+                              <TD r c="#D01012">{sc.peakRunoff}</TD><TD r>{sc.runoffCoeff}</TD>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                    {p.subcatchRunoff.length > 0 && (() => {
+                      const barData = p.subcatchRunoff.map(sc => ({
+                        name: sc.name, precip: sc.precip, runoff: sc.runoff_in, infil: sc.infil,
+                      }));
+                      return <>
+                        <SectionTitle color="#4B9F4A">📊 Subcatchment Water Balance</SectionTitle>
+                        <ResponsiveContainer width="100%" height={180}>
+                          <BarChart data={barData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#E4CD9E" />
+                            <XAxis dataKey="name" tick={{ fontSize: 8, fill: "#1B2A34" }} />
+                            <YAxis tick={{ fontSize: 8, fill: "#1B2A34" }} label={{ value: "inches", angle: -90, position: "insideLeft", fontSize: 8 }} />
+                            <Tooltip contentStyle={{ background: "#fff", border: "2px solid #6C6E68", borderRadius: 4, fontSize: 10 }}
+                              formatter={(v) => [Number(v).toFixed(3)]} />
+                            <Legend wrapperStyle={{ fontSize: 9 }} />
+                            <Bar dataKey="precip" fill="#5A93DB" name="Precip" radius={[2, 2, 0, 0]} />
+                            <Bar dataKey="runoff" fill="#70C442" name="Runoff" radius={[2, 2, 0, 0]} />
+                            <Bar dataKey="infil" fill="#F2C717" name="Infil" radius={[2, 2, 0, 0]} />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </>;
+                    })()}
+                  </div>
+                )}
+
+                {rptTab === "nodes" && (
+                  <div style={{ overflowX: "auto" }}>
+                    <SectionTitle color="#FE8A18">⚙️ Node Depth Summary</SectionTitle>
+                    {p.nodeDepth.length === 0 ? <div style={{ fontSize: 10, color: "#6C6E68" }}>No node data in RPT</div> : (
+                      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                        <thead><tr><TH>Name</TH><TH>Type</TH><TH>Avg Depth (ft)</TH><TH>Max Depth (ft)</TH><TH>Max HGL (ft)</TH></tr></thead>
+                        <tbody>
+                          {p.nodeDepth.map((n, i) => (
+                            <tr key={i} style={{ background: i % 2 ? "#F8F8F8" : "#fff" }}>
+                              <TD c="#FE8A18">{n.name}</TD><TD>{n.type}</TD>
+                              <TD r>{n.avgDepth}</TD><TD r c="#D01012">{n.maxDepth}</TD><TD r>{n.maxHGL}</TD>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+
+                    <SectionTitle color="#006DB7">📥 Node Inflow Summary</SectionTitle>
+                    {p.nodeInflow.length === 0 ? <div style={{ fontSize: 10, color: "#6C6E68" }}>No inflow data in RPT</div> : (
+                      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                        <thead><tr><TH>Name</TH><TH>Type</TH><TH>Max Lateral (CFS)</TH><TH>Max Total (CFS)</TH><TH>Total Vol (gal)</TH></tr></thead>
+                        <tbody>
+                          {p.nodeInflow.map((n, i) => (
+                            <tr key={i} style={{ background: i % 2 ? "#F8F8F8" : "#fff" }}>
+                              <TD c="#006DB7">{n.name}</TD><TD>{n.type}</TD>
+                              <TD r>{n.maxLatInflow}</TD><TD r c="#D01012">{n.maxTotalInflow}</TD><TD r>{n.totalInflowVol}</TD>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+
+                    <SectionTitle color="#D01012">🏗️ Outfall Loading</SectionTitle>
+                    {p.outfallLoading.length === 0 ? <div style={{ fontSize: 10, color: "#6C6E68" }}>No outfall data</div> : (
+                      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                        <thead><tr><TH>Name</TH><TH>Flow Freq (%)</TH><TH>Avg Flow (CFS)</TH><TH>Max Flow (CFS)</TH><TH>Total Vol (gal)</TH></tr></thead>
+                        <tbody>
+                          {p.outfallLoading.map((o, i) => (
+                            <tr key={i} style={{ background: i % 2 ? "#F8F8F8" : "#fff" }}>
+                              <TD c="#D01012">{o.name}</TD><TD r>{o.flowFreq}</TD>
+                              <TD r>{o.avgFlow}</TD><TD r c="#D01012">{o.maxFlow}</TD><TD r>{o.totalVol}</TD>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                )}
+
+                {rptTab === "links" && (
+                  <div style={{ overflowX: "auto" }}>
+                    <SectionTitle color="#5A93DB">🔵 Link Flow Summary</SectionTitle>
+                    {p.linkFlow.length === 0 ? <div style={{ fontSize: 10, color: "#6C6E68" }}>No link data in RPT</div> : (
+                      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                        <thead><tr><TH>Name</TH><TH>Type</TH><TH>Max Flow (CFS)</TH><TH>Max Veloc (ft/s)</TH><TH>Max d/D</TH></tr></thead>
+                        <tbody>
+                          {p.linkFlow.map((l, i) => (
+                            <tr key={i} style={{ background: i % 2 ? "#F8F8F8" : "#fff" }}>
+                              <TD c="#5A93DB">{l.name}</TD><TD>{l.type}</TD>
+                              <TD r c="#006DB7">{l.maxFlow}</TD><TD r>{l.maxVeloc}</TD>
+                              <TD r c={+l.maxDepthFrac >= 1 ? "#D01012" : "#4B9F4A"}>{l.maxDepthFrac}</TD>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                )}
+
+                {rptTab === "continuity" && (
+                  <div>
+                    {Object.keys(p.runoffQuantity).length > 0 && <>
+                      <SectionTitle color="#70C442">💧 Runoff Quantity Continuity</SectionTitle>
+                      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                        <thead><tr><TH>Component</TH><TH>Depth (in)</TH><TH>Volume (gal)</TH></tr></thead>
+                        <tbody>
+                          {Object.entries(p.runoffQuantity).map(([k, v], i) => (
+                            <tr key={i} style={{ background: i % 2 ? "#F8F8F8" : "#fff" }}>
+                              <TD c="#4B9F4A">{k}</TD><TD r>{v.in}</TD><TD r>{v.gal}</TD>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </>}
+                    {Object.keys(p.routingSummary).length > 0 && <>
+                      <SectionTitle color="#006DB7">🔄 Flow Routing Continuity</SectionTitle>
+                      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                        <thead><tr><TH>Component</TH><TH>Depth (in)</TH><TH>Volume (gal)</TH></tr></thead>
+                        <tbody>
+                          {Object.entries(p.routingSummary).map(([k, v], i) => (
+                            <tr key={i} style={{ background: i % 2 ? "#F8F8F8" : "#fff" }}>
+                              <TD c="#006DB7">{k}</TD><TD r>{v.in}</TD><TD r>{v.gal}</TD>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </>}
+                  </div>
+                )}
+
+                {rptTab === "raw" && (
+                  <pre style={{
+                    background: "#1B2A34", color: "#F4F4F4", padding: 10, borderRadius: 6,
+                    fontSize: 8, lineHeight: 1.3, maxHeight: 400, overflow: "auto",
+                    fontFamily: "'Courier New', monospace", whiteSpace: "pre",
+                  }}>{wasmRpt}</pre>
+                )}
+              </div>
+            );
+          })()}
         </div>
 
         <div style={{ width: 280, flexShrink: 0, display: "flex", flexDirection: "column", gap: 10 }}>
