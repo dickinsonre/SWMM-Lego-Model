@@ -1518,17 +1518,17 @@ export default function SWMM5LegoBuilder() {
           })()}
         </div>
 
-        <div style={{ width: 280, flexShrink: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ width: 280, flexShrink: 0, display: "flex", flexDirection: "column", gap: 6 }}>
           <div style={{
-            background: "#F4F4F4", borderRadius: 4, padding: 14,
+            background: "#F4F4F4", borderRadius: 4, padding: 8,
             border: "3px solid #6C6E68", color: "#1B2A34",
             boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
           }}>
             <div style={{
               background: "#F2C717", color: "#1B2A34", fontWeight: 900,
-              padding: "4px 8px", borderRadius: 2, fontSize: 14, display: "inline-block", marginBottom: 10,
+              padding: "2px 8px", borderRadius: 2, fontSize: 12, display: "inline-block", marginBottom: 6,
             }}>📊 NETWORK</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 4 }}>
               {(() => {
                 const counts = {};
                 grid.flat().filter(Boolean).forEach(e => { counts[e] = (counts[e] || 0) + 1; });
@@ -1549,12 +1549,12 @@ export default function SWMM5LegoBuilder() {
                   { l: "S (in)", v: wcn > 0 ? (1000/wcn - 10).toFixed(1) : "—", c: "#6C6E68" },
                 ].map((s, i) => (
                   <div key={i} style={{
-                    background: "#fff", borderRadius: 4, padding: "8px 6px", textAlign: "center",
+                    background: "#fff", borderRadius: 3, padding: "4px 4px", textAlign: "center",
                     border: "2px solid #E4CD9E",
                     boxShadow: "inset 1px 1px 0 rgba(255,255,255,0.8), 2px 2px 0 rgba(0,0,0,0.15)",
                   }}>
-                    <div style={{ fontSize: 20, fontWeight: 900, color: s.c, fontFamily: "'Fredoka'" }}>{s.v}</div>
-                    <div style={{ fontSize: 10, color: "#6C6E68", fontWeight: 700 }}>{s.l}</div>
+                    <div style={{ fontSize: 16, fontWeight: 900, color: s.c, fontFamily: "'Fredoka'" }}>{s.v}</div>
+                    <div style={{ fontSize: 8, color: "#6C6E68", fontWeight: 700 }}>{s.l}</div>
                   </div>
                 ));
               })()}
@@ -1562,40 +1562,40 @@ export default function SWMM5LegoBuilder() {
           </div>
 
           <div style={{
-            background: "#F4F4F4", borderRadius: 4, padding: 14,
+            background: "#F4F4F4", borderRadius: 4, padding: 8,
             border: "3px solid #6C6E68", color: "#1B2A34",
             boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
           }}>
             <div style={{
               background: "#006DB7", color: "#F4F4F4", fontWeight: 900,
-              padding: "4px 8px", borderRadius: 2, fontSize: 13, display: "inline-block", marginBottom: 8,
+              padding: "2px 8px", borderRadius: 2, fontSize: 11, display: "inline-block", marginBottom: 4,
             }}>💡 SWMM5 MAP</div>
-            <div style={{ fontSize: 11, color: "#1B2A34", lineHeight: 1.9, fontWeight: 600 }}>
-              <div><span style={{ color: "#70C442", fontSize: 14 }}>■</span> Surfaces → [SUBCATCHMENTS]</div>
-              <div><span style={{ color: "#6C6E68", fontSize: 14 }}>■</span> Manholes → [JUNCTIONS]</div>
-              <div><span style={{ color: "#006DB7", fontSize: 14 }}>■</span> Inlets → [JUNCTIONS]</div>
-              <div><span style={{ color: "#003F87", fontSize: 14 }}>■</span> Outfalls → [OUTFALLS]</div>
-              <div><span style={{ color: "#FE8A18", fontSize: 14 }}>■</span> Storage → [STORAGE]</div>
-              <div><span style={{ color: "#F2C717", fontSize: 14 }}>■</span> Dividers → [DIVIDERS]</div>
-              <div><span style={{ color: "#5A93DB", fontSize: 14 }}>■</span> Pipes → [CONDUITS]</div>
-              <div><span style={{ color: "#006DB7", fontSize: 14 }}>■</span> Channels → [CONDUITS]</div>
-              <div><span style={{ color: "#FE8A18", fontSize: 14 }}>■</span> Pumps → [PUMPS]</div>
-              <div><span style={{ color: "#5A93DB", fontSize: 14 }}>■</span> Orifices → [ORIFICES]</div>
-              <div><span style={{ color: "#F2C717", fontSize: 14 }}>■</span> Weirs → [WEIRS]</div>
-              <div><span style={{ color: "#70C442", fontSize: 14 }}>■</span> LID → BioRetention</div>
+            <div style={{ fontSize: 10, color: "#1B2A34", lineHeight: 1.5, fontWeight: 600 }}>
+              <div><span style={{ color: "#70C442", fontSize: 12 }}>■</span> Surfaces → [SUBCATCHMENTS]</div>
+              <div><span style={{ color: "#6C6E68", fontSize: 12 }}>■</span> Manholes → [JUNCTIONS]</div>
+              <div><span style={{ color: "#006DB7", fontSize: 12 }}>■</span> Inlets → [JUNCTIONS]</div>
+              <div><span style={{ color: "#003F87", fontSize: 12 }}>■</span> Outfalls → [OUTFALLS]</div>
+              <div><span style={{ color: "#FE8A18", fontSize: 12 }}>■</span> Storage → [STORAGE]</div>
+              <div><span style={{ color: "#F2C717", fontSize: 12 }}>■</span> Dividers → [DIVIDERS]</div>
+              <div><span style={{ color: "#5A93DB", fontSize: 12 }}>■</span> Pipes → [CONDUITS]</div>
+              <div><span style={{ color: "#006DB7", fontSize: 12 }}>■</span> Channels → [CONDUITS]</div>
+              <div><span style={{ color: "#FE8A18", fontSize: 12 }}>■</span> Pumps → [PUMPS]</div>
+              <div><span style={{ color: "#5A93DB", fontSize: 12 }}>■</span> Orifices → [ORIFICES]</div>
+              <div><span style={{ color: "#F2C717", fontSize: 12 }}>■</span> Weirs → [WEIRS]</div>
+              <div><span style={{ color: "#70C442", fontSize: 12 }}>■</span> LID → BioRetention</div>
             </div>
           </div>
 
           <div style={{
-            background: "#F4F4F4", borderRadius: 4, padding: 14,
+            background: "#F4F4F4", borderRadius: 4, padding: 8,
             border: "3px solid #6C6E68", color: "#1B2A34",
             boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
           }}>
             <div style={{
               background: "#4B9F4A", color: "#F4F4F4", fontWeight: 900,
-              padding: "4px 8px", borderRadius: 2, fontSize: 13, display: "inline-block", marginBottom: 8,
+              padding: "2px 8px", borderRadius: 2, fontSize: 11, display: "inline-block", marginBottom: 4,
             }}>🎮 WORKFLOW</div>
-            <div style={{ fontSize: 12, color: "#1B2A34", lineHeight: 2.0, fontWeight: 600 }}>
+            <div style={{ fontSize: 10, color: "#1B2A34", lineHeight: 1.6, fontWeight: 600 }}>
               <div>1️⃣ Paint surfaces & nodes</div>
               <div>2️⃣ Connect with pipes</div>
               <div>3️⃣ Right-click to edit properties</div>
@@ -1608,14 +1608,14 @@ export default function SWMM5LegoBuilder() {
           </div>
 
           <div style={{
-            background: "#F4F4F4", borderRadius: 4, padding: 12,
+            background: "#F4F4F4", borderRadius: 4, padding: 8,
             border: "3px solid #6C6E68", color: "#1B2A34",
             boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
             flex: 1, display: "flex", flexDirection: "column", minHeight: 0,
           }}>
             <div style={{
               background: "#D01012", color: "#F4F4F4", fontWeight: 900,
-              padding: "4px 8px", borderRadius: 2, fontSize: 13, display: "inline-block", marginBottom: 6,
+              padding: "2px 8px", borderRadius: 2, fontSize: 11, display: "inline-block", marginBottom: 4,
             }}>🌧️ DESIGN STORMS ({STORMS.length})</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 3, marginBottom: 6 }}>
               <button onClick={() => setStormCat("all")} style={{
