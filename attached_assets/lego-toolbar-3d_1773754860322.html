@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SWMM5 Lego Builder — 3D Toolbar</title>
+<style>
+/* ============================================================
+   SWMM5 LEGO BUILDER — 3D TOOLBAR CSS
+   Drop this <style> block into your existing app.
+   Each .lego-btn gets the 3D treatment automatically
+   based on its data-color attribute.
+   ============================================================ */
+
+:root {
+  /* ---- Lego Color Palette ---- */
+  /* Each color needs 3 stops: base, light (highlight), dark (depth) */
+  --lego-yellow:       #F5C518;
+  --lego-yellow-light: #FFE066;
+  --lego-yellow-dark:  #C49A00;
+
+  --lego-red:          #E53935;
+  --lego-red-light:    #FF7B7B;
+  --lego-red-dark:     #A11A17;
+
+  --lego-green:        #43A047;
+  --lego-green-light:  #7ECF82;
+  --lego-green-dark:   #1E6E22;
+
+  --lego-blue:         #1E88E5;
+  --lego-blue-light:   #6DB8F7;
+  --lego-blue-dark:    #0D5BAB;
+
+  --lego-gray:         #757575;
+  --lego-gray-light:   #A8A8A8;
+  --lego-gray-dark:    #424242;
+
+  --lego-orange:       #F57C00;
+  --lego-orange-light: #FFB74D;
+  --lego-orange-dark:  #BB4D00;
+
+  --lego-white:        #F5F5F5;
+  --lego-white-light:  #FFFFFF;
+  --lego-white-dark:   #BDBDBD;
+
+  /* ---- Stud dimensions ---- */
+  --stud-size: 14px;
+  --stud-offset: -7px;  /* half of stud-size, pulls it above the button */
+
+  /* ---- Depth (the thick bottom border) ---- */
+  --depth-height: 5px;
+
+  /* ---- Toolbar ---- */
+  --toolbar-bg: #388E3C;
+  --toolbar-bg-dark: #2E7D32;
+  --toolbar-border: #1B5E20;
+  --toolbar-padding: 12px;
+  --toolbar-gap: 8px;
+}
+
+/* ============================================================
+   TOOLBAR CONTAINER — the green baseplate
+   ============================================================ */
+.lego-toolbar {
+  background: var(--toolbar-bg);
+  border: 3px solid var(--toolbar-border);
+  border-radius: 8px;
+  padding: var(--toolbar-padding) var(--toolbar-padding) calc(var(--toolbar-padding) - 2px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--toolbar-gap);
+  align-items: center;
+  justify-content: center;
+  /* Baseplate texture: subtle grid lines */
+  background-image:
+    linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.15),
+    0 4px 0 var(--toolbar-border),
+    0 6px 8px rgba(0,0,0,0.3);
+}
+
+.lego-toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--toolbar-gap);
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.lego-toolbar .separator {
+  width: 2px;
+  height: 28px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 1px;
+  margin: 0 4px;
+}
+
+.lego-toolbar .label {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  margin: 0 2px;
+}
+
+/* ============================================================
+   LEGO BUTTON — the core 3D brick
+   ============================================================ */
+.lego-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  margin-top: 8px; /* room for the stud */
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 2px solid rgba(0,0,0,0.25);
+  border-radius: 4px;
+  transition: all 0.08s ease;
+  user-select: none;
+  white-space: nowrap;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.15);
+}
+
+/* ---- 3D depth: thick bottom border ---- */
+.lego-btn {
+  border-bottom-width: var(--depth-height);
+}
+
+/* ---- 3D highlight: inset top/left glow ---- */
+.lego-btn {
+  box-shadow:
+    inset 0 2px 0 var(--btn-light, rgba(255,255,255,0.3)),
+    inset 2px 0 0 var(--btn-light-subtle, rgba(255,255,255,0.15));
+}
+
+/* ---- The stud (circular bump on top) ---- */
+.lego-btn::before {
+  content: '';
+  position: absolute;
+  top: var(--stud-offset);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--stud-size);
+  height: var(--stud-size);
+  border-radius: 50%;
+  background: var(--btn-base, #999);
+  border: 2px solid rgba(0,0,0,0.2);
+  box-shadow:
+    inset 0 2px 0 var(--btn-light, rgba(255,255,255,0.3)),
+    inset 0 -2px 0 var(--btn-dark, rgba(0,0,0,0.2));
+  pointer-events: none;
+}
+
+/* ---- Press animation: brick pushes down ---- */
+.lego-btn:active {
+  border-bottom-width: 2px;
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 1px 0 var(--btn-light, rgba(255,255,255,0.2));
+}
+
+/* ---- Hover: slight brightening ---- */
+.lego-btn:hover {
+  filter: brightness(1.08);
+}
+
+/* ---- Focus ring for accessibility ---- */
+.lego-btn:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   COLOR VARIANTS — set via data-color="yellow" etc.
+   ============================================================ */
+
+/* YELLOW */
+.lego-btn[data-color="yellow"] {
+  background: var(--lego-yellow);
+  border-bottom-color: var(--lego-yellow-dark);
+  color: #1a1a00;
+  --btn-base: var(--lego-yellow);
+  --btn-light: var(--lego-yellow-light);
+  --btn-light-subtle: rgba(255, 224, 102, 0.4);
+  --btn-dark: var(--lego-yellow-dark);
+}
+
+/* RED */
+.lego-btn[data-color="red"] {
+  background: var(--lego-red);
+  border-bottom-color: var(--lego-red-dark);
+  color: #fff;
+  --btn-base: var(--lego-red);
+  --btn-light: var(--lego-red-light);
+  --btn-light-subtle: rgba(255, 123, 123, 0.35);
+  --btn-dark: var(--lego-red-dark);
+}
+
+/* GREEN */
+.lego-btn[data-color="green"] {
+  background: var(--lego-green);
+  border-bottom-color: var(--lego-green-dark);
+  color: #fff;
+  --btn-base: var(--lego-green);
+  --btn-light: var(--lego-green-light);
+  --btn-light-subtle: rgba(126, 207, 130, 0.35);
+  --btn-dark: var(--lego-green-dark);
+}
+
+/* BLUE */
+.lego-btn[data-color="blue"] {
+  background: var(--lego-blue);
+  border-bottom-color: var(--lego-blue-dark);
+  color: #fff;
+  --btn-base: var(--lego-blue);
+  --btn-light: var(--lego-blue-light);
+  --btn-light-subtle: rgba(109, 184, 247, 0.35);
+  --btn-dark: var(--lego-blue-dark);
+}
+
+/* GRAY */
+.lego-btn[data-color="gray"] {
+  background: var(--lego-gray);
+  border-bottom-color: var(--lego-gray-dark);
+  color: #fff;
+  --btn-base: var(--lego-gray);
+  --btn-light: var(--lego-gray-light);
+  --btn-light-subtle: rgba(168, 168, 168, 0.35);
+  --btn-dark: var(--lego-gray-dark);
+}
+
+/* ORANGE */
+.lego-btn[data-color="orange"] {
+  background: var(--lego-orange);
+  border-bottom-color: var(--lego-orange-dark);
+  color: #fff;
+  --btn-base: var(--lego-orange);
+  --btn-light: var(--lego-orange-light);
+  --btn-light-subtle: rgba(255, 183, 77, 0.35);
+  --btn-dark: var(--lego-orange-dark);
+}
+
+/* WHITE / LIGHT GRAY — for grid size buttons */
+.lego-btn[data-color="white"] {
+  background: var(--lego-white);
+  border-bottom-color: var(--lego-white-dark);
+  color: #333;
+  --btn-base: var(--lego-white);
+  --btn-light: var(--lego-white-light);
+  --btn-light-subtle: rgba(255, 255, 255, 0.5);
+  --btn-dark: var(--lego-white-dark);
+  text-shadow: none;
+}
+
+/* ---- Active / Selected state (e.g., current grid size) ---- */
+.lego-btn.active {
+  box-shadow:
+    inset 0 3px 6px rgba(0,0,0,0.3);
+  border-bottom-width: 2px;
+  transform: translateY(2px);
+  filter: brightness(0.92);
+}
+
+/* ============================================================
+   ICON SUPPORT — emoji or SVG icons before the label
+   ============================================================ */
+.lego-btn .icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* ============================================================
+   SMALL VARIANT — for grid size buttons
+   ============================================================ */
+.lego-btn.sm {
+  padding: 5px 10px;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  --stud-size: 10px;
+  --stud-offset: -5px;
+}
+
+.lego-btn.sm::before {
+  width: 10px;
+  height: 10px;
+}
+
+/* ============================================================
+   PAGE DEMO STYLING (not part of the toolbar itself)
+   ============================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  background: #1a1a2e;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  gap: 40px;
+}
+
+h1 {
+  color: #F5C518;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+h2 {
+  color: #aaa;
+  font-size: 16px;
+  font-weight: 400;
+  margin-top: -20px;
+}
+
+.demo-section {
+  width: 100%;
+  max-width: 1100px;
+}
+
+.demo-label {
+  color: #888;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+/* ---- CSS code display ---- */
+.code-block {
+  background: #0d0d1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 700px;
+  margin: 0 auto;
+  overflow-x: auto;
+}
+
+.code-block pre {
+  color: #ccc;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.code-block .comment { color: #6a9955; }
+.code-block .prop    { color: #9cdcfe; }
+.code-block .val     { color: #ce9178; }
+.code-block .sel     { color: #d7ba7d; }
+</style>
+</head>
+<body>
+
+<h1>SWMM5 Lego Builder</h1>
+<h2>3D Toolbar — drop-in CSS for your existing app</h2>
+
+<!-- ============================================================
+     FULL TOOLBAR DEMO
+     ============================================================ -->
+<div class="demo-section">
+  <div class="demo-label">Full toolbar</div>
+  <div class="lego-toolbar">
+
+    <!-- Row 1 -->
+    <div class="lego-toolbar-row">
+      <button class="lego-btn" data-color="yellow"><span class="icon">↩</span> Undo</button>
+      <button class="lego-btn" data-color="red"><span class="icon">🗑</span> Clear</button>
+      <button class="lego-btn" data-color="green"><span class="icon">🎮</span> Demos</button>
+
+      <span class="separator"></span>
+
+      <button class="lego-btn" data-color="green"><span class="icon">☑</span> Validate</button>
+      <button class="lego-btn" data-color="yellow"><span class="icon">🔧</span> Fix</button>
+
+      <span class="separator"></span>
+
+      <button class="lego-btn" data-color="blue"><span class="icon">🚀</span> Run SWMM5</button>
+      <button class="lego-btn" data-color="gray"><span class="icon">↺</span> Reset</button>
+      <button class="lego-btn" data-color="gray"><span class="icon">💾</span> Save/Load</button>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="lego-toolbar-row">
+      <button class="lego-btn" data-color="yellow"><span class="icon">📄</span> EPA SWMM5</button>
+      <button class="lego-btn" data-color="green"><span class="icon">📤</span> Export</button>
+      <button class="lego-btn" data-color="orange"><span class="icon">📂</span> Import</button>
+
+      <span class="separator"></span>
+
+      <span class="label">Grid:</span>
+      <button class="lego-btn sm active" data-color="yellow">20×20</button>
+      <button class="lego-btn sm" data-color="white">25×25</button>
+      <button class="lego-btn sm" data-color="white">30×30</button>
+      <button class="lego-btn sm" data-color="white">40×40</button>
+      <button class="lego-btn sm" data-color="white">50×50</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     INDIVIDUAL COLOR SWATCHES
+     ============================================================ -->
+<div class="demo-section">
+  <div class="demo-label">All color variants</div>
+  <div class="lego-toolbar" style="max-width: 700px; margin: 0 auto;">
+    <div class="lego-toolbar-row">
+      <button class="lego-btn" data-color="yellow">Yellow</button>
+      <button class="lego-btn" data-color="red">Red</button>
+      <button class="lego-btn" data-color="green">Green</button>
+      <button class="lego-btn" data-color="blue">Blue</button>
+      <button class="lego-btn" data-color="gray">Gray</button>
+      <button class="lego-btn" data-color="orange">Orange</button>
+      <button class="lego-btn" data-color="white">White</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     QUICK INTEGRATION GUIDE
+     ============================================================ -->
+<div class="demo-section">
+  <div class="demo-label">How to integrate — just add data-color and the class</div>
+  <div class="code-block">
+<pre><span class="comment">/* Before (flat): */</span>
+<span class="sel">&lt;button class="toolbar-btn"&gt;</span>Run SWMM5<span class="sel">&lt;/button&gt;</span>
+
+<span class="comment">/* After (3D Lego): */</span>
+<span class="sel">&lt;button class="<span class="val">lego-btn</span>" data-color="<span class="val">blue</span>"&gt;</span>
+  <span class="sel">&lt;span class="icon"&gt;</span>🚀<span class="sel">&lt;/span&gt;</span> Run SWMM5
+<span class="sel">&lt;/button&gt;</span>
+
+<span class="comment">/* Small variant for grid buttons: */</span>
+<span class="sel">&lt;button class="<span class="val">lego-btn sm</span>" data-color="<span class="val">white</span>"&gt;</span>30×30<span class="sel">&lt;/button&gt;</span>
+
+<span class="comment">/* Active/selected state: */</span>
+<span class="sel">&lt;button class="<span class="val">lego-btn sm active</span>" data-color="<span class="val">yellow</span>"&gt;</span>20×20<span class="sel">&lt;/button&gt;</span>
+
+<span class="comment">/* The 3D effect comes from 4 things:
+   1. border-bottom: 5px solid &lt;dark shade&gt;    → depth
+   2. box-shadow: inset 0 2px 0 &lt;light shade&gt;  → highlight
+   3. ::before pseudo-element                    → stud
+   4. :active translateY(3px)                    → press
+*/</span></pre>
+  </div>
+</div>
+
+<script>
+  /* Grid button toggle demo */
+  document.querySelectorAll('.lego-btn.sm').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.lego-btn.sm').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('data-color', 'white');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('data-color', 'yellow');
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -12,6 +12,7 @@ import { importINP } from "../lib/importInp.js";
 import { DEMOS } from "../lib/demos.js";
 import { initSwmmWasm, runSwmmWasm, isSwmmReady } from "../lib/swmmWasm.js";
 import { parseRpt } from "../lib/parseRpt.js";
+import "./LegoToolbar.css";
 
 function GridCell({ element, isHov, hasErr, hasWarn, hasOverride, flowIntensity, depthFrac, row, col }) {
   const el = element ? EL[element] : null;
@@ -48,33 +49,20 @@ function GridCell({ element, isHov, hasErr, hasWarn, hasOverride, flowIntensity,
     tip += "\nEmpty — click to place\nRight-click placed cells to edit properties";
   }
 
-  const brickShadow = el
-    ? `inset 3px 3px 0 0 rgba(255,255,255,0.20), inset -3px -4px 0 0 rgba(0,0,0,0.30), 2px 3px 0 0 rgba(0,0,0,0.40)${flowGlow}`
-    : "none";
+  const extraShadow = flowGlow ? flowGlow : "";
   const borderStyle = hasErr ? "2px solid #D01012" : hasWarn ? "2px solid #FE8A18" : hasOverride ? "2px solid #F2C717" : isHov && !el ? "2px solid rgba(255,255,255,0.25)" : "none";
-  const cellShadow = hasErr ? `0 0 8px rgba(208,16,18,0.6)${flowGlow}` : hasWarn ? `0 0 8px rgba(254,138,24,0.5)${flowGlow}` : brickShadow;
+  const errShadow = hasErr ? `0 0 8px rgba(208,16,18,0.6)${extraShadow}` : hasWarn ? `0 0 8px rgba(254,138,24,0.5)${extraShadow}` : "";
 
   return (
-    <div title={tip} style={{
+    <div title={tip} className={`lego-grid-cell${el ? " filled" : ""}`} style={{
       width: CELL, height: CELL,
       background: el ? base : "transparent",
       border: borderStyle,
-      borderRadius: 3, cursor: "pointer",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      fontSize: el ? 13 : 0, position: "relative",
-      boxShadow: cellShadow,
-      transition: "box-shadow 0.15s ease, transform 0.1s ease",
-      userSelect: "none",
-      margin: el ? 0 : 0,
+      fontSize: el ? 13 : 0,
+      ...(errShadow ? { boxShadow: errShadow } : {}),
+      ...(extraShadow && !hasErr && !hasWarn && el ? { boxShadow: `inset 3px 3px 0 0 rgba(255,255,255,0.25), inset -3px -4px 0 0 rgba(0,0,0,0.30), 2px 3px 0 0 rgba(0,0,0,0.40)${extraShadow}` } : {}),
     }}>
-      {el && <div style={{
-        width: 10, height: 10, borderRadius: "50%",
-        background: "inherit",
-        filter: "brightness(1.15)",
-        position: "absolute", top: 3, left: 3,
-        boxShadow: "0 0 0 1.5px rgba(0,0,0,0.30), inset 0 -2px 0px rgba(0,0,0,0.20), inset 0 1px 0px rgba(255,255,255,0.35)",
-        zIndex: 1,
-      }} />}
+      {el && <div className="stud" />}
       <span style={{ position: "relative", zIndex: 2, textShadow: el ? "1px 1px 0 rgba(0,0,0,0.4)" : "none" }}>{el ? el.e : ""}</span>
       {depthFrac > 0 && el?.cat === "node" && (
         <div style={{
@@ -93,21 +81,14 @@ function PalBtn({ type, sel, onClick }) {
   const el = EL[type];
   const on = sel === type;
   return (
-    <button onClick={() => onClick(type)} title={`${el.lbl}${el.cn !== undefined ? ` • CN:${el.cn} • %Imp:${el.pI}` : ""}${el.maxD ? ` • MaxD:${el.maxD}ft` : ""}${el.diam ? ` • Dia:${el.diam}ft` : ""}`} style={{
-      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end",
-      gap: 1, padding: "14px 2px 4px",
-      background: on ? el.clr : "rgba(255,255,255,0.06)",
-      border: "none", borderRadius: 4,
-      color: on ? "#fff" : "#A0A19B", cursor: "pointer",
-      fontFamily: "'Fredoka', sans-serif", fontWeight: on ? 700 : 500,
-      width: "100%", transition: "all 0.12s", position: "relative",
-      boxShadow: on
-        ? `inset 3px 3px 0 rgba(0,0,0,0.15), inset -1px -1px 0 rgba(255,255,255,0.10), 0px 1px 0 rgba(0,0,0,0.40)`
-        : `inset 2px 2px 0 rgba(255,255,255,0.15), inset -2px -3px 0 rgba(0,0,0,0.20), 2px 3px 0 rgba(0,0,0,0.35)`,
-      outline: on ? `3px solid #F2C717` : "none",
-      outlineOffset: on ? 2 : 0,
-      transform: on ? "translateY(2px)" : "none",
-    }}>
+    <button onClick={() => onClick(type)} title={`${el.lbl}${el.cn !== undefined ? ` • CN:${el.cn} • %Imp:${el.pI}` : ""}${el.maxD ? ` • MaxD:${el.maxD}ft` : ""}${el.diam ? ` • Dia:${el.diam}ft` : ""}`}
+      className={`lego-pal-btn${on ? " selected" : ""}`}
+      style={{
+        background: on ? el.clr : undefined,
+        color: on ? "#fff" : "#A0A19B",
+        fontWeight: on ? 700 : 500,
+        borderBottomColor: on ? "rgba(0,0,0,0.35)" : undefined,
+      }}>
       <span style={{ fontSize: 13, lineHeight: 1, position: "relative", zIndex: 2, textShadow: on ? "1px 1px 0 rgba(0,0,0,0.5)" : "none" }}>{el.e}</span>
       <span style={{ fontSize: 7, lineHeight: 1, position: "relative", zIndex: 2, textShadow: on ? "1px 1px 0 rgba(0,0,0,0.5)" : "none", fontWeight: 800 }}>{el.lbl}</span>
     </button>
@@ -498,26 +479,12 @@ export default function SWMM5LegoBuilder() {
 
         <div style={{ width: 210, flexShrink: 0, display: "flex", flexDirection: "column", gap: 8 }}>
           <div style={{ display: "flex", gap: 4 }}>
-            <button onClick={() => setErasing(false)} style={{
-              flex: 1, padding: "7px 0", borderRadius: 4, border: "none",
-              background: !erasing ? "#4B9F4A" : "#6C6E68",
-              color: "#F4F4F4", cursor: "pointer", fontSize: 11, fontWeight: 800,
-              fontFamily: "'Fredoka', sans-serif", textTransform: "uppercase", letterSpacing: 0.5,
-              boxShadow: !erasing
-                ? "inset 2px 2px 0 rgba(0,0,0,0.15), 0px 1px 0 rgba(0,0,0,0.40)"
-                : "inset 2px 2px 0 rgba(255,255,255,0.15), inset -2px -3px 0 rgba(0,0,0,0.20), 0 3px 0 rgba(0,0,0,0.35)",
-              transform: !erasing ? "translateY(2px)" : "none",
-            }}>🖌️ Paint</button>
-            <button onClick={() => setErasing(true)} style={{
-              flex: 1, padding: "7px 0", borderRadius: 4, border: "none",
-              background: erasing ? "#D01012" : "#6C6E68",
-              color: "#F4F4F4", cursor: "pointer", fontSize: 11, fontWeight: 800,
-              fontFamily: "'Fredoka', sans-serif", textTransform: "uppercase", letterSpacing: 0.5,
-              boxShadow: erasing
-                ? "inset 2px 2px 0 rgba(0,0,0,0.15), 0px 1px 0 rgba(0,0,0,0.40)"
-                : "inset 2px 2px 0 rgba(255,255,255,0.15), inset -2px -3px 0 rgba(0,0,0,0.20), 0 3px 0 rgba(0,0,0,0.35)",
-              transform: erasing ? "translateY(2px)" : "none",
-            }}>🧹 Erase</button>
+            <button onClick={() => setErasing(false)}
+              className={`lego-paint-btn ${!erasing ? "paint-mode paint-active" : "inactive"}`}
+            >🖌️ Paint</button>
+            <button onClick={() => setErasing(true)}
+              className={`lego-paint-btn ${erasing ? "erase-mode erase-active" : "inactive"}`}
+            >🧹 Erase</button>
           </div>
 
           {CATS.map(cat => (
@@ -623,52 +590,36 @@ export default function SWMM5LegoBuilder() {
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 8, flexGrow: 1, maxWidth: 780 }}>
-          <div style={{
-            background: "#4B9F4A", borderRadius: 4, padding: 10,
-            border: "4px solid #3A8A3A",
-            borderBottom: "6px solid #2A6A2A",
-            borderRight: "6px solid #2A6A2A",
-            boxShadow: "4px 4px 0 0 rgba(0,0,0,0.4)",
-          }}>
-            <div style={{ display: "flex", gap: 5, marginBottom: 6, justifyContent: "center", flexWrap: "wrap" }}>
+          <div className="lego-toolbar">
+            <div style={{ display: "flex", gap: 5, justifyContent: "center", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
               {[
-                { l: "↩ UNDO", fn: () => { if (hist.length) { const entry = hist[hist.length-1]; setGridGlobal(entry.gridSize); setGridSize(entry.gridSize); setGrid(entry.grid); setHist(h => h.slice(0,-1)); } }, bg: "#F2C717", fg: "#1B2A34", tip: "Undo last grid change (up to 30 steps)" },
-                { l: "🗑️ CLEAR", fn: () => { save(); setGrid(emptyGrid(gridSize)); doReset(); }, bg: "#D01012", fg: "#fff", tip: "Clear entire grid and reset simulation" },
-                { l: "🎲 DEMOS", fn: () => setShowDemos(s => !s), bg: "#FE8A18", fg: "#fff", tip: "Load a pre-built demo model (Residential, Parking Lot, etc.)" },
-                { l: "✅ VALIDATE", fn: () => setValidation(validateModel(grid)), bg: "#4B9F4A", fg: "#fff", tip: "Check model for errors: missing outfalls, disconnected pipes, CFL violations" },
-                { l: "🔧 FIX", fn: doFix, bg: "#F2C717", fg: "#1B2A34", tip: "Auto-fix validation errors: add missing outfalls, connect orphan pipes" },
-                { l: "🚀 RUN SWMM5", fn: doRun, bg: "#006DB7", fg: "#fff", tip: "Run animated JS simulation with real-time flow visualization on the grid" },
-                ...(isRunning ? [{ l: "⏸ STOP", fn: doStop, bg: "#D01012", fg: "#fff", tip: "Stop the running simulation" }] : []),
-                ...(simResult && !isRunning ? [{ l: "🔄 RESET", fn: doReset, bg: "#6C6E68", fg: "#fff", tip: "Clear simulation results and reset the grid display" }] : []),
-                { l: "💾 SAVE/LOAD", fn: () => { setSaveSlots(getSaveSlots()); setShowSavePanel(true); }, bg: "#4B9F4A", fg: "#fff", tip: "Save/load models to browser storage (auto-save + 5 named slots)" },
-                { l: wasmLoading ? "⏳ RUNNING..." : "🔬 EPA SWMM5", fn: doRunWasm, bg: "#D01012", fg: "#fff", tip: "Run full EPA SWMM5 solver (WASM) with Dynamic Wave routing and detailed RPT output" },
-                { l: "📦 EXPORT", fn: doExport, bg: "#FE8A18", fg: "#fff", tip: "Export model as EPA SWMM5 .INP file (compatible with desktop SWMM5)" },
-                { l: "📂 IMPORT", fn: () => fileRef.current?.click(), bg: "#006DB7", fg: "#fff", tip: "Import an EPA SWMM5 .INP file from your computer" },
-              ].map((b, i) => (
-                <button key={i} onClick={b.fn} title={b.tip} style={{
-                  padding: "5px 12px", borderRadius: 4, border: "none",
-                  background: b.bg, color: b.fg, cursor: "pointer",
-                  fontSize: 10, fontWeight: 800, letterSpacing: 0.5,
-                  fontFamily: "'Fredoka', sans-serif", textTransform: "uppercase",
-                  boxShadow: "inset 2px 2px 0 rgba(255,255,255,0.30), inset -2px -3px 0 rgba(0,0,0,0.20), 0 4px 0 rgba(0,0,0,0.35), 2px 0 0 rgba(0,0,0,0.15)",
-                }}>{b.l}</button>
+                { l: "↩ UNDO", fn: () => { if (hist.length) { const entry = hist[hist.length-1]; setGridGlobal(entry.gridSize); setGridSize(entry.gridSize); setGrid(entry.grid); setHist(h => h.slice(0,-1)); } }, color: "yellow", tip: "Undo last grid change (up to 30 steps)" },
+                { l: "🗑️ CLEAR", fn: () => { save(); setGrid(emptyGrid(gridSize)); doReset(); }, color: "red", tip: "Clear entire grid and reset simulation" },
+                { l: "🎲 DEMOS", fn: () => setShowDemos(s => !s), color: "orange", tip: "Load a pre-built demo model (Residential, Parking Lot, etc.)" },
+                { sep: true },
+                { l: "✅ VALIDATE", fn: () => setValidation(validateModel(grid)), color: "green", tip: "Check model for errors: missing outfalls, disconnected pipes, CFL violations" },
+                { l: "🔧 FIX", fn: doFix, color: "yellow", tip: "Auto-fix validation errors: add missing outfalls, connect orphan pipes" },
+                { sep: true },
+                { l: "🚀 RUN SWMM5", fn: doRun, color: "blue", tip: "Run animated JS simulation with real-time flow visualization on the grid" },
+                ...(isRunning ? [{ l: "⏸ STOP", fn: doStop, color: "red", tip: "Stop the running simulation" }] : []),
+                ...(simResult && !isRunning ? [{ l: "🔄 RESET", fn: doReset, color: "gray", tip: "Clear simulation results and reset the grid display" }] : []),
+                { l: "💾 SAVE/LOAD", fn: () => { setSaveSlots(getSaveSlots()); setShowSavePanel(true); }, color: "green", tip: "Save/load models to browser storage (auto-save + 5 named slots)" },
+                { sep: true },
+                { l: wasmLoading ? "⏳ RUNNING..." : "🔬 EPA SWMM5", fn: doRunWasm, color: "red", tip: "Run full EPA SWMM5 solver (WASM) with Dynamic Wave routing and detailed RPT output" },
+                { l: "📦 EXPORT", fn: doExport, color: "orange", tip: "Export model as EPA SWMM5 .INP file (compatible with desktop SWMM5)" },
+                { l: "📂 IMPORT", fn: () => fileRef.current?.click(), color: "blue", tip: "Import an EPA SWMM5 .INP file from your computer" },
+              ].map((b, i) => b.sep
+                ? <span key={i} className="separator" />
+                : <button key={i} className="lego-btn" data-color={b.color} onClick={b.fn} title={b.tip}>{b.l}</button>
+              )}
+              <span className="separator" />
+              <span className="lego-label">Grid:</span>
+              {[20, 25, 30, 40, 50].map(sz => (
+                <button key={sz} className={`lego-btn sm${gridSize === sz ? " active" : ""}`}
+                  data-color={gridSize === sz ? "yellow" : "white"}
+                  onClick={() => resizeGrid(sz)} title={`Resize grid to ${sz}×${sz} cells`}
+                >{sz}×{sz}</button>
               ))}
-              <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                <span style={{ fontSize: 9, color: "#F4F4F4", fontWeight: 800, textShadow: "1px 1px 0 rgba(0,0,0,0.3)" }}>Grid:</span>
-                {[20, 25, 30, 40, 50].map(sz => (
-                  <button key={sz} onClick={() => resizeGrid(sz)} title={`Resize grid to ${sz}×${sz} cells`} style={{
-                    width: 36, height: 28, borderRadius: 3, fontSize: 8, fontWeight: 800, cursor: "pointer",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    background: gridSize === sz ? "#F2C717" : "#6C6E68",
-                    border: "none",
-                    color: gridSize === sz ? "#1B2A34" : "#F4F4F4", fontFamily: "'Fredoka', sans-serif",
-                    boxShadow: gridSize === sz
-                      ? "inset 2px 2px 0 rgba(0,0,0,0.15), 0px 1px 0 rgba(0,0,0,0.40)"
-                      : "inset 2px 2px 0 rgba(255,255,255,0.15), inset -2px -3px 0 rgba(0,0,0,0.30), 2px 3px 0 rgba(0,0,0,0.40)",
-                    outline: gridSize === sz ? "2px solid white" : "none",
-                  }}>{sz}×{sz}</button>
-                ))}
-              </div>
             </div>
             <input ref={fileRef} type="file" accept=".inp,.txt" onChange={doImport} style={{ display: "none" }} />
 
@@ -679,17 +630,8 @@ export default function SWMM5LegoBuilder() {
                 border: "3px solid #6C6E68", boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
               }}>
                 {DEMOS.map((d, i) => (
-                  <button key={i} onClick={() => loadDemo(i)} title={d.desc} style={{
-                    padding: "5px 10px", borderRadius: 4,
-                    border: "none",
-                    background: "#FE8A18",
-                    color: "#fff", cursor: "pointer", fontSize: 10, fontWeight: 800,
-                    fontFamily: "'Fredoka', sans-serif",
-                    transition: "all 0.12s",
-                    boxShadow: "inset 2px 2px 0 rgba(255,255,255,0.25), inset -2px -3px 0 rgba(0,0,0,0.20), 0 3px 0 rgba(0,0,0,0.35)",
-                  }}
-                  onMouseEnter={e => { e.target.style.transform = "translateY(-2px)"; }}
-                  onMouseLeave={e => { e.target.style.transform = "none"; }}
+                  <button key={i} className="lego-btn" data-color="orange" onClick={() => loadDemo(i)} title={d.desc}
+                    style={{ flexDirection: "column", alignItems: "center", textAlign: "center" }}
                   >
                     <div>{d.name}</div>
                     <div style={{ fontSize: 8, color: "#1B2A34", fontWeight: 600 }}>{d.desc}</div>
