@@ -1719,6 +1719,42 @@ export default function SWMM5LegoBuilder() {
             background: "#F4F4F4", borderRadius: 4, padding: 8,
             border: "3px solid #6C6E68", color: "#1B2A34",
             boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
+          }}>
+            <div style={{
+              background: "#FE8A18", color: "#F4F4F4", fontWeight: 900,
+              padding: "2px 8px", borderRadius: 2, fontSize: 11, display: "inline-block", marginBottom: 6,
+            }}>📄 DOCUMENTATION</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              {[
+                { file: "SWMM5_Lego_Builder_Documentation.docx", label: "📘 User Guide", desc: "Full documentation (DOCX)", color: "#006DB7" },
+                { file: "SWMM5_Lego_Builder.pptx", label: "📊 Presentation", desc: "Slide deck (PPTX)", color: "#D01012" },
+                { file: "SWMM5_Lego_Builder_Reference.xlsx", label: "📋 Reference Tables", desc: "Element specs (XLSX)", color: "#4B9F4A" },
+              ].map((d, i) => (
+                <a key={i} href={`${import.meta.env.BASE_URL}docs/${d.file}`} download={d.file}
+                  style={{
+                    display: "flex", alignItems: "center", gap: 6, padding: "5px 8px",
+                    background: "#fff", borderRadius: 3, border: `2px solid ${d.color}`,
+                    textDecoration: "none", cursor: "pointer",
+                    boxShadow: "inset 1px 1px 0 rgba(255,255,255,0.8), 2px 2px 0 rgba(0,0,0,0.15)",
+                    transition: "transform 0.1s",
+                  }}
+                  onMouseOver={e => e.currentTarget.style.transform = "translateY(-1px)"}
+                  onMouseOut={e => e.currentTarget.style.transform = "none"}
+                >
+                  <div>
+                    <div style={{ fontSize: 10, fontWeight: 900, color: d.color, fontFamily: "'Fredoka'" }}>{d.label}</div>
+                    <div style={{ fontSize: 8, color: "#6C6E68", fontWeight: 600 }}>{d.desc}</div>
+                  </div>
+                  <div style={{ marginLeft: "auto", fontSize: 12 }}>⬇️</div>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div style={{
+            background: "#F4F4F4", borderRadius: 4, padding: 8,
+            border: "3px solid #6C6E68", color: "#1B2A34",
+            boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
             flex: 1, display: "flex", flexDirection: "column", minHeight: 0,
           }}>
             <div style={{
