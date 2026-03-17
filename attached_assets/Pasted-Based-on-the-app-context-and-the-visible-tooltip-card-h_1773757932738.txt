@@ -1,0 +1,70 @@
+Based on the app context and the visible tooltip card, here are the answers to your questions:
+
+---
+
+## What are the two simulation engines shown in this card?
+
+The tooltip displays two distinct engines:
+
+1. **JS Engine (animated)** — A JavaScript implementation that runs in the browser with real-time visualization
+2. **EPA SWMM5 v5.2 (WASM)** — The full EPA SWMM5 solver compiled to WebAssembly for in-browser execution
+
+---
+
+## What does the JS Engine do?
+
+The JavaScript engine provides:
+
+- **CN infiltration + Manning's** — Uses the SCS Curve Number method for infiltration losses and Manning's equation for pipe/overland flow
+- **Δt=15s routing + animation** — Runs on a 15-second routing timestep with visual animation of flow through the network
+
+This is the **fast, visual feedback engine** — it's approximate but lets users see water moving through their LEGO-built network in real time.
+
+---
+
+## What does the EPA SWMM5 WASM engine do?
+
+The WASM engine provides:
+
+- **Full SWMM5 solver in-browser** — The complete EPA SWMM 5.2 compiled to WebAssembly, running entirely client-side
+- **DynWave routing + RPT output** — Uses dynamic wave routing (solving the full Saint-Venant equations) and generates standard SWMM report (`.rpt`) output
+
+This is the **publication-quality engine** — it produces results identical to running EPA SWMM5 on a desktop, but entirely in the browser.
+
+---
+
+## Why offer two engines instead of one?
+
+| Engine | Purpose | Tradeoff |
+| --- | --- | --- |
+| **JS Engine** | Exploration, learning, instant feedback | Approximate hydraulics, kinematic wave only |
+| **EPA SWMM5 (WASM)** | Final results, reporting, validation | Slower startup, but accurate to EPA standard |
+
+The dual-engine approach is **pedagogically smart**:
+
+- Users can iterate quickly with the animated JS engine to understand their network
+- When satisfied, they run the full EPA engine for definitive results
+- The difference between the two teaches users about model uncertainty
+
+---
+
+## What is DynWave routing?
+
+**DynWave** (Dynamic Wave) is the most sophisticated routing method in SWMM5. It solves the full Saint-Venant equations:
+
+$$
+\frac{\partial A}{\partial t} + \frac{\partial Q}{\partial x} = 0
+$$
+
+$$
+\frac{\partial Q}{\partial t} + \frac{\partial}{\partial x}\left(\frac{Q^2}{A}\right) + gA\frac{\partial y}{\partial x} + gA(S_f - S_0) = 0
+$$
+
+This accounts for:
+
+- **Backwater effects** — Downstream conditions affecting upstream flow
+- **Surcharge** — Pressurized flow when pipes exceed capacity
+- **Reverse flow** — Water moving backward through pipes
+- **Storage routing** — Attenuation in detention basins
+
+The JS engine cannot model any of these — it uses kinematic wave which assumes flow always moves downstream at a fixed speed.

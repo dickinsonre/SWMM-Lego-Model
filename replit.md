@@ -69,8 +69,27 @@ Interactive browser-based stormwater management model builder. Features:
 - Grid cell borders: red=error, orange=CFL/validation warning, yellow=custom property override
 
 **Dual Simulation Engines**:
-1. **Quick Sim** (🚀 QUICK SIM): Simplified animated JS hydrology — SCS Curve Number infiltration + Manning's equations, 15-second routing timestep, real-time flow visualization on grid. Not actual SWMM — a teaching/preview tool.
-2. **EPA SWMM5 WASM** (🔬 EPA SWMM5): Full EPA SWMM5 v5.2 solver compiled to WebAssembly, runs entirely in-browser with Dynamic Wave routing, produces standard .RPT output with 6-tab results viewer (Summary, Subcatchments, Nodes, Links, Continuity, Raw RPT) including recharts bar charts
+
+| Engine | Button | Purpose | Tradeoff |
+| --- | --- | --- | --- |
+| **Quick Sim** | 🚀 QUICK SIM | Exploration, learning, instant feedback | Approximate hydraulics, kinematic wave only |
+| **EPA SWMM5 v5.2** | 🔬 EPA SWMM5 | Final results, reporting, validation | Slower startup, but accurate to EPA standard |
+
+1. **Quick Sim** (🚀 QUICK SIM): Simplified animated JS hydrology preview — not actual SWMM.
+   - SCS Curve Number method for infiltration losses
+   - Manning's equation for pipe/overland flow
+   - 15-second routing timestep with real-time flow animation on grid
+   - Kinematic wave only — assumes flow always moves downstream at a fixed speed
+   - Cannot model backwater effects, surcharge, reverse flow, or storage routing
+   - Fast visual feedback engine for iterating on network design
+
+2. **EPA SWMM5 WASM** (🔬 EPA SWMM5): Full EPA SWMM5 v5.2 solver compiled to WebAssembly, runs entirely in-browser.
+   - Dynamic Wave (DynWave) routing — solves the full Saint-Venant equations (continuity + momentum)
+   - Accounts for: backwater effects (downstream conditions affecting upstream), surcharge (pressurized pipe flow), reverse flow, and storage routing (detention basin attenuation)
+   - Produces standard .RPT output with 6-tab results viewer (Summary, Subcatchments, Nodes, Links, Continuity, Raw RPT) including recharts bar charts
+   - Results identical to running EPA SWMM5 on desktop — publication-quality engine
+
+**Why two engines?** The dual-engine approach is pedagogically valuable: users iterate quickly with Quick Sim to understand their network, then run the full EPA engine for definitive results. The difference between the two teaches about model uncertainty and the importance of proper hydraulic routing.
 
 **Key dependencies**: React, recharts (charts), Vite (build)
 
